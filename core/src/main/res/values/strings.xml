@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Core</string>
+
+    <!-- General -->
+    <string name="unknown_error">Whoops! Something went wrong</string>
+
 </resources>
