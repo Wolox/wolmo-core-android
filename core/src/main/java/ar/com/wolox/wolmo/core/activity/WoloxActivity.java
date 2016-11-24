@@ -1,12 +1,14 @@
 package ar.com.wolox.wolmo.core.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import ar.com.wolox.wolmo.core.R;
+import ar.com.wolox.wolmo.core.permission.PermissionManager;
+import ar.com.wolox.wolmo.core.util.ToastUtils;
 import butterknife.ButterKnife;
 
 public abstract class WoloxActivity extends FragmentActivity {
@@ -22,7 +24,7 @@ public abstract class WoloxActivity extends FragmentActivity {
             populate();
             setListeners();
         } else {
-            showToast(R.string.unknown_error);
+            ToastUtils.showToast(R.string.unknown_error);
             finish();
         }
     }
@@ -66,14 +68,6 @@ public abstract class WoloxActivity extends FragmentActivity {
         // Do nothing, override if needed!
     }
 
-    protected void showToast(int resId) {
-        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
-    }
-
-    protected void showToast(String s) {
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-    }
-
     protected void replaceFragment(int resId, Fragment f) {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -96,5 +90,12 @@ public abstract class WoloxActivity extends FragmentActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionManager.getInstance()
+                .onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
