@@ -112,6 +112,10 @@ public abstract class WoloxDialogFragment<T extends BasePresenter> extends Dialo
         super.show(manager, getClass().getName());
     }
 
+    /**
+     * Override this method as a callback when navigation back button is pressed. Returning false
+     * will execute the default behavior and close the dialog.
+     */
     public boolean onBackPressed() {
         return false;
     }

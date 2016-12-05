@@ -11,6 +11,8 @@ import android.support.v4.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ar.com.wolox.wolmo.core.util.ContextUtils;
+
 public class PermissionManager {
 
     private static PermissionManager sInstance;
@@ -62,7 +64,7 @@ public class PermissionManager {
                     }
                 });
             } else {
-                listener.onPermissionsDenied();
+                listener.onPermissionsDenied(filterUngranted(ContextUtils.getAppContext(), permissions));
             }
         }
     }
