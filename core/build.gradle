@@ -9,7 +9,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 25
         consumerProguardFiles 'proguard-joda-time.pro', 'proguard-retrofit.pro',
-                'proguard-butterknife.pro'
+                'proguard-butterknife.pro', 'proguard-okhttp.pro'
     }
 }
 
