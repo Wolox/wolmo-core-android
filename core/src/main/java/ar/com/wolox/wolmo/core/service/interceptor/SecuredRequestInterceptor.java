@@ -1,6 +1,7 @@
 package ar.com.wolox.wolmo.core.service.interceptor;
 
-import com.squareup.okhttp.Request;
+
+import okhttp3.Request;
 
 public class SecuredRequestInterceptor extends ApiRestInterceptor {
 
