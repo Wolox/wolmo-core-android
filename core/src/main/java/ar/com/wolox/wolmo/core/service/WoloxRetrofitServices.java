@@ -21,10 +21,15 @@ public abstract class WoloxRetrofitServices {
     public void init() {
         mServices = new HashMap<>();
         Gson gson = GsonBuilder.getBasicGsonBuilder().create();
-        OkHttpClient client = new SecuredRequestInterceptor();
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        client.interceptors().add(interceptor);
+
+        HttpLoggingInterceptor loggerInterceptor = new HttpLoggingInterceptor();
+        loggerInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new SecuredRequestInterceptor())
+                .addInterceptor(loggerInterceptor)
+                .build();
+
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(getApiEndpoint())
                 .addConverterFactory(GsonConverterFactory.create(gson))

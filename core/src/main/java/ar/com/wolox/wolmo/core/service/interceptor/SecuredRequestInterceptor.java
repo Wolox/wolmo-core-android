@@ -7,6 +7,7 @@ public class SecuredRequestInterceptor extends ApiRestInterceptor {
 
     public static final String SESSION_TOKEN_HEADER = "Authorization";
 
+    @Override
     public void addHeaders(Request.Builder requestBuilder) {
         String token = "holis"; // AccessUtils.getSessionToken()
         if (token == null) return;
