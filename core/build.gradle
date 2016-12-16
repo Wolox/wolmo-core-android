@@ -11,6 +11,10 @@ android {
         consumerProguardFiles 'proguard-joda-time.pro', 'proguard-retrofit.pro',
                 'proguard-butterknife.pro', 'proguard-okhttp.pro'
     }
+
+    lintOptions {
+//        lintConfig file('lint.xml')
+    }
 }
 
 dependencies {
