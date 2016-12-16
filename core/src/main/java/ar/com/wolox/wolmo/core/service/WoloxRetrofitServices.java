@@ -2,11 +2,11 @@ package ar.com.wolox.wolmo.core.service;
 
 import com.google.gson.Gson;
 
+import ar.com.wolox.wolmo.core.service.serializer.GsonBuilder;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import ar.com.wolox.wolmo.core.service.interceptor.SecuredRequestInterceptor;
-import ar.com.wolox.wolmo.core.service.serializer.GsonBuilder;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -15,43 +15,66 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public abstract class WoloxRetrofitServices {
 
     private Retrofit mRetrofit;
-    private Retrofit mApiaryRetrofit;
     private Map<Class, Object> mServices;
 
     public void init() {
         mServices = new HashMap<>();
-        Gson gson = GsonBuilder.getBasicGsonBuilder().create();
-
-        HttpLoggingInterceptor loggerInterceptor = new HttpLoggingInterceptor();
-        loggerInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(new SecuredRequestInterceptor())
-                .addInterceptor(loggerInterceptor)
-                .build();
-
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(getApiEndpoint())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client)
-                .build();
-        mApiaryRetrofit = new Retrofit.Builder()
-                .baseUrl(getApiaryEndpoint())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client)
+                .addConverterFactory(GsonConverterFactory.create(getGson()))
+                .client(getOkHttpClient())
                 .build();
     }
 
+    /**
+     * Returns the API endpoint.
+     *
+     * @return URL endpoint
+     */
     public abstract String getApiEndpoint();
 
-    public abstract String getApiaryEndpoint();
+    /**
+     * Returns an instance of Gson to use for conversion.
+     * This method calls <i>initGson(builder)</i> to configure the Gson Builder.
+     *
+     * @return A configured Gson instance
+     */
+    protected Gson getGson() {
+        com.google.gson.GsonBuilder builder = GsonBuilder.getBasicGsonBuilder();
+        initGson(builder);
+        return builder.create();
+    }
 
-    public <T> T getApiaryService(Class<T> clazz) {
-        T service = (T) mServices.get(clazz);
-        if (service != null) return service;
-        service = mApiaryRetrofit.create(clazz);
-        mServices.put(clazz, service);
-        return service;
+    /**
+     * Configure gson builder.
+     * You must add serializers and/or deserializers inside this method.
+     *
+     * @param builder Builder to configure
+     */
+    protected void initGson(com.google.gson.GsonBuilder builder) {
+    }
+
+    /**
+     * Returns an OkHttpClient.
+     * This method calls <i>initClient(builder)</i> to configure the builder for OkHttpClient.
+     *
+     * @return A configured instance of OkHttpClient.
+     */
+    protected OkHttpClient getOkHttpClient() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        initClient(builder);
+        return builder.build();
+    }
+
+    /**
+     * Configures an <i>OkHttpClient.Builder</i>.
+     * You must add interceptors and configure the builder inside this method.
+     */
+    protected void initClient(OkHttpClient.Builder builder) {
+        HttpLoggingInterceptor loggerInterceptor = new HttpLoggingInterceptor();
+        loggerInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        builder.addInterceptor(loggerInterceptor);
     }
 
     public <T> T getService(Class<T> clazz) {
