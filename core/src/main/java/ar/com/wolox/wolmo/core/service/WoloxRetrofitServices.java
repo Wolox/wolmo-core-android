@@ -1,16 +1,16 @@
 package ar.com.wolox.wolmo.core.service;
 
 import com.google.gson.Gson;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import ar.com.wolox.wolmo.core.service.interceptor.SecuredRequestInterceptor;
 import ar.com.wolox.wolmo.core.service.serializer.GsonBuilder;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public abstract class WoloxRetrofitServices {
 
@@ -21,10 +21,15 @@ public abstract class WoloxRetrofitServices {
     public void init() {
         mServices = new HashMap<>();
         Gson gson = GsonBuilder.getBasicGsonBuilder().create();
-        OkHttpClient client = new SecuredRequestInterceptor();
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        client.interceptors().add(interceptor);
+
+        HttpLoggingInterceptor loggerInterceptor = new HttpLoggingInterceptor();
+        loggerInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new SecuredRequestInterceptor())
+                .addInterceptor(loggerInterceptor)
+                .build();
+
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(getApiEndpoint())
                 .addConverterFactory(GsonConverterFactory.create(gson))
