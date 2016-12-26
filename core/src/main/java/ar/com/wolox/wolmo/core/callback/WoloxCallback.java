@@ -14,10 +14,13 @@ public abstract class WoloxCallback<T> implements Callback<T> {
      */
     @Override
     public void onResponse(Call<T> call, Response<T> response) {
-        if (response.isSuccessful())
+        if (isAuthError(response)) {
+            handleAuthError(response);
+        } else if (response.isSuccessful()) {
             onResponseSuccessful(response.body());
-        else
+        } else {
             onResponseFailed(response.errorBody(), response.code());
+        }
     }
 
     /**
@@ -28,6 +31,29 @@ public abstract class WoloxCallback<T> implements Callback<T> {
     public void onFailure(Call<T> call, Throwable t) {
         onCallFailure(t);
     }
+
+    /**
+     * Checks whether the response is an auth error or not.
+     *
+     * You should override this method and check if the response is an auth error, then return <b>true</b> if it is.
+     * By default, this method returns <b>false</b>.
+     *
+     * @param response Retrofit response
+     * @return <b>true</b> if the response is an auth error, <b>false</b> otherwise
+     */
+    protected boolean isAuthError(Response<T> response) {
+        return false;
+    }
+
+    /**
+     * Handles the auth error response.
+     * This method is only called when there is an auth error. (<i>isAuthError() returns true</i>)
+     * You should remove tokens and do the corresponding cleaning inside this method.
+     * By default, this method does nothing.
+     *
+     * @param response Retrofit response
+     */
+    protected void handleAuthError(Response<T> response) {}
 
     /**
      * Successful HTTP response

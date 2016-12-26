@@ -77,6 +77,15 @@ public abstract class WoloxRetrofitServices {
         builder.addInterceptor(loggerInterceptor);
     }
 
+    /**
+     * Builds and returns a Retrofit Service.
+     * If the service wasn't accessed, it'll be created and cached internally.
+     * On successive requests, the already created instance will be returned.
+     *
+     * @param clazz RetrofitService Class
+     * @param <T> Service class
+     * @return service
+     */
     public <T> T getService(Class<T> clazz) {
         T service = (T) mServices.get(clazz);
         if (service != null) return service;
