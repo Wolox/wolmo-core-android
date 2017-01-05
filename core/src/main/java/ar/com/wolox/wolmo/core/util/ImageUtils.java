@@ -117,44 +117,57 @@ public class ImageUtils {
     }
 
     /**
-     * Get PNG representation from a {@link Bitmap}.
+     * Get {@link byte[]} representation from a {@link Bitmap}, with boundaries.
      *
      * @param bitmap target Bitmap
      * @param format image compress format
      * @param quality compress quality, between 0 and 100
+     * @param maxHeight max height of the target image
+     * @param maxWidth max width of the target image
      *
-     * @return byte array with the formatted information of the Bitmap
+     * @return byte array with the formatted information of the Bitmap, if the image exceeded
+     *          boundaries, it's re scaled.
      */
     public static byte[] getImageAsByteArray(
             Bitmap bitmap,
             Bitmap.CompressFormat format,
-            @IntRange(from = 0, to = 100) int quality) {
+            @IntRange(from = 0, to = 100) int quality,
+            int maxWidth,
+            int maxHeight) {
 
+        Bitmap targetBitmap = resize(bitmap, maxWidth, maxHeight);
 
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(format, sanitizeQuality(quality), bytes);
+        targetBitmap.compress(format, sanitizeQuality(quality), bytes);
 
         return bytes.toByteArray();
     }
 
     /**
-     * Get PNG from an image file, represented by its {@link Uri}
+     * Get {@link byte[]} from an image file, represented by its {@link Uri}
      *
      * @param imageFileUri target image file URI
      * @param format image compress format
      * @param quality compress quality, between 0 and 100
+     * @param maxHeight max height of the target image
+     * @param maxWidth max width of the target image
      *
-     * @return byte array with the formatted information of the image file
+     * @return byte array with the formatted information of the image file, if the image exceeded
+     *          boundaries, it's re scaled.
      */
     public static byte[] getImageAsByteArray(
             Uri imageFileUri,
             Bitmap.CompressFormat format,
-            @IntRange(from = 0, to = 100) int quality) {
+            @IntRange(from = 0, to = 100) int quality,
+            int maxWidth,
+            int maxHeight) {
 
         return getImageAsByteArray(
                 BitmapFactory.decodeFile(FileUtils.getRealPathFromUri(imageFileUri)),
                 format,
-                quality);
+                quality,
+                maxWidth,
+                maxHeight);
     }
 
     /**
@@ -168,6 +181,40 @@ public class ImageUtils {
         if (quality < 0) return 0;
         else if (quality > 100) return 100;
         return quality;
+    }
+
+    /**
+     *
+     * @param image
+     * @param maxWidth
+     * @param maxHeight
+     *
+     * @return
+     */
+    public static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        if (maxWidth > 0 && maxHeight > 0 && (width > maxWidth || height > maxHeight)) {
+
+            float ratioImage = (float) width / (float) height;
+
+            int finalWidth = maxWidth;
+            int finalHeight = maxHeight;
+            if (ratioImage > 1) {
+                finalHeight = (int) ((float)finalWidth / ratioImage);
+            } else {
+                finalWidth = (int) ((float)finalHeight * ratioImage);
+            }
+
+            Bitmap resizedImage = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+
+            if (image != resizedImage) image.recycle();
+
+            return resizedImage;
+        } else {
+            return image;
+        }
     }
 
 }
