@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,9 +26,9 @@ public class FileUtils {
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
         return File.createTempFile(
-                filename,                           /* name */
-                extension,                          /* extension */
-                storageDir                          /* directory */
+                filename,
+                extension,
+                storageDir
         );
     }
 
@@ -36,8 +37,9 @@ public class FileUtils {
      *
      * @param fileUri A URI of a content provider pointing to an image resource
      *
-     * @return A path to the real file location
+     * @return A path to the real file location, or null if it can't find it
      */
+    @Nullable
     public static String getRealPathFromUri(Uri fileUri) {
         Cursor cursor = null;
         try {
@@ -46,6 +48,9 @@ public class FileUtils {
                     .getAppContext()
                     .getContentResolver()
                     .query(fileUri, proj, null, null, null);
+
+            if (cursor == null) return null;
+
             int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(columnIndex);

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.annotation.StringRes;
@@ -45,9 +46,7 @@ public class ImageUtils {
      * @author juanignaciomolina
      */
     public static void getImageFromGallery(Fragment fragment, int requestCode, @StringRes int errorResId) {
-        Intent i = new Intent(
-                Intent.ACTION_PICK,
-                MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         i.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
 
         // Ensure that there's a gallery app to handle the intent
@@ -121,12 +120,19 @@ public class ImageUtils {
      * Get PNG representation from a {@link Bitmap}.
      *
      * @param bitmap target Bitmap
+     * @param format image compress format
+     * @param quality compress quality, between 0 and 100
      *
-     * @return byte array with the PNG information of the Bitmap
+     * @return byte array with the formatted information of the Bitmap
      */
-    public static byte[] generatePngByteArray(Bitmap bitmap) {
+    public static byte[] getImageAsByteArray(
+            Bitmap bitmap,
+            Bitmap.CompressFormat format,
+            @IntRange(from = 0, to = 100) int quality) {
+
+
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 80, bytes);
+        bitmap.compress(format, sanitizeQuality(quality), bytes);
 
         return bytes.toByteArray();
     }
@@ -135,13 +141,33 @@ public class ImageUtils {
      * Get PNG from an image file, represented by its {@link Uri}
      *
      * @param imageFileUri target image file URI
+     * @param format image compress format
+     * @param quality compress quality, between 0 and 100
      *
-     * @return byte array with the PNG information of the image file.
+     * @return byte array with the formatted information of the image file
      */
-    public static byte[] generatePngByteArray(Uri imageFileUri) {
-        Bitmap imageBitmap = BitmapFactory.decodeFile(FileUtils.getRealPathFromUri(imageFileUri));
+    public static byte[] getImageAsByteArray(
+            Uri imageFileUri,
+            Bitmap.CompressFormat format,
+            @IntRange(from = 0, to = 100) int quality) {
 
-        return generatePngByteArray(imageBitmap);
+        return getImageAsByteArray(
+                BitmapFactory.decodeFile(FileUtils.getRealPathFromUri(imageFileUri)),
+                format,
+                quality);
+    }
+
+    /**
+     * Prevents quality from being outside 0...100 range
+     *
+     * @param quality target quality
+     *
+     * @return if below 0, returns 0, if above 100, return 100, else returns {@code quality} param
+     */
+    private static int sanitizeQuality(int quality) {
+        if (quality < 0) return 0;
+        else if (quality > 100) return 100;
+        return quality;
     }
 
 }

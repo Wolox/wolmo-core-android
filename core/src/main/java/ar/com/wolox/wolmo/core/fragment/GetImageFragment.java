@@ -38,8 +38,19 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
     /* Callback for image selection */
     public interface OnImageReturnCallback {
 
+        /**
+         * Method for when the image retrieval was a success, exposing the {@link Uri} of the image
+         *
+         * @param imageUri retrieved image
+         */
         void success(Uri imageUri);
 
+        /**
+         * Method for when the image retrieval was a failure, exposing the correponding
+         * {@link Error} instance
+         *
+         * @param error describing the failure reason
+         */
         void error(Error error);
 
     }
@@ -50,7 +61,6 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
 
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                // Gallery request codes
                 case INTENT_CODE_IMAGE_GALLERY:
                     if (data != null) {
                         mImageCallback.success(data.getData());
@@ -59,19 +69,15 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
                     }
                     break;
 
-                // Camera request codes
                 case INTENT_CODE_IMAGE_CAMERA:
-                    // Add the new picture to the device's gallery app
                     ImageUtils.addPictureToDeviceGallery(mPictureTakenUri);
                     mImageCallback.success(mPictureTakenUri);
                     break;
 
-                // Unknown request code
                 default:
                     notifyError(Error.ERROR_UNKNOWN);
             }
         } else if (resultCode == Activity.RESULT_CANCELED) {
-
             switch (requestCode) {
                 case INTENT_CODE_IMAGE_GALLERY:
                 case INTENT_CODE_IMAGE_CAMERA:
@@ -84,7 +90,6 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
 
         }
 
-        // Remove callbacks references after processing images
         clearCallbacks();
     }
 
