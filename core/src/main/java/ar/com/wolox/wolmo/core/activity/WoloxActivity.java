@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import ar.com.wolox.wolmo.core.R;
+import ar.com.wolox.wolmo.core.fragment.IWoloxFragment;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.util.ToastUtils;
 
@@ -98,5 +99,24 @@ public abstract class WoloxActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionManager.getInstance()
                 .onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    /**
+     * Custom behaviour that calls, for every child fragment that is an instance of
+     * {@link IWoloxFragment} and {@link Fragment#isVisible()}, its
+     * {@link IWoloxFragment#onBackPressed()}.
+     *
+     * If any of those returns 'true', the method returns. Else, it calls
+     * {@link AppCompatActivity#onBackPressed()}.
+     */
+    @Override
+    public void onBackPressed() {
+        for (Fragment childFragment : getSupportFragmentManager().getFragments()) {
+            if (childFragment instanceof IWoloxFragment && childFragment.isVisible()) {
+                if (((IWoloxFragment) childFragment).onBackPressed()) return;
+            }
+        }
+
+        super.onBackPressed();
     }
 }

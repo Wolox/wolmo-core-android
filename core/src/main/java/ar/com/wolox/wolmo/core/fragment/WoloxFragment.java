@@ -1,8 +1,10 @@
 package ar.com.wolox.wolmo.core.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,5 +78,17 @@ public abstract class WoloxFragment<T extends BasePresenter> extends Fragment
 
     @Override
     public void onHide() {
+    }
+
+    /**
+     * @see IWoloxFragment#onBackPressed()
+     *
+     * Beware, when overriding, that returning 'true' will prevent default navigation behaviour such
+     * as {@link FragmentManager#popBackStackImmediate()} or {@link Activity#finish()}, but not
+     * dismissing the keyboard, for example.
+     */
+    @Override
+    public boolean onBackPressed() {
+        return false;
     }
 }

@@ -1,5 +1,6 @@
 package ar.com.wolox.wolmo.core.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -43,6 +44,25 @@ public abstract class WoloxDialogFragment<T extends BasePresenter> extends Dialo
             getDialog().getWindow().setBackgroundDrawable(backgroundDrawable);
             setOnBackPressedListener();
         }
+    }
+
+    /**
+     * Sets a custom {@link android.content.DialogInterface.OnKeyListener} for the
+     * {@link Dialog} returned by {@link #getDialog()} that calls {@link #onBackPressed()}
+     * if the key is the back key.
+     *
+     * Beware that, when clicking a key, the {@link android.content.DialogInterface.OnKeyListener}
+     * is called before delegating the event to other structures. For example, the back is handled
+     * here before sending it to an {@link Activity}.
+     */
+    private void setOnBackPressedListener() {
+        if (getDialog() == null) return;
+        getDialog().setOnKeyListener(new Dialog.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface arg0, int keyCode, KeyEvent event) {
+                return keyCode == KeyEvent.KEYCODE_BACK && onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -113,25 +133,14 @@ public abstract class WoloxDialogFragment<T extends BasePresenter> extends Dialo
     }
 
     /**
-     * Override this method as a callback when navigation back button is pressed. Returning false
-     * will execute the default behavior and close the dialog.
+     * @see IWoloxFragment#onBackPressed()
+     *
+     * Beware, when overriding, that returning 'true' will prevent default navigation behaviour such
+     * as {@link Dialog#dismiss()}.
      */
+    @Override
     public boolean onBackPressed() {
         return false;
-    }
-
-    private void setOnBackPressedListener() {
-        if (getDialog() == null) return;
-        getDialog().setOnKeyListener(new Dialog.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface arg0, int keyCode,
-                                 KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    return onBackPressed();
-                }
-                return false;
-            }
-        });
     }
 
     @Override
