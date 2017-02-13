@@ -28,14 +28,14 @@ public class FileUtils {
      *
      * @return {@link File} result of the creation
      *
-     * @throws IOException if a file could not be created
+     * @throws IOException If a file could not be created
      */
     public static File createFile(
             @NonNull String filename, @NonNull String extension) throws IOException {
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
         //The suffix will be appended as it is, we need to add the dot manually
-        if (!extension.startsWith("."))
+        if (!extension.startsWith(".")) {
             extension = "." + extension;
         }
 
