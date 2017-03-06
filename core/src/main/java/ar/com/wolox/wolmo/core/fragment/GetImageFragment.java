@@ -39,19 +39,19 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
     public interface OnImageReturnCallback {
 
         /**
-         * Method for when the image retrieval was a success, exposing the {@link Uri} of the image
+         * Method for when the image retrieval was a success, exposing the {@link Uri} of the image.
          *
-         * @param imageUri retrieved image
+         * @param imageUri of the retrieved image
          */
-        void success(Uri imageUri);
+        void success(@NonNull Uri imageUri);
 
         /**
          * Method for when the image retrieval was a failure, exposing the correponding
-         * {@link Error} instance
+         * {@link Error} instance.
          *
          * @param error describing the failure reason
          */
-        void error(Error error);
+        void error(@NonNull Error error);
 
     }
 
@@ -113,11 +113,12 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
     protected abstract String pictureTakenFilename();
 
     /**
-     * Start a request for an image from Gallery
+     * Start a request for an image from Gallery.
      *
      * @param onImageReturnCallback callback for request result
      */
-    protected void selectImageFromGallery(final OnImageReturnCallback onImageReturnCallback) {
+    protected void selectImageFromGallery(
+            @NonNull final OnImageReturnCallback onImageReturnCallback) {
         PermissionManager.getInstance().requirePermission(
                 this,
                 new PermissionListener() {
@@ -140,11 +141,12 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
     }
 
     /**
-     * Start a request for an image from Camera
+     * Start a request for an image from Camera.
      *
      * @param onImageReturnCallback callback for request result
      */
-    protected void takePicture(final OnImageReturnCallback onImageReturnCallback) {
+    protected void takePicture(
+            @NonNull final OnImageReturnCallback onImageReturnCallback) {
         PermissionManager.getInstance().requirePermission(
                 this,
                 new PermissionListener() {

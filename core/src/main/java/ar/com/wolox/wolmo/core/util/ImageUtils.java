@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.annotation.StringRes;
@@ -18,6 +19,10 @@ import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
+/**
+ * Utils class to manipulate images, through {@link Bitmap}s or their corresponding {@link Uri}, and
+ * for retrieving pictures from gallery/taking them from the camera.
+ */
 public class ImageUtils {
 
     @Retention(SOURCE)
@@ -25,44 +30,47 @@ public class ImageUtils {
             PNG,
             JPG
     })
-    public @interface ImageFormat {
-    }
+    /**
+     * Image compression formats supported.
+     */
+    public @interface ImageFormat {}
 
     public static final String PNG = "png";
     public static final String JPG = "jpg";
 
-    private ImageUtils() {
-    }
+    private ImageUtils() {}
 
     /**
-     * Triggers an intent to go to the device's image gallery and returns an URI with the file
+     * Triggers an intent to go to the device's image gallery and returns an URI with the file.
      * <p>
      * <p/>
      * Override the onActivityResult method in your fragment and specify behaviour
      * for the provided request code. The selected image URI will be
      * returned in the data variable of the activity result.
      *
-     * @param fragment A fragment where the get image intent is going to be called
-     * @author juanignaciomolina
+     * @param fragment    A fragment where the get image intent is going to be called
+     * @param requestCode of the result call to be identified with
+     * @param errorResId  {@link StringRes} to be displayed in case of error
      */
-    public static void getImageFromGallery(Fragment fragment, int requestCode, @StringRes int errorResId) {
+    public static void getImageFromGallery(
+            @NonNull Fragment fragment, int requestCode, @StringRes int errorResId) {
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         i.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
 
         // Ensure that there's a gallery app to handle the intent
-        if (i.resolveActivity(ContextUtils.getAppContext().getPackageManager()) != null)
+        if (i.resolveActivity(ContextUtils.getAppContext().getPackageManager()) != null){
             fragment.startActivityForResult(i, requestCode);
-        else {
+        } else {
             ToastUtils.showToast(errorResId);
         }
     }
 
     /**
-     * Adds a given picture to the device images gallery
+     * Adds a given picture to the device images gallery.
      *
      * @param imageUri The {@link Uri} of the image
      */
-    public static void addPictureToDeviceGallery(Uri imageUri) {
+    public static void addPictureToDeviceGallery(@NonNull Uri imageUri) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         mediaScanIntent.setData(imageUri);
         ContextUtils.getAppContext().sendBroadcast(mediaScanIntent);
@@ -70,60 +78,60 @@ public class ImageUtils {
 
     /**
      * Triggers an intent to go to the device's camera app, stores the image as 'filename'.'format',
-     * and returns its {@link Uri}
+     * and returns its {@link Uri}.
      * <p>
      * <p/>
      * Override the onActivityResult method in your fragment and specify behaviour
      * for the provided request code. This method returns a File object that
-     * contains the picture taken. You can get the returned image as an Uri using
-     * Uri.fromFile(getImageFromCamera(fragment));
+     * contains the picture taken. You can get the returned image as an {@link Uri} using
+     * {@link Uri#fromFile(File)}.
      *
      * @param fragment    A fragment where the get image intent is going to be called
      * @param requestCode A request code for the intent
      * @param filename    Filename for the future stored image
      * @param format      Format (extension) for the future image
      * @param errorResId  Resource id of the error string
+     *
      * @return {@link Uri} of the newly stored image
      */
     @Nullable
-    public static Uri getImageFromCamera(Fragment fragment, int requestCode, String filename,
-                                         @ImageFormat String format, @StringRes int errorResId) {
+    public static Uri getImageFromCamera(
+            @NonNull Fragment fragment, int requestCode, @NonNull String filename,
+            @ImageFormat String format, @StringRes int errorResId) {
 
         Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         // Ensure that there's a camera app to handle the intent
-        if (i.resolveActivity(ContextUtils.getAppContext().getPackageManager()) != null) {
-            File photoFile = null;
-
-            try {
-                photoFile = FileUtils.createFile(filename, format);
-            } catch (IOException ex) {
-                ToastUtils.showToast(errorResId);
-            }
-
-            Uri photoFileUri = Uri.fromFile(photoFile);
-
-            if (photoFile != null) {
-                i.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
-                fragment.startActivityForResult(i, requestCode);
-            }
-
-            return photoFileUri;
-        } else {
+        if (i.resolveActivity(ContextUtils.getAppContext().getPackageManager()) == null) {
             ToastUtils.showToast(errorResId);
+            return null;
         }
 
-        return null;
+        File photoFile;
+
+        try {
+            photoFile = FileUtils.createFile(filename, format);
+        } catch (IOException ex) {
+            ToastUtils.showToast(errorResId);
+
+            return null;
+        }
+
+        Uri photoFileUri = Uri.fromFile(photoFile);
+        i.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
+        fragment.startActivityForResult(i, requestCode);
+
+        return photoFileUri;
     }
 
     /**
      * Get {@link byte[]} representation from a {@link Bitmap}, with boundaries.
      *
-     * @param bitmap target Bitmap
-     * @param format image compress format
-     * @param quality compress quality, between 0 and 100
+     * @param bitmap    target Bitmap
+     * @param format    image compress format
+     * @param quality   compress quality, between 0 and 100
      * @param maxHeight max height of the target image
-     * @param maxWidth max width of the target image
+     * @param maxWidth  max width of the target image
      *
      * @return byte array with the formatted information of the Bitmap, if the image exceeded
      *          boundaries, it's re scaled.
@@ -135,7 +143,7 @@ public class ImageUtils {
             int maxWidth,
             int maxHeight) {
 
-        Bitmap targetBitmap = resize(bitmap, maxWidth, maxHeight);
+        Bitmap targetBitmap = fit(bitmap, maxWidth, maxHeight);
 
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         targetBitmap.compress(format, sanitizeQuality(quality), bytes);
@@ -144,20 +152,20 @@ public class ImageUtils {
     }
 
     /**
-     * Get {@link byte[]} from an image file, represented by its {@link Uri}
+     * Get {@link byte[]} from an image file, represented by its {@link Uri}.
      *
      * @param imageFileUri target image file URI
-     * @param format image compress format
-     * @param quality compress quality, between 0 and 100
-     * @param maxHeight max height of the target image
-     * @param maxWidth max width of the target image
+     * @param format       image compress format
+     * @param quality      compress quality, between 0 and 100
+     * @param maxWidth     max width of the target image
+     * @param maxHeight    max height of the target image
      *
      * @return byte array with the formatted information of the image file, if the image exceeded
      *          boundaries, it's re scaled.
      */
     public static byte[] getImageAsByteArray(
-            Uri imageFileUri,
-            Bitmap.CompressFormat format,
+            @NonNull Uri imageFileUri,
+            @NonNull Bitmap.CompressFormat format,
             @IntRange(from = 0, to = 100) int quality,
             int maxWidth,
             int maxHeight) {
@@ -171,50 +179,52 @@ public class ImageUtils {
     }
 
     /**
-     * Prevents quality from being outside 0...100 range
+     * Prevents quality from being outside 0...100 range.
      *
      * @param quality target quality
      *
      * @return if below 0, returns 0, if above 100, return 100, else returns {@code quality} param
      */
     private static int sanitizeQuality(int quality) {
-        if (quality < 0) return 0;
-        else if (quality > 100) return 100;
+        if (quality < 0) {
+            return 0;
+        } else if (quality > 100) {
+            return 100;
+        }
+
         return quality;
     }
 
     /**
+     * Re-sizes the image, represented as a {@link Bitmap}, to fit the boundaries and keeping its
+     * aspect ratio.
      *
-     * @param image
-     * @param maxWidth
-     * @param maxHeight
+     * @param image     {@link Bitmap} to scale
+     * @param maxWidth  max width it can occupy
+     * @param maxHeight max height it can occupy
      *
-     * @return
+     * @return If the re-scaling was necessary, the scaled {@link Bitmap}. Else, it returns the
+     *         target one.
      */
-    public static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+    public static Bitmap fit(@NonNull Bitmap image, int maxWidth, int maxHeight) {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        if (maxWidth > 0 && maxHeight > 0 && (width > maxWidth || height > maxHeight)) {
-
-            float ratioImage = (float) width / (float) height;
-
-            int finalWidth = maxWidth;
-            int finalHeight = maxHeight;
-            if (ratioImage > 1) {
-                finalHeight = (int) ((float)finalWidth / ratioImage);
-            } else {
-                finalWidth = (int) ((float)finalHeight * ratioImage);
-            }
-
-            Bitmap resizedImage = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
-
-            if (image != resizedImage) image.recycle();
-
-            return resizedImage;
-        } else {
+        if (maxWidth <= 0 || maxHeight <= 0 || (width <= maxWidth && height <= maxHeight)) {
             return image;
         }
+
+        float ratioImage = (float) width / (float) height;
+
+        int finalWidth = maxWidth;
+        int finalHeight = maxHeight;
+        if (ratioImage > 1) {
+            finalHeight = (int) ((float)finalWidth / ratioImage);
+        } else {
+            finalWidth = (int) ((float)finalHeight * ratioImage);
+        }
+
+        return Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
     }
 
 }
