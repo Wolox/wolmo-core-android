@@ -7,9 +7,12 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
+import java.io.File;
+
 import ar.com.wolox.wolmo.core.permission.PermissionListener;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
+import ar.com.wolox.wolmo.core.util.FileUtils;
 import ar.com.wolox.wolmo.core.util.ImageUtils;
 
 public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFragment<T> {
@@ -24,7 +27,7 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
     private static final int INTENT_CODE_IMAGE_GALLERY = 9000;
     private static final int INTENT_CODE_IMAGE_CAMERA = 9001;
 
-    private Uri mPictureTakenUri;
+    private File mPictureTakenFile;
     private OnImageReturnCallback mImageCallback;
 
     /* Error types */
@@ -41,9 +44,11 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
         /**
          * Method for when the image retrieval was a success, exposing the {@link Uri} of the image.
          *
-         * @param imageUri of the retrieved image
+         * @param file retrieved image file
+         *             Returning the Uri brought us some trouble. Anyway, it can be easily retrieved
+         *             calling {@link Uri#fromFile(File)}
          */
-        void success(@NonNull Uri imageUri);
+        void success(@NonNull File file);
 
         /**
          * Method for when the image retrieval was a failure, exposing the correponding
@@ -63,15 +68,16 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
             switch (requestCode) {
                 case INTENT_CODE_IMAGE_GALLERY:
                     if (data != null) {
-                        mImageCallback.success(data.getData());
+                        String pathUri = FileUtils.getRealPathFromUri(data.getData());
+                        mImageCallback.success(new File(pathUri));
                     } else {
                         notifyError(Error.ERROR_DATA);
                     }
                     break;
 
                 case INTENT_CODE_IMAGE_CAMERA:
-                    ImageUtils.addPictureToDeviceGallery(mPictureTakenUri);
-                    mImageCallback.success(mPictureTakenUri);
+                    ImageUtils.addPictureToDeviceGallery(Uri.fromFile(mPictureTakenFile));
+                    mImageCallback.success(mPictureTakenFile);
                     break;
 
                 default:
@@ -153,7 +159,7 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
                     public void onPermissionsGranted() {
                         mImageCallback = onImageReturnCallback;
 
-                        mPictureTakenUri =
+                        mPictureTakenFile =
                                 ImageUtils.getImageFromCamera(
                                         GetImageFragment.this,
                                         INTENT_CODE_IMAGE_CAMERA,
