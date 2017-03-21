@@ -3,15 +3,16 @@ package ar.com.wolox.wolmo.core.activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.util.ToastUtils;
+
 import butterknife.ButterKnife;
 
-public abstract class WoloxActivity extends FragmentActivity {
+public abstract class WoloxActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
