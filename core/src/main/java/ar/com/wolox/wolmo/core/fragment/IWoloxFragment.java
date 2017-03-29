@@ -45,12 +45,19 @@ public interface IWoloxFragment<T extends BasePresenter> {
     public void setListeners();
 
     /**
-     * Override this method is you want to do anything when the fragmnent becomes visible
+     * Override this method is you want to do anything when the fragment becomes visible
      */
     void onVisible();
 
     /**
-     * Override this method is you want to do anything when the fragmnent hides
+     * Override this method is you want to do anything when the fragment hides
      */
     void onHide();
+
+    /**
+     * Custom back press handling method.
+     *
+     * @return 'true' if the back was handled and shouldn't propagate, 'false' otherwise
+     */
+    boolean onBackPressed();
 }

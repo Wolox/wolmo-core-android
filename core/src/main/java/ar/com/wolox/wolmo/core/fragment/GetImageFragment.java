@@ -145,8 +145,7 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
      *
      * @param onImageReturnCallback callback for request result
      */
-    protected void takePicture(
-            @NonNull final OnImageReturnCallback onImageReturnCallback) {
+    protected void takePicture(@NonNull final OnImageReturnCallback onImageReturnCallback) {
         PermissionManager.getInstance().requirePermission(
                 this,
                 new PermissionListener() {
