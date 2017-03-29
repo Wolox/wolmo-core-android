@@ -109,19 +109,17 @@ public class ImageUtils {
         }
 
         File photoFile;
-
         try {
             photoFile = FileUtils.createFile(filename, format);
         } catch (IOException ex) {
             ToastUtils.showToast(errorResId);
-
             return null;
         }
 
-//        Uri photoFileUri = Uri.fromFile(photoFile);
-
+        // Change in API 24 to get the file
         Uri photoFileUri = FileProvider.getUriForFile(fragment.getContext(),
-                fragment.getContext().getPackageName() + ".provider", photoFile);
+            fragment.getContext().getPackageName() + ".provider", photoFile);
+
         i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
         fragment.startActivityForResult(i, requestCode);
