@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -117,7 +118,11 @@ public class ImageUtils {
             return null;
         }
 
-        Uri photoFileUri = Uri.fromFile(photoFile);
+//        Uri photoFileUri = Uri.fromFile(photoFile);
+
+        Uri photoFileUri = FileProvider.getUriForFile(fragment.getContext(),
+                fragment.getContext().getPackageName() + ".provider", photoFile);
+        i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
         fragment.startActivityForResult(i, requestCode);
 
