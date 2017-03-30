@@ -57,14 +57,6 @@ public class BasePresenter<T> {
     }
 
     /**
-     * Method called to detach the view of this presenter.
-     */
-    public final void detachView() {
-        mViewInstance = null;
-        mViewCreated = false;
-    }
-
-    /**
      * Returns the status of the attached view.
      * <b>NOTE: </b> The view can be attached but not yet created.
      *
@@ -72,6 +64,15 @@ public class BasePresenter<T> {
      */
     public final boolean isViewCreated() {
         return mViewCreated;
+    }
+
+    /**
+     * Method called to detach the view of this presenter.
+     */
+    @CallSuper
+    public void detachView() {
+        mViewInstance = null;
+        mViewCreated = false;
     }
 
     /**
