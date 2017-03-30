@@ -1,11 +1,13 @@
 package ar.com.wolox.wolmo.core.fragment;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 
 public interface IWoloxFragment<T extends BasePresenter> {
+
     /**
      * Returns the layout id for the inflater so the view can be populated
      */
@@ -13,8 +15,11 @@ public interface IWoloxFragment<T extends BasePresenter> {
 
     /**
      * Reads arguments sent as a Bundle and saves them as appropriate.
-     * @param args The bundle obtainable by the getArguments method.
-     * @return true if arguments were read successfully, false otherwise.
+     * <b>NOTE: </b>Returning <i>false</i> will end the execution of the activity.
+     *
+     * @param args The bundle obtainable by the {@link Fragment#getArguments()} method.
+     *
+     * @return <b>true</b> if this fragment contains the required values, <b>false</b> otherwise.
      * Default implementation returns true.
      */
     boolean handleArguments(Bundle args);
