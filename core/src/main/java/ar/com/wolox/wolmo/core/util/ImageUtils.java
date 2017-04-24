@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -95,7 +96,7 @@ public class ImageUtils {
      * @return {@link Uri} of the newly stored image
      */
     @Nullable
-    public static Uri getImageFromCamera(
+    public static File getImageFromCamera(
             @NonNull Fragment fragment, int requestCode, @NonNull String filename,
             @ImageFormat String format, @StringRes int errorResId) {
 
@@ -108,20 +109,22 @@ public class ImageUtils {
         }
 
         File photoFile;
-
         try {
             photoFile = FileUtils.createFile(filename, format);
         } catch (IOException ex) {
             ToastUtils.showToast(errorResId);
-
             return null;
         }
 
-        Uri photoFileUri = Uri.fromFile(photoFile);
+        // Change in API 24 to get the file
+        Uri photoFileUri = FileProvider.getUriForFile(fragment.getContext(),
+            fragment.getContext().getPackageName() + ".provider", photoFile);
+
+        i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
         fragment.startActivityForResult(i, requestCode);
 
-        return photoFileUri;
+        return photoFile;
     }
 
     /**
@@ -172,6 +175,33 @@ public class ImageUtils {
 
         return getImageAsByteArray(
                 BitmapFactory.decodeFile(FileUtils.getRealPathFromUri(imageFileUri)),
+                format,
+                quality,
+                maxWidth,
+                maxHeight);
+    }
+
+    /**
+     * Get {@link byte[]} from an image {@link File}
+     *
+     * @param file         target image file
+     * @param format       image compress format
+     * @param quality      compress quality, between 0 and 100
+     * @param maxWidth     max width of the target image
+     * @param maxHeight    max height of the target image
+     *
+     * @return byte array with the formatted information of the image file, if the image exceeded
+     *          boundaries, it's re scaled.
+     */
+    public static byte[] getImageAsByteArray(
+            @NonNull File file,
+            @NonNull Bitmap.CompressFormat format,
+            @IntRange(from = 0, to = 100) int quality,
+            int maxWidth,
+            int maxHeight) {
+
+        return getImageAsByteArray(
+                BitmapFactory.decodeFile(file.getPath()),
                 format,
                 quality,
                 maxWidth,
