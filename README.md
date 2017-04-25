@@ -46,9 +46,9 @@ and it was written by [Wolox](http://www.wolox.com.ar).
 
 ## <a name="topic-license"></a> License
 
-**WARP** is available under the MIT [license](https://raw.githubusercontent.com/Wolox/wolmo-core-android/master/LICENSE.md).
+**WOLMO CORE** is available under the MIT [license](https://raw.githubusercontent.com/Wolox/wolmo-core-android/master/LICENSE.md).
 
-    Copyright (c) 2017 Juan Ignacio Molina, aka Juani
+    Copyright (c) Wolox S.A
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
