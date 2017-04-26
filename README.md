@@ -1,3 +1,7 @@
+<p align="center">
+  <img height="140px" width="400px" src="https://cloud.githubusercontent.com/assets/4109119/25450281/cac5979e-2a94-11e7-9176-8e323df5dab8.png"/>
+</p>
+
 # WOLMO
 
 WOLMO is a an opinionated framework designed to reduce the time taken to develop mobile applications by cutting off boilerplate code and offering MVP-ready fragments and activities while also providing utilities and helper classes for everyday tasks.
