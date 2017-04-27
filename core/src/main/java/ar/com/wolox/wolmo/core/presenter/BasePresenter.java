@@ -3,6 +3,9 @@ package ar.com.wolox.wolmo.core.presenter;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
 /**
  * Base presenter that provides the view to the specific presenters.
  */
@@ -74,6 +77,21 @@ public class BasePresenter<T> {
     @CallSuper
     public void onViewDestroyed() {
         mViewCreated = false;
+    }
+
+    /**
+     * Runs the {@link Consumer<T>} if the view is attached to the presenter.
+     * If no view is attached, the expression will not run.
+     * The consumer receives the view instance as argument.
+     *
+     * @param method Expression to run if the view is attached.
+     */
+    protected void runIfViewCreated(Consumer<T> method) {
+        if (isViewCreated()) method.accept(mViewInstance);
+    }
+
+    protected void runIfViewCreated(Runnable method) {
+        if (isViewCreated()) method.run();
     }
 
 }
