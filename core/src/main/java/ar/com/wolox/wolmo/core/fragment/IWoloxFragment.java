@@ -27,27 +27,27 @@ public interface IWoloxFragment<T extends BasePresenter> {
     /**
      * Create the presenter for this fragment
      */
-    public T createPresenter();
+    T createPresenter();
 
     /**
      * Loads the view elements for the fragment
      */
-    public void setUi(View v);
+    void setUi(View v);
 
     /**
      * Initializes any variables that the fragment needs
      */
-    public abstract void init();
+    void init();
 
     /**
      * Populates the view elements of the fragment
      */
-    public void populate();
+    void populate();
 
     /**
      * Sets the listeners for the views of the fragment
      */
-    public void setListeners();
+    void setListeners();
 
     /**
      * Override this method is you want to do anything when the fragment becomes visible

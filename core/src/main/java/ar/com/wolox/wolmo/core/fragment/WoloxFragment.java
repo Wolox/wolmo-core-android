@@ -16,10 +16,18 @@ import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 
 import butterknife.ButterKnife;
 
+/**
+ * Base implementation for {@link IWoloxFragment}. This is in charge of inflating the view returned
+ * by {@link #layout()} and calls {@link ButterKnife} to bind members. The presenter is created on
+ * {@link #onCreate(Bundle)} if {@link #handleArguments(Bundle)} returns true.
+ * This class defines default implementations for most of the methods on {@link IWoloxFragment}.
+ *
+ * @param <T> Presenter for this fragment. It should extend {@link BasePresenter}
+ */
 public abstract class WoloxFragment<T extends BasePresenter> extends Fragment
     implements IWoloxFragment<T> {
 
-    private WoloxFragmentHandler<T> mFragmentHandler = new WoloxFragmentHandler<T>(this);
+    private WoloxFragmentHandler<T> mFragmentHandler = new WoloxFragmentHandler<>(this);
 
     @Override
     @CallSuper
@@ -44,7 +52,7 @@ public abstract class WoloxFragment<T extends BasePresenter> extends Fragment
 
     @Override
     @CallSuper
-    public void setMenuVisibility(final boolean visible) {
+    public void setMenuVisibility(boolean visible) {
         super.setMenuVisibility(visible);
         mFragmentHandler.setMenuVisibility(visible);
     }
@@ -72,6 +80,13 @@ public abstract class WoloxFragment<T extends BasePresenter> extends Fragment
 
     @Override
     @CallSuper
+    public void onDestroy() {
+        mFragmentHandler.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    @CallSuper
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
         @NonNull int[] grantResults) {
 
@@ -94,10 +109,6 @@ public abstract class WoloxFragment<T extends BasePresenter> extends Fragment
     @Override
     public void populate() {}
 
-    protected T getPresenter() {
-        return mFragmentHandler.getPresenter();
-    }
-
     @Override
     public void onVisible() {}
 
@@ -105,10 +116,18 @@ public abstract class WoloxFragment<T extends BasePresenter> extends Fragment
     public void onHide() {}
 
     /**
+     * Returns the instance of the presenter for this fragment.
+     *
+     * @return Presenter for this fragment
+     */
+    protected T getPresenter() {
+        return mFragmentHandler.getPresenter();
+    }
+
+    /**
      * @see IWoloxFragment#onBackPressed()
      * <p>
-     * Beware, when overriding, that returning 'true' will prevent default navigation behaviour
-     * such
+     * Beware, when overriding, that returning 'true' will prevent default navigation behaviour such
      * as {@link FragmentManager#popBackStackImmediate()} or {@link Activity#finish()}, but not
      * dismissing the keyboard, for example.
      */
