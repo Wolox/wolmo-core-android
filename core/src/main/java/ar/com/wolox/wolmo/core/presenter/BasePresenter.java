@@ -24,8 +24,9 @@ public class BasePresenter<T> {
      * Returns the view attached this presenter.
      * <b>NOTE: </b> You should check if the view is created, or at least attached calling the
      * methods {@link BasePresenter#isViewCreated()} and
-     * {@link BasePresenter#isViewAttached()} before calling method of the view.
-     * It's not safe to call methods if the view isn't created.
+     * {@link BasePresenter#isViewAttached()} before calling any method of the view.
+     * It's not safe to call methods if the view isn't created and you should not call methods
+     * if the view is not attached.
      *
      * @return Attached view
      */
@@ -80,18 +81,29 @@ public class BasePresenter<T> {
     }
 
     /**
-     * Runs the {@link Consumer<T>} if the view is attached to the presenter.
-     * If no view is attached, the expression will not run.
+     * Runs the {@link Consumer<T>} if the view is attached to the presenter and created.
+     * If the view is not created, the expression will not run.
      * The consumer receives the view instance as argument.
      *
-     * @param method Expression to run if the view is attached.
+     * @param method Expression to run if the view is created.
      */
     protected void runIfViewCreated(Consumer<T> method) {
-        if (isViewCreated()) method.accept(mViewInstance);
+        if (isViewCreated()) {
+            method.accept(mViewInstance);
+        }
     }
 
+    /**
+     * Runs the {@link {@link Runnable}} if the view is attached to the presenter and created.
+     * If the view is not created, the expression will not run.
+     * The runnable will not run in another thread.
+     *
+     * @param method Expression to run if the view is created.
+     */
     protected void runIfViewCreated(Runnable method) {
-        if (isViewCreated()) method.run();
+        if (isViewCreated()) {
+            method.run();
+        }
     }
 
 }
