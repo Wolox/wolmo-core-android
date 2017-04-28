@@ -25,13 +25,23 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
-
+/**
+ * This class is a implementation of Retrofit's {@link Callback}.
+ * It helps to differentiate and handle call errors, request errors and handle authentication errors.
+ * Only one method will be invoked in response to a given request.
+ * <p>
+ * All the callback methods are executed using an executor.
+ *
+ * @param <T> Successful response body type
+ */
 public abstract class WoloxCallback<T> implements Callback<T> {
 
     /**
-     * WoloxCallback's implementation of Retrofit's onResponse() callback
-     * Try using WoloxCallback's onResponseSuccessful() and onResponseFailed() in your project.
+     * WoloxCallback's implementation of Retrofit's {@link Callback#onResponse(Call, Response)}
+     * callback. Try using WoloxCallback's {@link #onResponseSuccessful(Object)} and {@link
+     * #onResponseFailed(ResponseBody, int)} in your project.
      */
     @Override
     public void onResponse(Call<T> call, Response<T> response) {
@@ -45,8 +55,8 @@ public abstract class WoloxCallback<T> implements Callback<T> {
     }
 
     /**
-     * WoloxCallback's implementation of Retrofit's onFailure() callback
-     * Try using WoloxCallback's onCallFailure() in your project.
+     * WoloxCallback's implementation of Retrofit's {@link Callback#onFailure(Call, Throwable)} callback.
+     * Try using WoloxCallback's {@link #onCallFailure(Throwable)} in your project.
      */
     @Override
     public void onFailure(Call<T> call, Throwable t) {
@@ -55,9 +65,9 @@ public abstract class WoloxCallback<T> implements Callback<T> {
 
     /**
      * Checks whether the response is an auth error or not.
-     *
-     * You should override this method and check if the response is an auth error, then return <b>true</b> if it is.
-     * By default, this method returns <b>false</b>.
+     * <p>
+     * You should override this method and check if the response is an auth error, then return
+     * <b>true</b> if it is. By default, this method returns <b>false</b>.
      *
      * @param response Retrofit response
      * @return <b>true</b> if the response is an auth error, <b>false</b> otherwise
@@ -68,7 +78,9 @@ public abstract class WoloxCallback<T> implements Callback<T> {
 
     /**
      * Handles the auth error response.
-     * This method is only called when there is an auth error. (<i>isAuthError() returns true</i>)
+     * This method is only called when there is an auth error. (If {@link #isAuthError(Response)}
+     * returns true).
+     * <p>
      * You should remove tokens and do the corresponding cleaning inside this method.
      * By default, this method does nothing.
      *
@@ -77,14 +89,16 @@ public abstract class WoloxCallback<T> implements Callback<T> {
     protected void handleAuthError(Response<T> response) {}
 
     /**
-     * Successful HTTP response
+     * Successful HTTP response.
+     *
      * @param response the API JSON response converted to a Java object.
      *                 The API response code is included in the response object.
      */
     public abstract void onResponseSuccessful(T response);
 
     /**
-     * Successful HTTP response but has an error body
+     * Successful HTTP response but has an error body.
+     *
      * @param responseBody The error body
      * @param code The error code
      */
@@ -93,6 +107,7 @@ public abstract class WoloxCallback<T> implements Callback<T> {
     /**
      * Invoked when a network or unexpected exception occurred during the HTTP request, meaning
      * that the request couldn't be executed.
+     *
      * @param t A Throwable with the cause of the call failure
      */
     public abstract void onCallFailure(Throwable t);

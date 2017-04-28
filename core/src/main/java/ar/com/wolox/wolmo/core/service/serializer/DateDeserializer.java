@@ -36,25 +36,35 @@ import org.joda.time.format.DateTimeFormatter;
 import java.lang.reflect.Type;
 
 /**
- * Transforms a date string with the format yyyy-MM-dd into a LocalDate class
+ * Transforms a date string with the format yyyy-MM-dd into a {@link LocalDate} class
  * from the JodaTime library and viceversa
  */
-public class DateDeserializer implements JsonDeserializer<LocalDate>,
-        JsonSerializer<LocalDate> {
+public class DateDeserializer implements JsonDeserializer<LocalDate>, JsonSerializer<LocalDate> {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
 
     @Override
-    public LocalDate deserialize(JsonElement element, Type arg1,
-                                 JsonDeserializationContext arg2) throws JsonParseException {
+    public LocalDate deserialize(JsonElement element, Type arg1, JsonDeserializationContext arg2)
+        throws JsonParseException {
+
         String date = element.toString();
         date = date.substring(1, date.length() - 1);
-        DateTimeFormatter dtf = DateTimeFormat.forPattern(DATE_FORMAT);
+        DateTimeFormatter dtf = DateTimeFormat.forPattern(getDateFormat());
         return dtf.parseLocalDate(date);
     }
 
     @Override
     public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
         return new JsonParser().parse(src.toString());
+    }
+
+    /**
+     * Returns the date format for the deserializer.
+     * The date format utilized is: "<b>yyyy-MM-dd</b>"
+     *
+     * @return Date format
+     */
+    protected String getDateFormat() {
+        return DATE_FORMAT;
     }
 }

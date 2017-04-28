@@ -106,8 +106,7 @@ class WoloxFragmentHandler<T extends BasePresenter> {
 
     /**
      * Method called from {@link WoloxFragment#onViewCreated(View, Bundle)}, it notifies the {@link
-     * BasePresenter} that
-     * the view was created calling {@link BasePresenter#onViewCreated()}.
+     * BasePresenter} that the view was created calling {@link BasePresenter#onViewCreated()}.
      */
     void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         if (getPresenter() != null) {
@@ -154,9 +153,9 @@ class WoloxFragmentHandler<T extends BasePresenter> {
 
     /**
      * Called from {@link WoloxFragment#setMenuVisibility(boolean)}, checks visibility of the
-     * fragment's menu
-     * and calls {@link WoloxFragment#onVisible()} or {@link WoloxFragment#onHide()} accordingly.
-     * For mor info see {@link Fragment#setMenuVisibility(boolean)}.
+     * fragment's menu and calls {@link WoloxFragment#onVisible()} or
+     * {@link WoloxFragment#onHide()} accordingly.
+     * For mor info {@see Fragment#setMenuVisibility(boolean)}.
      */
     void setMenuVisibility(boolean visible) {
         mMenuVisible = visible;
