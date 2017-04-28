@@ -20,7 +20,28 @@ WOLMO is made up of several modules, each one supporting a different role in the
 * **AUTH:** Provides utilities for accounts, login and signup features.
 * **MAPS:** Google Maps helpers classes and views.
 
-## CORE MODULE
+### Usage
+
+Import the module as alibrary in your project using Gradle:
+
+**root build.gradle**
+```groovy
+allprojects {
+  repositories {
+    ...
+    maven { url 'https://jitpack.io' }
+  }
+}
+```
+**your app module build.gradle**
+```groovy
+dependencies {
+        compile 'com.github.Wolox:wolmo-core-android:master-SNAPSHOT'
+}
+```
+Note: The above line will download the latest version of the module, if you want to run an specific version replace `master-SNAPSHOT` with `1.0.0` or any other version.
+
+## Features
 
 CORE is the base module of the framework and provides all of the must have classes and utilities. This modules defines the opinionated character of the framework and may be used by other modules to fulfill their role.
 
