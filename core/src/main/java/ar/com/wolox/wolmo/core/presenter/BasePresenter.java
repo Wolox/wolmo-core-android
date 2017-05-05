@@ -29,7 +29,7 @@ import android.support.annotation.NonNull;
  */
 public class BasePresenter<T> {
 
-    private T mViewInstance;
+    private final T mViewInstance;
     private boolean mViewCreated;
     private boolean mViewAttached;
 
@@ -79,15 +79,16 @@ public class BasePresenter<T> {
     public void detachView() {
         mViewAttached = false;
         mViewCreated = false;
-        mViewInstance = null;
     }
 
     /**
      * Method called when the view is created and it's safe for the presenter to interact with it.
+     * If the view is not attached this doesn't have any effect, because you shouldn't have a
+     * view created but not attached.
      */
     @CallSuper
     public void onViewCreated() {
-        mViewCreated = true;
+        mViewCreated = mViewAttached;
     }
 
     /**

@@ -35,6 +35,7 @@ import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.ToastUtils;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * This class is used to separate Wolox Fragments logic so that different subclasses of
@@ -50,6 +51,7 @@ class WoloxFragmentHandler<T extends BasePresenter> {
     private T mPresenter;
     private boolean mMenuVisible;
     private boolean mVisible;
+    private Unbinder mUnbinder;
 
     WoloxFragmentHandler(@NonNull IWoloxFragment<T> woloxFragment) {
         if (!(woloxFragment instanceof Fragment)) {
@@ -94,7 +96,7 @@ class WoloxFragmentHandler<T extends BasePresenter> {
         @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(mWoloxFragment.layout(), container, false);
-        ButterKnife.bind(mFragment, v);
+        mUnbinder = ButterKnife.bind(mFragment, v);
         mWoloxFragment.setUi(v);
         mWoloxFragment.init();
         mWoloxFragment.populate();
@@ -170,6 +172,7 @@ class WoloxFragmentHandler<T extends BasePresenter> {
         if (getPresenter() != null) {
             getPresenter().onViewDestroyed();
         }
+        mUnbinder.unbind();
     }
 
     /**
