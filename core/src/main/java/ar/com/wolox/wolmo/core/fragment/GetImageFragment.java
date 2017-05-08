@@ -25,6 +25,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
@@ -36,6 +37,11 @@ import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.FileUtils;
 import ar.com.wolox.wolmo.core.util.ImageUtils;
 
+/**
+ * Class to help to load images from the gallery or from the camera.
+ *
+ * @param <T> Presenter for this fragment
+ */
 public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFragment<T> {
 
     private static final String[] CAMERA_PERMISSIONS = new String[]{
@@ -52,6 +58,16 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
     private OnImageReturnCallback mImageCallback;
 
     /* Error types */
+
+    /**
+     * Error Types returned on {@link OnImageReturnCallback#error(Error)}
+     * <li>
+     *     <ul>{@link Error#USER_CANCELED}: Image selection canceled by the user.</ul>
+     *     <ul>{@link Error#ERROR_DATA}: Image URI was not returned.</ul>
+     *     <ul>{@link Error#ERROR_UNKNOWN}: Unknown error.</ul>
+     *     <ul>{@link Error#PERMISSION_DENIED}: Gallery/Camera permission denied.</ul>
+     * </li>
+     */
     protected enum Error {
         USER_CANCELED,      // Image selection canceled by the user
         ERROR_DATA,         // Image URI was no returned
@@ -59,7 +75,9 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
         PERMISSION_DENIED   // Gallery/Camera Permission denied
     }
 
-    /* Callback for image selection */
+    /**
+     * Callback for image selection
+     */
     public interface OnImageReturnCallback {
 
         /**
@@ -130,12 +148,27 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
         }
     }
 
+    /**
+     * Resource ID to show as a toast if there is an error obtaining the image from the gallery.
+     *
+     * @return Error string resource id
+     */
     @StringRes
     protected abstract int galleryErrorResId();
 
+    /**
+     * Resource ID to show as a toast if there is an error obtaining the image from the camera.
+     *
+     * @return Error string resource id
+     */
     @StringRes
     protected abstract int cameraErrorResId();
 
+    /**
+     * Filename of the image taken by the camera.
+     *
+     * @return Image filename
+     */
     @NonNull
     protected abstract String pictureTakenFilename();
 

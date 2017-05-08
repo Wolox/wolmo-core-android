@@ -22,6 +22,7 @@
 package ar.com.wolox.wolmo.core.activity;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +40,7 @@ import butterknife.ButterKnife;
 public abstract class WoloxActivity extends AppCompatActivity {
 
     @Override
+    @CallSuper
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(layout());
@@ -93,6 +95,7 @@ public abstract class WoloxActivity extends AppCompatActivity {
         // Do nothing, override if needed!
     }
 
+    // TODO We should delegate this methods to a helper
     protected void replaceFragment(int resId, Fragment f) {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -100,6 +103,7 @@ public abstract class WoloxActivity extends AppCompatActivity {
                 .commit();
     }
 
+    // TODO We should delegate this methods to a helper
     protected void replaceFragment(int resId, Fragment f, String tag) {
         getSupportFragmentManager()
                 .beginTransaction()
