@@ -21,6 +21,7 @@
  */
 package ar.com.wolox.wolmo.core.util;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,8 +39,13 @@ import android.support.v4.content.FileProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.annotation.Retention;
+
+import ar.com.wolox.wolmo.core.WoloxApplication;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
@@ -57,12 +63,14 @@ public class ImageUtils {
     /**
      * Image compression formats supported.
      */
-    public @interface ImageFormat {}
+    public @interface ImageFormat {
+    }
 
     public static final String PNG = "png";
     public static final String JPG = "jpg";
 
-    private ImageUtils() {}
+    private ImageUtils() {
+    }
 
     /**
      * Triggers an intent to go to the device's image gallery and returns an URI with the file.
@@ -82,7 +90,7 @@ public class ImageUtils {
         i.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
 
         // Ensure that there's a gallery app to handle the intent
-        if (i.resolveActivity(ContextUtils.getAppContext().getPackageManager()) != null){
+        if (i.resolveActivity(ContextUtils.getAppContext().getPackageManager()) != null) {
             fragment.startActivityForResult(i, requestCode);
         } else {
             ToastUtils.showToast(errorResId);
@@ -115,7 +123,6 @@ public class ImageUtils {
      * @param filename    Filename for the future stored image
      * @param format      Format (extension) for the future image
      * @param errorResId  Resource id of the error string
-     *
      * @return {@link Uri} of the newly stored image
      */
     @Nullable
@@ -141,7 +148,7 @@ public class ImageUtils {
 
         // Change in API 24 to get the file
         Uri photoFileUri = FileProvider.getUriForFile(fragment.getContext(),
-            fragment.getContext().getPackageName() + ".provider", photoFile);
+                fragment.getContext().getPackageName() + ".provider", photoFile);
 
         i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
@@ -158,9 +165,8 @@ public class ImageUtils {
      * @param quality   compress quality, between 0 and 100
      * @param maxHeight max height of the target image
      * @param maxWidth  max width of the target image
-     *
      * @return byte array with the formatted information of the Bitmap, if the image exceeded
-     *          boundaries, it's re scaled.
+     * boundaries, it's re scaled.
      */
     public static byte[] getImageAsByteArray(
             Bitmap bitmap,
@@ -185,9 +191,8 @@ public class ImageUtils {
      * @param quality      compress quality, between 0 and 100
      * @param maxWidth     max width of the target image
      * @param maxHeight    max height of the target image
-     *
      * @return byte array with the formatted information of the image file, if the image exceeded
-     *          boundaries, it's re scaled.
+     * boundaries, it's re scaled.
      */
     public static byte[] getImageAsByteArray(
             @NonNull Uri imageFileUri,
@@ -207,14 +212,13 @@ public class ImageUtils {
     /**
      * Get {@link byte[]} from an image {@link File}
      *
-     * @param file         target image file
-     * @param format       image compress format
-     * @param quality      compress quality, between 0 and 100
-     * @param maxWidth     max width of the target image
-     * @param maxHeight    max height of the target image
-     *
+     * @param file      target image file
+     * @param format    image compress format
+     * @param quality   compress quality, between 0 and 100
+     * @param maxWidth  max width of the target image
+     * @param maxHeight max height of the target image
      * @return byte array with the formatted information of the image file, if the image exceeded
-     *          boundaries, it's re scaled.
+     * boundaries, it's re scaled.
      */
     public static byte[] getImageAsByteArray(
             @NonNull File file,
@@ -235,7 +239,6 @@ public class ImageUtils {
      * Prevents quality from being outside 0...100 range.
      *
      * @param quality target quality
-     *
      * @return if below 0, returns 0, if above 100, return 100, else returns {@code quality} param
      */
     private static int sanitizeQuality(int quality) {
@@ -255,9 +258,8 @@ public class ImageUtils {
      * @param image     {@link Bitmap} to scale
      * @param maxWidth  max width it can occupy
      * @param maxHeight max height it can occupy
-     *
      * @return If the re-scaling was necessary, the scaled {@link Bitmap}. Else, it returns the
-     *         target one.
+     * target one.
      */
     public static Bitmap fit(@NonNull Bitmap image, int maxWidth, int maxHeight) {
         int width = image.getWidth();
@@ -272,19 +274,135 @@ public class ImageUtils {
         int finalWidth = maxWidth;
         int finalHeight = maxHeight;
         if (ratioImage > 1) {
-            finalHeight = (int) ((float)finalWidth / ratioImage);
+            finalHeight = (int) ((float) finalWidth / ratioImage);
         } else {
-            finalWidth = (int) ((float)finalHeight * ratioImage);
+            finalWidth = (int) ((float) finalHeight * ratioImage);
         }
 
         return Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
     }
 
+
+    public static Uri importBySize(@NonNull Uri imageUri,
+                                   int maxSize,
+                                   @IntRange(from = 0, to = 100) int quality) {
+
+        Context context = WoloxApplication.getInstance();
+
+        //Decode bounds of Image
+        BitmapFactory.Options options = decodeBounds(imageUri, context);
+
+        if (options == null) {
+            return imageUri;
+        }
+        int imageWidth = options.outWidth;
+        int imageHeight = options.outHeight;
+        int imageSize = imageWidth * imageHeight;
+
+        // Calculate image width and size to scale down
+        if (maxSize >= imageSize) {
+            return imageUri;
+        }
+
+        options.inSampleSize = calculateInSampleSize(maxSize, imageWidth, imageHeight);
+        options.inJustDecodeBounds = false;
+
+        //Load bitmap with estimated size by inSampleSize
+        Bitmap bitmap;
+        try {
+            InputStream input = context.getContentResolver()
+                    .openInputStream(imageUri);
+            bitmap = BitmapFactory.decodeStream(input, null, options);
+            if (input != null) {
+                input.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return imageUri;
+        }
+
+        //Scale down to the real calculated size
+        Bitmap scaledBitmap = fit(bitmap, imageWidth, imageHeight);
+
+        //Check Image rotation
+        scaledBitmap = rotate(scaledBitmap, getSourceExifOrientation(imageUri));
+
+        //Save reduced image in cache
+        File reducedImageFile = null;
+        OutputStream os;
+        try {
+            reducedImageFile = File.createTempFile("reduced-image", ".jpg", context.getCacheDir());
+            os = new FileOutputStream(reducedImageFile);
+            if (scaledBitmap != null) {
+                scaledBitmap.compress(Bitmap.CompressFormat.JPEG, quality, os);
+            }
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return imageUri;
+        } finally {
+            bitmap.recycle();
+            if (scaledBitmap != null) {
+                scaledBitmap.recycle();
+            }
+        }
+        return Uri.fromFile(reducedImageFile);
+    }
+
+    private static BitmapFactory.Options decodeBounds(@NonNull Uri imageUri, Context context) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        try {
+            InputStream input = context.getContentResolver()
+                    .openInputStream(imageUri);
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(input, null, options);
+            if (input != null) {
+                input.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return options;
+    }
+
+    public static int calculateInSampleSize(int maxSize, int imageWidth, int imageHeight) {
+
+        int imageEstimatedSize = imageWidth * imageHeight;
+        float reduceRatio = (float) Math.sqrt(maxSize / (double) imageEstimatedSize);
+
+        int reqHeight;
+        int reqWidth;
+
+        if (imageHeight > imageWidth) {
+            reqHeight = (int) (imageHeight * reduceRatio);
+            reqWidth = (int) ((float) imageEstimatedSize / imageHeight);
+        } else {
+            reqWidth = (int) (imageWidth * reduceRatio);
+            reqHeight = (int) ((float) imageEstimatedSize / imageWidth);
+        }
+
+        int inSampleSize = 1;
+
+        if (imageHeight > reqHeight || imageWidth > reqWidth) {
+
+            final int halfHeight = imageHeight / 2;
+            final int halfWidth = imageWidth / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
+    }
+
     /**
      * Get {@link ExifInterface} Exif rotation of the source
      *
-     * @param sourceUri     {@link Uri} of the source.
-     *
+     * @param sourceUri {@link Uri} of the source.
      * @return The Exif rotation {@link ExifInterface}.
      */
     public static int getSourceExifOrientation(Uri sourceUri) {
@@ -301,9 +419,8 @@ public class ImageUtils {
     /**
      * Rotate the image, represented as a {@link Bitmap}, to the given orientation
      *
-     * @param bitmap     {@link Bitmap} to rotate.
-     * @param orientation  new orientation based on {@link ExifInterface} ORIENTATION.
-     *
+     * @param bitmap      {@link Bitmap} to rotate.
+     * @param orientation new orientation based on {@link ExifInterface} ORIENTATION.
      * @return The rotated {@link Bitmap}.
      */
     public static Bitmap rotate(Bitmap bitmap, int orientation) {
