@@ -42,21 +42,20 @@ import android.view.WindowManager;
 
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-
 import butterknife.ButterKnife;
 
 /**
- * Base implementation for {@link IWoloxFragment} for dialog fragments. This is in charge of
+ * Base implementation for {@link IWolmoFragment} for dialog fragments. This is in charge of
  * inflating the view returned by {@link #layout()} and calls {@link ButterKnife} to bind members.
  * The presenter is created on {@link #onCreate(Bundle)} if {@link #handleArguments(Bundle)} returns
  * true. This class defines default implementations for most of the methods on {@link
- * IWoloxFragment}.
+ * IWolmoFragment}.
  *
  * @param <T> Presenter for this fragment. It should extend {@link BasePresenter}
  */
-public abstract class WoloxDialogFragment<T extends BasePresenter> extends DialogFragment
-    implements IWoloxFragment<T> {
-    private WoloxFragmentHandler<T> mFragmentHandler;
+public abstract class WolmoDialogFragment<T extends BasePresenter> extends DialogFragment
+        implements IWolmoFragment<T> {
+    private WolmoFragmentHandler<T> mFragmentHandler;
 
     @NonNull
     @Override
@@ -72,7 +71,7 @@ public abstract class WoloxDialogFragment<T extends BasePresenter> extends Dialo
         super.onStart();
         if (getDialog() != null) {
             getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
+                    ViewGroup.LayoutParams.MATCH_PARENT);
             Drawable backgroundDrawable = new ColorDrawable(Color.argb(1, 255, 0, 0));
             getDialog().getWindow().setBackgroundDrawable(backgroundDrawable);
             setOnBackPressedListener();
@@ -102,13 +101,13 @@ public abstract class WoloxDialogFragment<T extends BasePresenter> extends Dialo
     @CallSuper
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFragmentHandler = new WoloxFragmentHandler<T>(this);
+        mFragmentHandler = new WolmoFragmentHandler<T>(this);
     }
 
     @Override
     @CallSuper
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-        Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         return mFragmentHandler.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -140,22 +139,55 @@ public abstract class WoloxDialogFragment<T extends BasePresenter> extends Dialo
         super.onDestroyView();
     }
 
+    /**
+     * Reads arguments sent as a Bundle extras.
+     *
+     * @param arguments The bundle obtainable by the getExtras method of the intent.
+     * @return true if arguments were read successfully, false otherwise.
+     * Default implementation returns true.
+     */
     public boolean handleArguments(Bundle arguments) {
         return true;
     }
 
-    public void setUi(View v) {}
+    /**
+     * Associates variables to views inflated from the XML resource
+     * provided in {@link IWolmoFragment#layout()}
+     * Override if needed. If using {@link ButterKnife}, there is no need to use this method.
+     */
+    public void setUi(View v) {
+    }
 
-    public void setListeners() {}
+    /**
+     * Sets the listeners for the views of the fragment.
+     * Override if needed.
+     */
+    public void setListeners() {
+    }
 
+    /**
+     * Callback called when the fragment becomes visible to the user.
+     * Override if needed.
+     */
     @Override
-    public void onVisible() {}
+    public void onVisible() {
+    }
 
+    /**
+     * Callback called when the fragment becomes hidden to the user.
+     * Override if needed.
+     */
     @Override
-    public void onHide() {}
+    public void onHide() {
+    }
 
+    /**
+     * Populates the view elements of the fragment.
+     * Override if needed.
+     */
     @Override
-    public void populate() {}
+    public void populate() {
+    }
 
     /**
      * Returns the instance of the presenter for this fragment.
@@ -167,7 +199,7 @@ public abstract class WoloxDialogFragment<T extends BasePresenter> extends Dialo
     }
 
     /**
-     * Shows the {@link WoloxDialogFragment} using the fragment.
+     * Shows the {@link WolmoDialogFragment} using the fragment.
      *
      * @param manager Fragment Manager to show the dialog fragment
      */
@@ -176,7 +208,7 @@ public abstract class WoloxDialogFragment<T extends BasePresenter> extends Dialo
     }
 
     /**
-     * @see IWoloxFragment#onBackPressed()
+     * @see IWolmoFragment#onBackPressed()
      * <p>
      * Beware, when overriding, that returning 'true' will prevent default navigation behaviour such
      * as {@link Dialog#dismiss()}.
@@ -187,10 +219,11 @@ public abstract class WoloxDialogFragment<T extends BasePresenter> extends Dialo
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-        @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionManager.getInstance()
-            .onRequestPermissionsResult(requestCode, permissions, grantResults);
+                .onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

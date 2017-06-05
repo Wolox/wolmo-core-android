@@ -25,7 +25,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
@@ -42,7 +41,7 @@ import ar.com.wolox.wolmo.core.util.ImageUtils;
  *
  * @param <T> Presenter for this fragment
  */
-public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFragment<T> {
+public abstract class GetImageFragment<T extends BasePresenter> extends WolmoFragment<T> {
 
     private static final String[] CAMERA_PERMISSIONS = new String[]{
             Manifest.permission.CAMERA,
@@ -62,10 +61,10 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
     /**
      * Error Types returned on {@link OnImageReturnCallback#error(Error)}
      * <li>
-     *     <ul>{@link Error#USER_CANCELED}: Image selection canceled by the user.</ul>
-     *     <ul>{@link Error#ERROR_DATA}: Image URI was not returned.</ul>
-     *     <ul>{@link Error#ERROR_UNKNOWN}: Unknown error.</ul>
-     *     <ul>{@link Error#PERMISSION_DENIED}: Gallery/Camera permission denied.</ul>
+     * <ul>{@link Error#USER_CANCELED}: Image selection canceled by the user.</ul>
+     * <ul>{@link Error#ERROR_DATA}: Image URI was not returned.</ul>
+     * <ul>{@link Error#ERROR_UNKNOWN}: Unknown error.</ul>
+     * <ul>{@link Error#PERMISSION_DENIED}: Gallery/Camera permission denied.</ul>
      * </li>
      */
     protected enum Error {
@@ -90,7 +89,7 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
         void success(@NonNull File file);
 
         /**
-         * Method for when the image retrieval was a failure, exposing the correponding
+         * Method for when the image retrieval was a failure, exposing the corresponding
          * {@link Error} instance.
          *
          * @param error describing the failure reason
@@ -179,7 +178,7 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
      */
     protected void selectImageFromGallery(
             @NonNull final OnImageReturnCallback onImageReturnCallback) {
-        PermissionManager.getInstance().requirePermission(
+        PermissionManager.getInstance().requestPermission(
                 this,
                 new PermissionListener() {
                     @Override
@@ -193,7 +192,7 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
                     }
 
                     @Override
-                    public void onPermissionsDenied(String[] deniedPermissions) {
+                    public void onPermissionsDenied(@NonNull String[] deniedPermissions) {
                         onImageReturnCallback.error(Error.PERMISSION_DENIED);
                     }
                 },
@@ -206,7 +205,7 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
      * @param onImageReturnCallback callback for request result
      */
     protected void takePicture(@NonNull final OnImageReturnCallback onImageReturnCallback) {
-        PermissionManager.getInstance().requirePermission(
+        PermissionManager.getInstance().requestPermission(
                 this,
                 new PermissionListener() {
                     @Override
@@ -223,7 +222,7 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WoloxFra
                     }
 
                     @Override
-                    public void onPermissionsDenied(String[] deniedPermissions) {
+                    public void onPermissionsDenied(@NonNull String[] deniedPermissions) {
                         onImageReturnCallback.error(Error.PERMISSION_DENIED);
                     }
                 },

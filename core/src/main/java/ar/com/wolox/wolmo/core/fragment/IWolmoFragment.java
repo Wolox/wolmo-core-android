@@ -22,24 +22,37 @@
 package ar.com.wolox.wolmo.core.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 
-public interface IWoloxFragment<T extends BasePresenter> {
+/**
+ * This interface defines a set of methods that compose the lifecycle of Wolmo's fragments
+ *
+ * @param <T> an MVP Presenter, the class implementing this interface will act as an MVP View
+ */
+public interface IWolmoFragment<T extends BasePresenter> {
 
     /**
-     * Returns the layout id for the inflater so the view can be populated
+     * This method provides a way for populating the view with a layout defined in an XML resource.
+     * <p>
+     * Example:
+     * protected abstract int layout() {
+     * return R.layout.my_layout_for_this_activity;
+     * }
+     *
+     * @return The ID of the layout defined in an XML that will be used for populating the view.
      */
+    @LayoutRes
     int layout();
 
     /**
-     * Reads arguments sent as a Bundle and saves them as appropriate.
-     * <b>NOTE: </b>Returning <i>false</i> will end the execution of the activity.
+     * Reads arguments sent as a Bundle extras.
+     * <b>NOTE: </b>Returning <i>false</i> will end the execution of the fragment.
      *
      * @param args The bundle obtainable by the {@link Fragment#getArguments()} method.
-     *
      * @return <b>true</b> if this fragment contains the required values, <b>false</b> otherwise.
      * Default implementation returns true.
      */

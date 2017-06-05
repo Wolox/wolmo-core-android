@@ -6,10 +6,9 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion 11
         targetSdkVersion 25
-        consumerProguardFiles 'proguard-joda-time.pro', 'proguard-retrofit.pro',
-                'proguard-butterknife.pro', 'proguard-okhttp.pro'
+        consumerProguardFiles 'proguard-joda-time.pro', 'proguard-butterknife.pro'
     }
 }
 

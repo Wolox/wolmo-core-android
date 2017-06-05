@@ -22,11 +22,23 @@
 package ar.com.wolox.wolmo.core.util;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
-import ar.com.wolox.wolmo.core.WoloxApplication;
+import ar.com.wolox.wolmo.core.WolmoApplication;
 
+/**
+ * An utility class to work with Android's {@link Context}
+ */
 public class ContextUtils {
+
+    /**
+     * Returns a singleton {@link Context} from the running application
+     *
+     * @return a singleton instance of {@link Context} that can be used for almost everything
+     */
+    @NonNull
     public static Context getAppContext() {
-        return WoloxApplication.getInstance().getApplicationContext();
+        return WolmoApplication.getInstance().getApplicationContext();
     }
+
 }

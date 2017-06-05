@@ -19,14 +19,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.service.provider;
 
-import java.util.List;
+package ar.com.wolox.wolmo.core;
 
-import retrofit2.Callback;
+import android.app.Application;
+import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 
-public interface Provider<T> {
+/**
+ * An extension of Android's native {@link Application} class that is intended to be used as
+ * a Singleton
+ */
+public abstract class WolmoApplication extends Application {
 
-    void provide(int currentPage, int itemsPerPage, Callback<List<T>> callback);
+    private static WolmoApplication sApplication;
 
+    @Override
+    @CallSuper
+    public void onCreate() {
+        super.onCreate();
+        sApplication = this; // Singleton instance
+        onInit();
+    }
+
+    /**
+     * Provides an entry point that gets executed after the {@link Application} has been created.
+     * Useful to initialize libraries and other dependencies.
+     */
+    public abstract void onInit();
+
+
+    /**
+     * Gets the singleton instance of the class
+     *
+     * @return A singleton instance of {@link WolmoApplication}
+     */
+    @NonNull
+    public static WolmoApplication getInstance() {
+        return sApplication;
+    }
 }
