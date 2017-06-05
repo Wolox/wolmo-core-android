@@ -39,7 +39,7 @@ dependencies {
         compile 'com.github.Wolox:wolmo-core-android:master-SNAPSHOT'
 }
 ```
-Note: The above line will download the latest version of the module, if you want to run an specific version replace `master-SNAPSHOT` with `1.0.0` or any other version.
+Note: The above line will download the latest version of the module, if you want to run an specific version replace `master-SNAPSHOT` with `1.0.0` or any other version. Avaiable versions can be found here: [Github releases](https://github.com/Wolox/wolmo-core-android/releases)
 
 ## Features
 
@@ -50,7 +50,6 @@ CORE is the base module of the framework and provides all of the must have class
 These features can be found in CORE:
 
 * MVP-ready activities and fragments
-* Network (Retrofit) utilities
 * Files helpers
 * Camera and image helpers
 
