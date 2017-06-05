@@ -36,19 +36,18 @@ import java.io.IOException;
  */
 public class FileUtils {
 
-    private FileUtils() {}
+    private FileUtils() {
+    }
 
     /**
      * Creates a file in the external public directory to store data.
-     *
+     * <p>
      * The file ends up being stored as:
-     *  filename + "." + extension
+     * filename + "." + extension
      *
-     * @param filename File name, used as described above
+     * @param filename  File name, used as described above
      * @param extension ImageFormat of the file, used as described above
-     *
      * @return {@link File} result of the creation
-     *
      * @throws IOException If a file could not be created
      */
     public static File createFile(
@@ -67,7 +66,6 @@ public class FileUtils {
      * Get the physical path to a stored File by providing a URI of a content provider.
      *
      * @param fileUri A URI of a content provider pointing to an image resource
-     *
      * @return A path to the real file location, or null if it can't find it
      */
     @Nullable

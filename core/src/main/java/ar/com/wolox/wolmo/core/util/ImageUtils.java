@@ -55,12 +55,14 @@ public class ImageUtils {
     /**
      * Image compression formats supported.
      */
-    public @interface ImageFormat {}
+    public @interface ImageFormat {
+    }
 
     public static final String PNG = "png";
     public static final String JPG = "jpg";
 
-    private ImageUtils() {}
+    private ImageUtils() {
+    }
 
     /**
      * Triggers an intent to go to the device's image gallery and returns an URI with the file.
@@ -80,10 +82,10 @@ public class ImageUtils {
         i.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
 
         // Ensure that there's a gallery app to handle the intent
-        if (i.resolveActivity(ContextUtils.getAppContext().getPackageManager()) != null){
+        if (i.resolveActivity(ContextUtils.getAppContext().getPackageManager()) != null) {
             fragment.startActivityForResult(i, requestCode);
         } else {
-            ToastUtils.showToast(errorResId);
+            ToastUtils.show(errorResId);
         }
     }
 
@@ -113,7 +115,6 @@ public class ImageUtils {
      * @param filename    Filename for the future stored image
      * @param format      Format (extension) for the future image
      * @param errorResId  Resource id of the error string
-     *
      * @return {@link Uri} of the newly stored image
      */
     @Nullable
@@ -125,7 +126,7 @@ public class ImageUtils {
 
         // Ensure that there's a camera app to handle the intent
         if (i.resolveActivity(ContextUtils.getAppContext().getPackageManager()) == null) {
-            ToastUtils.showToast(errorResId);
+            ToastUtils.show(errorResId);
             return null;
         }
 
@@ -133,13 +134,13 @@ public class ImageUtils {
         try {
             photoFile = FileUtils.createFile(filename, format);
         } catch (IOException ex) {
-            ToastUtils.showToast(errorResId);
+            ToastUtils.show(errorResId);
             return null;
         }
 
         // Change in API 24 to get the file
         Uri photoFileUri = FileProvider.getUriForFile(fragment.getContext(),
-            fragment.getContext().getPackageName() + ".provider", photoFile);
+                fragment.getContext().getPackageName() + ".provider", photoFile);
 
         i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
@@ -156,9 +157,8 @@ public class ImageUtils {
      * @param quality   compress quality, between 0 and 100
      * @param maxHeight max height of the target image
      * @param maxWidth  max width of the target image
-     *
      * @return byte array with the formatted information of the Bitmap, if the image exceeded
-     *          boundaries, it's re scaled.
+     * boundaries, it's re scaled.
      */
     public static byte[] getImageAsByteArray(
             Bitmap bitmap,
@@ -183,9 +183,8 @@ public class ImageUtils {
      * @param quality      compress quality, between 0 and 100
      * @param maxWidth     max width of the target image
      * @param maxHeight    max height of the target image
-     *
      * @return byte array with the formatted information of the image file, if the image exceeded
-     *          boundaries, it's re scaled.
+     * boundaries, it's re scaled.
      */
     public static byte[] getImageAsByteArray(
             @NonNull Uri imageFileUri,
@@ -205,14 +204,13 @@ public class ImageUtils {
     /**
      * Get {@link byte[]} from an image {@link File}
      *
-     * @param file         target image file
-     * @param format       image compress format
-     * @param quality      compress quality, between 0 and 100
-     * @param maxWidth     max width of the target image
-     * @param maxHeight    max height of the target image
-     *
+     * @param file      target image file
+     * @param format    image compress format
+     * @param quality   compress quality, between 0 and 100
+     * @param maxWidth  max width of the target image
+     * @param maxHeight max height of the target image
      * @return byte array with the formatted information of the image file, if the image exceeded
-     *          boundaries, it's re scaled.
+     * boundaries, it's re scaled.
      */
     public static byte[] getImageAsByteArray(
             @NonNull File file,
@@ -233,7 +231,6 @@ public class ImageUtils {
      * Prevents quality from being outside 0...100 range.
      *
      * @param quality target quality
-     *
      * @return if below 0, returns 0, if above 100, return 100, else returns {@code quality} param
      */
     private static int sanitizeQuality(int quality) {
@@ -253,9 +250,8 @@ public class ImageUtils {
      * @param image     {@link Bitmap} to scale
      * @param maxWidth  max width it can occupy
      * @param maxHeight max height it can occupy
-     *
      * @return If the re-scaling was necessary, the scaled {@link Bitmap}. Else, it returns the
-     *         target one.
+     * target one.
      */
     public static Bitmap fit(@NonNull Bitmap image, int maxWidth, int maxHeight) {
         int width = image.getWidth();
@@ -270,9 +266,9 @@ public class ImageUtils {
         int finalWidth = maxWidth;
         int finalHeight = maxHeight;
         if (ratioImage > 1) {
-            finalHeight = (int) ((float)finalWidth / ratioImage);
+            finalHeight = (int) ((float) finalWidth / ratioImage);
         } else {
-            finalWidth = (int) ((float)finalHeight * ratioImage);
+            finalWidth = (int) ((float) finalHeight * ratioImage);
         }
 
         return Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);

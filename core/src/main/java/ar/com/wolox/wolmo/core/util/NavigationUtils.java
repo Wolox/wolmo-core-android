@@ -25,9 +25,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
+import android.text.TextUtils;
 import android.view.View;
 
 import java.io.Serializable;
@@ -35,62 +38,140 @@ import java.util.ArrayList;
 
 public class NavigationUtils {
 
-    public static void openBrowser(Context context, String url) {
+    private static final String BLANK_PAGE = "about:blank";
+
+    /**
+     * Opens the browser with a given URL.
+     *
+     * @param context An instance of {@link Context}. Can't be null.
+     * @param url     The URL that the browser should open. If the URL is null or empty,
+     *                the browser will be opened with a blank page.
+     */
+    public static void openBrowser(@NonNull Context context, @Nullable String url) {
+        if (TextUtils.isEmpty(url)) url = BLANK_PAGE;
+
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         context.startActivity(browserIntent);
     }
 
-    public static void jumpTo(Context a, Class clazz, String reference, long id) {
-        Intent userIntent = new Intent(a, clazz);
-        userIntent.putExtra(reference, id);
-        a.startActivity(userIntent);
+    /**
+     * Sends an intent to start an {@link Activity} for the provided {@link Class}
+     *
+     * @param context An instance of {@link Context}. Can't be null.
+     * @param clazz   The {@link Class} of the {@link Activity} that will be opened. Can't be null.
+     */
+    public static void jumpTo(@NonNull Context context, @NonNull Class clazz) {
+        context.startActivity(new Intent(context, clazz));
     }
 
-    public static void jumpTo(Context a, Class clazz, String reference, int id) {
-        Intent userIntent = new Intent(a, clazz);
-        userIntent.putExtra(reference, id);
-        a.startActivity(userIntent);
-    }
-
-    public static void jumpTo(Context a, Class clazz, String reference, String id) {
-        Intent userIntent = new Intent(a, clazz);
-        userIntent.putExtra(reference, id);
-        a.startActivity(userIntent);
-    }
-
-    public static void jumpTo(Context context, Class clazz, IntentObject... intentObjects) {
+    /**
+     * Sends an intent to start an {@link Activity} for the provided {@link Class}
+     *
+     * @param context      An instance of {@link Context}. Can't be null.
+     * @param clazz        The {@link Class} of the {@link Activity} that will be opened.
+     *                     Can't be null.
+     * @param intentExtras Variable number of instances of {@link IntentExtra} that will be sent
+     *                     as extras to the started {@link Activity}
+     */
+    public static void jumpTo(@NonNull Context context,
+                              @NonNull Class clazz,
+                              @NonNull IntentExtra... intentExtras) {
         Intent intent = new Intent(context, clazz);
-        for (IntentObject intentObject : intentObjects) {
-            intent.putExtra(intentObject.reference, intentObject.object);
+        for (IntentExtra intentExtra : intentExtras) {
+            intent.putExtra(intentExtra.reference, intentExtra.object);
         }
         context.startActivity(intent);
     }
 
-    public static void jumpToClearingTask(Context context, Class clazz,
-                                          IntentObject... intentObjects) {
+    /**
+     * Sends an intent to start an {@link Activity} for the provided {@link Class} but clearing
+     * the current task and starting a new one.
+     *
+     * @param context An instance of {@link Context}. Can't be null.
+     * @param clazz   The {@link Class} of the {@link Activity} that will be opened. Can't be null.
+     */
+    public static void jumpToClearingTask(@NonNull Context context, @NonNull Class clazz) {
         Intent intent = new Intent(context, clazz);
-        for (IntentObject intentObject : intentObjects) {
-            intent.putExtra(intentObject.reference, intentObject.object);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
+    }
+
+    /**
+     * Sends an intent to start an {@link Activity} for the provided {@link Class} but clearing
+     * the current task and starting a new one.
+     *
+     * @param context      An instance of {@link Context}. Can't be null.
+     * @param clazz        The {@link Class} of the {@link Activity} that will be opened.
+     *                     Can't be null.
+     * @param intentExtras Variable number of instances of {@link IntentExtra} that will be sent
+     *                     as extras to the started {@link Activity}
+     */
+    public static void jumpToClearingTask(@NonNull Context context,
+                                          @NonNull Class clazz,
+                                          @NonNull IntentExtra... intentExtras) {
+        Intent intent = new Intent(context, clazz);
+        for (IntentExtra intentExtra : intentExtras) {
+            intent.putExtra(intentExtra.reference, intentExtra.object);
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
     }
 
-    public static void jumpToWithAnimation(Activity activity,
-                                           Class clazz,
-                                           ActivityOptionsCompat transitionActivityOptions,
-                                           IntentObject... intentObjects) {
-        Intent intent = new Intent(activity, clazz);
-        for (IntentObject intentObject : intentObjects) {
-            intent.putExtra(intentObject.reference, intentObject.object);
-        }
-        ActivityCompat.startActivity(activity, intent, transitionActivityOptions.toBundle());
+    /**
+     * Sends an intent to start an {@link Activity} for the provided {@link Class} with an
+     * animation defined by {@link ActivityOptionsCompat}
+     *
+     * @param activity   The {@link Activity} where the intent will be sent from.
+     *                   Can't be null.
+     * @param clazz      The {@link Class} of the {@link Activity} that will
+     *                   be opened. Can't be null.
+     * @param transition An instance of {@link ActivityOptionsCompat} that defines
+     *                   the animation behaviour.
+     */
+    public static void jumpToWithAnimation(@NonNull Activity activity,
+                                           @NonNull Class clazz,
+                                           @NonNull ActivityOptionsCompat transition) {
+        ActivityCompat.startActivity(activity, new Intent(activity, clazz), transition.toBundle());
     }
 
+    /**
+     * Sends an intent to start an {@link Activity} for the provided {@link Class} with an
+     * animation defined by {@link ActivityOptionsCompat}
+     *
+     * @param activity     The {@link Activity} where the intent will be sent from.
+     *                     Can't be null.
+     * @param clazz        The {@link Class} of the {@link Activity} that will
+     *                     be opened. Can't be null.
+     * @param transition   An instance of {@link ActivityOptionsCompat} that defines
+     *                     the animation behaviour.
+     * @param intentExtras Variable number of instances of {@link IntentExtra} that
+     *                     will be sent as extras to the started {@link Activity}
+     */
+    public static void jumpToWithAnimation(@NonNull Activity activity,
+                                           @NonNull Class clazz,
+                                           @NonNull ActivityOptionsCompat transition,
+                                           @NonNull IntentExtra... intentExtras) {
+        Intent intent = new Intent(activity, clazz);
+        for (IntentExtra intentExtra : intentExtras) {
+            intent.putExtra(intentExtra.reference, intentExtra.object);
+        }
+        ActivityCompat.startActivity(activity, intent, transition.toBundle());
+    }
+
+    /**
+     * Returns an instance of {@link ActivityOptionsCompat} constructed from an instance of the
+     * {@link Activity} where the intent will be send and a number of pairs of {@link View} and
+     * {@link String} representing the shared view in the transition.
+     *
+     * @param activity The {@link Activity} where the intent is being started.
+     * @param pairs    Paris of {@link View} and {@link String} with the shared elements.
+     * @return A non null instance of @{@link ActivityOptionsCompat}
+     */
+    @SafeVarargs
+    @NonNull
     public static ActivityOptionsCompat buildActivityOptions(
-            Activity activity, Pair<View, String>... pairs) {
-        return ActivityOptionsCompat
-                .makeSceneTransitionAnimation(activity, pairs);
+            @NonNull Activity activity, @NonNull Pair<View, String>... pairs) {
+        return ActivityOptionsCompat.makeSceneTransitionAnimation(activity, pairs);
     }
 
     public static class Builder {
@@ -98,57 +179,68 @@ public class NavigationUtils {
         private Activity activity;
         private Class clazz;
         private ArrayList<Pair<View, String>> sharedElements;
-        private ArrayList<IntentObject> intentObjects;
+        private ArrayList<IntentExtra> mIntentExtras;
 
-        public Builder(Activity activity) {
+        public Builder(@NonNull Activity activity) {
             this.activity = activity;
             sharedElements = new ArrayList<>();
-            intentObjects = new ArrayList<>();
+            mIntentExtras = new ArrayList<>();
         }
 
-        public Builder setClass(Class clazz) {
+        public Builder setClass(@NonNull Class clazz) {
             this.clazz = clazz;
             return this;
         }
 
-        public Builder addSharedElement(View sharedView, String sharedString) {
+        public Builder addSharedElement(@NonNull View sharedView, @NonNull String sharedString) {
             sharedElements.add(new Pair<View, String>(sharedView, sharedString));
             return this;
         }
 
-        public Builder addIntentObjects(IntentObject... intentObjects) {
-            for (IntentObject intentObject : intentObjects) addIntentObject(intentObject);
+        public Builder addIntentObjects(@NonNull IntentExtra... intentExtras) {
+            for (IntentExtra intentExtra : intentExtras) {
+                addIntentObject(intentExtra);
+            }
             return this;
         }
 
-        public Builder addIntentObject(IntentObject intentObject) {
-            this.intentObjects.add(intentObject);
+        public Builder addIntentObject(@NonNull IntentExtra intentExtra) {
+            this.mIntentExtras.add(intentExtra);
             return this;
         }
 
-        public Builder addExtra(String reference, Serializable object) {
-            addIntentObject(new IntentObject(reference, object));
+        public Builder addExtra(@NonNull String reference, @NonNull Serializable object) {
+            addIntentObject(new IntentExtra(reference, object));
             return this;
         }
 
         public void jump() {
             if (sharedElements.isEmpty()) {
                 jumpTo(activity, clazz,
-                        intentObjects.toArray(new IntentObject[intentObjects.size()]));
+                        mIntentExtras.toArray(new IntentExtra[mIntentExtras.size()]));
             } else {
                 jumpToWithAnimation(activity, clazz, buildActivityOptions(activity,
                         sharedElements.toArray(new Pair[sharedElements.size()])),
-                        intentObjects.toArray(new IntentObject[intentObjects.size()]));
+                        mIntentExtras.toArray(new IntentExtra[mIntentExtras.size()]));
             }
 
         }
     }
 
-    public static class IntentObject {
+    /**
+     * An utility class to pair {@link Intent} extras with their corresponding references.
+     */
+    public static class IntentExtra {
         private String reference;
         private Serializable object;
 
-        public IntentObject(String reference, Serializable object) {
+        /**
+         * Constructor that binds an {@link Intent} extra with its corresponding reference.
+         *
+         * @param reference A reference for an {@link Intent} extra. Can't be null.
+         * @param object    An instance of an {@link Intent} extra. Can't be null.
+         */
+        public IntentExtra(@NonNull String reference, @NonNull Serializable object) {
             this.reference = reference;
             this.object = object;
         }

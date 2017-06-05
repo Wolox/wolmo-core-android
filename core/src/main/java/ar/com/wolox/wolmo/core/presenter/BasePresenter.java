@@ -136,6 +136,7 @@ public class BasePresenter<T> {
 
         /**
          * Accept the argument
+         *
          * @param param argument
          */
         void accept(T param);

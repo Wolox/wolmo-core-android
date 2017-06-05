@@ -23,6 +23,7 @@ package ar.com.wolox.wolmo.core.activity;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -31,14 +32,23 @@ import android.view.MenuItem;
 import java.util.List;
 
 import ar.com.wolox.wolmo.core.R;
-import ar.com.wolox.wolmo.core.fragment.IWoloxFragment;
+import ar.com.wolox.wolmo.core.fragment.IWolmoFragment;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.util.ToastUtils;
-
 import butterknife.ButterKnife;
 
-public abstract class WoloxActivity extends AppCompatActivity {
+/**
+ * A base {@link AppCompatActivity} that implements Wolmo's custom lifecycle.
+ */
+public abstract class WolmoActivity extends AppCompatActivity {
 
+    /**
+     * Handles the custom lifecycle of Wolmo's Activity. It provides a set of callbacks to structure
+     * the different aspects of the Activities initialization.
+     * Also, it provides initialization for Butterknife.
+     *
+     * @param savedInstanceState a {@link Bundle} provided by Android's lifecycle.
+     */
     @Override
     @CallSuper
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +61,22 @@ public abstract class WoloxActivity extends AppCompatActivity {
             populate();
             setListeners();
         } else {
-            ToastUtils.showToast(R.string.unknown_error);
+            ToastUtils.show(R.string.unknown_error);
             finish();
         }
     }
 
+    /**
+     * This method provides a way for populating the view with a layout defined in an XML resource.
+     * <p>
+     * Example:
+     * protected abstract int layout() {
+     * return R.layout.my_layout_for_this_activity;
+     * }
+     *
+     * @return The ID of the layout defined in an XML that will be used for populating the view.
+     */
+    @LayoutRes
     protected abstract int layout();
 
     /**
@@ -70,31 +91,44 @@ public abstract class WoloxActivity extends AppCompatActivity {
     }
 
     /**
-     * Loads the view elements for the activity
+     * Associates variables to views inflated from the XML resource
+     * provided in {@link WolmoActivity#layout()}
+     * Override if needed. If using {@link ButterKnife}, there is no need to use this method.
      */
     protected void setUi() {
-        // Do nothing, ButterKnife does this for us now!
+
     }
 
     /**
-     * Initializes any variables that the activity needs
+     * Entry point for the Activity's specific code.
+     * Prefer this callback over {@link android.app.Activity#onCreate(Bundle)}.
+     * Initializes any variables or behaviour that the activity needs.
      */
     protected abstract void init();
 
     /**
-     * Populates the view elements of the activity
+     * Populates the view elements of the activity.
+     * Override if needed.
      */
     protected void populate() {
-        // Do nothing, override if needed!
+
     }
 
     /**
-     * Sets the listeners for the views of the activity
+     * Sets the listeners for the views of the activity.
+     * Override if needed.
      */
     protected void setListeners() {
-        // Do nothing, override if needed!
+
     }
 
+    /**
+     * Replaces the current {@link Fragment} in a given container layout with a new {@link Fragment}
+     *
+     * @param resId The ID of the layout that holds the current {@link Fragment}. It should be the
+     *              same container that will be used for the new {@link Fragment}
+     * @param f     An instance of a {@link Fragment} that will replace the older one.
+     */
     // TODO We should delegate this methods to a helper
     protected void replaceFragment(int resId, Fragment f) {
         getSupportFragmentManager()
@@ -103,6 +137,15 @@ public abstract class WoloxActivity extends AppCompatActivity {
                 .commit();
     }
 
+    /**
+     * Replaces the current {@link Fragment} in a given container layout with a new {@link Fragment}
+     * using a custom tag ({@link String}) that allows the fragment to be more easily located.
+     *
+     * @param resId The ID of the layout that holds the current {@link Fragment}. It should be the
+     *              same container that will be used for the new {@link Fragment}
+     * @param f     An instance of a {@link Fragment} that will replace the older one.
+     * @param tag   A {@link String} that will be used to identify the {@link Fragment}
+     */
     // TODO We should delegate this methods to a helper
     protected void replaceFragment(int resId, Fragment f, String tag) {
         getSupportFragmentManager()
@@ -121,8 +164,14 @@ public abstract class WoloxActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Delegates permission handling to Wolmo's {@link PermissionManager}.
+     */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    @CallSuper
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionManager.getInstance()
                 .onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -130,22 +179,23 @@ public abstract class WoloxActivity extends AppCompatActivity {
 
     /**
      * Custom behaviour that calls, for every child fragment that is an instance of
-     * {@link IWoloxFragment} and {@link Fragment#isVisible()}, its
-     * {@link IWoloxFragment#onBackPressed()}.
-     *
+     * {@link IWolmoFragment} and {@link Fragment#isVisible()}, its
+     * {@link IWolmoFragment#onBackPressed()}.
+     * <p>
      * If any of those returns 'true', the method returns. Else, it calls
      * {@link AppCompatActivity#onBackPressed()}.
      */
     @SuppressWarnings("RestrictedApi")
     @Override
+    @CallSuper
     public void onBackPressed() {
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
 
         // If activity has no child fragments, the list is null
         if (fragments != null) {
             for (Fragment childFragment : fragments) {
-                if (childFragment instanceof IWoloxFragment && childFragment.isVisible()) {
-                    if (((IWoloxFragment) childFragment).onBackPressed()) return;
+                if (childFragment instanceof IWolmoFragment && childFragment.isVisible()) {
+                    if (((IWolmoFragment) childFragment).onBackPressed()) return;
                 }
             }
         }

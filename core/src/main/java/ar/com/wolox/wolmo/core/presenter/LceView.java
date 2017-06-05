@@ -29,7 +29,7 @@ public interface LceView<T> extends LeView {
 
     /**
      * Show the content view.
-     *
+     * <p>
      * <b>The content view must have the id = R.id.contentView</b>
      */
     void showContent();
