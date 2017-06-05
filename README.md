@@ -1,3 +1,5 @@
+[![Build Status](https://www.bitrise.io/app/effc7a938ebd8bc5/status.svg?token=5aAalVW4BGoIUIy-xgHv3A&branch=master)](https://www.bitrise.io/app/effc7a938ebd8bc5)
+
 <p align="center">
   <img height="140px" width="400px" src="https://cloud.githubusercontent.com/assets/4109119/25450281/cac5979e-2a94-11e7-9176-8e323df5dab8.png"/>
 </p>
