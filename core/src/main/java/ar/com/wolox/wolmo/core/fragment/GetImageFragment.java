@@ -28,20 +28,22 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
-import java.io.File;
-
 import ar.com.wolox.wolmo.core.permission.PermissionListener;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.FileUtils;
 import ar.com.wolox.wolmo.core.util.ImageUtils;
 
+import java.io.File;
+
+import javax.inject.Inject;
+
 /**
  * Class to help to load images from the gallery or from the camera.
  *
  * @param <T> Presenter for this fragment
  */
-public abstract class GetImageFragment<T extends BasePresenter> extends WolmoFragment<T> {
+public abstract class GetImageFragment<T extends BasePresenter<?>> extends WolmoFragment {
 
     private static final String[] CAMERA_PERMISSIONS = new String[]{
             Manifest.permission.CAMERA,
@@ -55,6 +57,10 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WolmoFra
 
     private File mPictureTakenFile;
     private OnImageReturnCallback mImageCallback;
+
+    @Inject PermissionManager mPermissionManager;
+    @Inject ImageUtils mImageUtils;
+    @Inject FileUtils mFileUtils;
 
     /* Error types */
 
@@ -106,7 +112,7 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WolmoFra
             switch (requestCode) {
                 case INTENT_CODE_IMAGE_GALLERY:
                     if (data != null) {
-                        String pathUri = FileUtils.getRealPathFromUri(data.getData());
+                        String pathUri = mFileUtils.getRealPathFromUri(data.getData());
                         mImageCallback.success(new File(pathUri));
                     } else {
                         notifyError(Error.ERROR_DATA);
@@ -114,7 +120,7 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WolmoFra
                     break;
 
                 case INTENT_CODE_IMAGE_CAMERA:
-                    ImageUtils.addPictureToDeviceGallery(Uri.fromFile(mPictureTakenFile));
+                    mImageUtils.addPictureToDeviceGallery(Uri.fromFile(mPictureTakenFile));
                     mImageCallback.success(mPictureTakenFile);
                     break;
 
@@ -177,26 +183,21 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WolmoFra
      * @param onImageReturnCallback callback for request result
      */
     protected void selectImageFromGallery(
-            @NonNull final OnImageReturnCallback onImageReturnCallback) {
-        PermissionManager.getInstance().requestPermission(
-                this,
-                new PermissionListener() {
-                    @Override
-                    public void onPermissionsGranted() {
-                        mImageCallback = onImageReturnCallback;
+          @NonNull final OnImageReturnCallback onImageReturnCallback) {
+        mPermissionManager.requestPermission(this, new PermissionListener() {
+            @Override
+            public void onPermissionsGranted() {
+                mImageCallback = onImageReturnCallback;
 
-                        ImageUtils.getImageFromGallery(
-                                GetImageFragment.this,
-                                INTENT_CODE_IMAGE_GALLERY,
-                                galleryErrorResId());
-                    }
+                mImageUtils.getImageFromGallery(GetImageFragment.this, INTENT_CODE_IMAGE_GALLERY,
+                    galleryErrorResId());
+            }
 
-                    @Override
-                    public void onPermissionsDenied(@NonNull String[] deniedPermissions) {
-                        onImageReturnCallback.error(Error.PERMISSION_DENIED);
-                    }
-                },
-                GALLERY_PERMISSIONS);
+            @Override
+            public void onPermissionsDenied(@NonNull String[] deniedPermissions) {
+                onImageReturnCallback.error(Error.PERMISSION_DENIED);
+            }
+        }, GALLERY_PERMISSIONS);
     }
 
     /**
@@ -205,7 +206,7 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WolmoFra
      * @param onImageReturnCallback callback for request result
      */
     protected void takePicture(@NonNull final OnImageReturnCallback onImageReturnCallback) {
-        PermissionManager.getInstance().requestPermission(
+        mPermissionManager.requestPermission(
                 this,
                 new PermissionListener() {
                     @Override
@@ -213,7 +214,7 @@ public abstract class GetImageFragment<T extends BasePresenter> extends WolmoFra
                         mImageCallback = onImageReturnCallback;
 
                         mPictureTakenFile =
-                                ImageUtils.getImageFromCamera(
+                                mImageUtils.getImageFromCamera(
                                         GetImageFragment.this,
                                         INTENT_CODE_IMAGE_CAMERA,
                                         pictureTakenFilename(),

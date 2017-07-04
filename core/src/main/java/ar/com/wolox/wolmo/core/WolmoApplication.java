@@ -24,21 +24,19 @@ package ar.com.wolox.wolmo.core;
 
 import android.app.Application;
 import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
+
+import dagger.android.support.DaggerApplication;
 
 /**
  * An extension of Android's native {@link Application} class that is intended to be used as
  * a Singleton
  */
-public abstract class WolmoApplication extends Application {
-
-    private static WolmoApplication sApplication;
+public abstract class WolmoApplication extends DaggerApplication {
 
     @Override
     @CallSuper
     public void onCreate() {
         super.onCreate();
-        sApplication = this; // Singleton instance
         onInit();
     }
 
@@ -48,14 +46,4 @@ public abstract class WolmoApplication extends Application {
      */
     public abstract void onInit();
 
-
-    /**
-     * Gets the singleton instance of the class
-     *
-     * @return A singleton instance of {@link WolmoApplication}
-     */
-    @NonNull
-    public static WolmoApplication getInstance() {
-        return sApplication;
-    }
 }

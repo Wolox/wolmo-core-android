@@ -38,6 +38,8 @@ import java.util.ArrayList;
 
 public class NavigationUtils {
 
+    private NavigationUtils() {}
+
     private static final String BLANK_PAGE = "about:blank";
 
     /**

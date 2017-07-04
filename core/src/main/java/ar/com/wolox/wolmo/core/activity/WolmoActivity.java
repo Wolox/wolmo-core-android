@@ -29,18 +29,25 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import java.util.List;
-
 import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.fragment.IWolmoFragment;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.util.ToastUtils;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerAppCompatActivity;
 
 /**
  * A base {@link AppCompatActivity} that implements Wolmo's custom lifecycle.
  */
-public abstract class WolmoActivity extends AppCompatActivity {
+public abstract class WolmoActivity extends DaggerAppCompatActivity {
+
+    @Inject ToastUtils mToastUtils;
+    @Inject PermissionManager mPermissionManager;
 
     /**
      * Handles the custom lifecycle of Wolmo's Activity. It provides a set of callbacks to structure
@@ -61,7 +68,7 @@ public abstract class WolmoActivity extends AppCompatActivity {
             populate();
             setListeners();
         } else {
-            ToastUtils.show(R.string.unknown_error);
+            mToastUtils.show(R.string.unknown_error);
             finish();
         }
     }
@@ -173,8 +180,7 @@ public abstract class WolmoActivity extends AppCompatActivity {
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionManager.getInstance()
-                .onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**

@@ -34,33 +34,21 @@ import android.util.SparseArray;
 
 import java.util.ArrayList;
 
-import ar.com.wolox.wolmo.core.util.ContextUtils;
+import javax.inject.Inject;
 
 /**
  * Helper class to handle Android's runtime permissions
  */
 public class PermissionManager {
 
-    private static PermissionManager sInstance; // Singleton
+    private int mRequestCount = 1;
+    private SparseArray<PermissionListener> mRequestListeners;
+    private Context mContext;
 
-    private int sRequestCount = 1;
-    private SparseArray<PermissionListener> sRequestListeners = new SparseArray<>();
-
-    // Private constructor to enforce the Singleton pattern
-    private PermissionManager() {
-
-    }
-
-    /**
-     * Gets a Singleton instance of {@link PermissionManager} ready to use.
-     *
-     * @return A singleton instance of {@link PermissionManager}
-     */
-    public synchronized static PermissionManager getInstance() {
-        if (sInstance == null) {
-            sInstance = new PermissionManager();
-        }
-        return sInstance;
+    @Inject
+    public PermissionManager(Context context) {
+        mContext = context;
+        mRequestListeners = new SparseArray<>();
     }
 
     /**
@@ -78,8 +66,8 @@ public class PermissionManager {
                                      @NonNull String... permissions) {
         String[] ungrantedPermissions = filterUngranted(fragment.getActivity(), permissions);
         if (ungrantedPermissions.length > 0) {
-            fragment.requestPermissions(ungrantedPermissions, sRequestCount);
-            sRequestListeners.put(sRequestCount++, listener);
+            fragment.requestPermissions(ungrantedPermissions, mRequestCount);
+            mRequestListeners.put(mRequestCount++, listener);
             return false;
         }
         if (listener != null) listener.onPermissionsGranted();
@@ -101,8 +89,8 @@ public class PermissionManager {
                                      @NonNull String... permissions) {
         String[] ungrantedPermissions = filterUngranted(activity, permissions);
         if (ungrantedPermissions.length > 0) {
-            ActivityCompat.requestPermissions(activity, ungrantedPermissions, sRequestCount);
-            sRequestListeners.put(sRequestCount++, listener);
+            ActivityCompat.requestPermissions(activity, ungrantedPermissions, mRequestCount);
+            mRequestListeners.put(mRequestCount++, listener);
             return false;
         }
         if (listener != null) listener.onPermissionsGranted();
@@ -130,9 +118,9 @@ public class PermissionManager {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull final int[] grantResults) {
-        final PermissionListener listener = sRequestListeners.get(requestCode);
+        final PermissionListener listener = mRequestListeners.get(requestCode);
         if (listener != null) {
-            sRequestListeners.remove(requestCode);
+            mRequestListeners.remove(requestCode);
             if (allGranted(grantResults)) {
                 // Workaround to Android bug: https://goo.gl/OwseuO
                 new Handler().post(new Runnable() {
@@ -142,9 +130,7 @@ public class PermissionManager {
                     }
                 });
             } else {
-                listener.onPermissionsDenied(
-                        filterUngranted(ContextUtils.getAppContext(), permissions)
-                );
+                listener.onPermissionsDenied(filterUngranted(mContext, permissions));
             }
         }
     }

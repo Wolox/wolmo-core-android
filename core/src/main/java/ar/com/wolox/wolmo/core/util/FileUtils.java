@@ -21,6 +21,7 @@
  */
 package ar.com.wolox.wolmo.core.util;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
@@ -31,12 +32,18 @@ import android.support.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 /**
  * Utils class for managing {@link File}s.
  */
 public class FileUtils {
 
-    private FileUtils() {
+    private Context mContext;
+
+    @Inject
+    public FileUtils(Context context) {
+        mContext = context;
     }
 
     /**
@@ -50,7 +57,7 @@ public class FileUtils {
      * @return {@link File} result of the creation
      * @throws IOException If a file could not be created
      */
-    public static File createFile(
+    public File createFile(
             @NonNull String filename, @NonNull String extension) throws IOException {
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
@@ -69,14 +76,11 @@ public class FileUtils {
      * @return A path to the real file location, or null if it can't find it
      */
     @Nullable
-    public static String getRealPathFromUri(@NonNull Uri fileUri) {
+    public String getRealPathFromUri(@NonNull Uri fileUri) {
         Cursor cursor = null;
         try {
             String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = ContextUtils
-                    .getAppContext()
-                    .getContentResolver()
-                    .query(fileUri, proj, null, null, null);
+            cursor = mContext.getContentResolver().query(fileUri, proj, null, null, null);
 
             if (cursor == null) return null;
 
