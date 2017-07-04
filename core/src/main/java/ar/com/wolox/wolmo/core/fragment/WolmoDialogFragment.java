@@ -42,6 +42,9 @@ import android.view.WindowManager;
 
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
+
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 
 /**
@@ -53,9 +56,11 @@ import butterknife.ButterKnife;
  *
  * @param <T> Presenter for this fragment. It should extend {@link BasePresenter}
  */
-public abstract class WolmoDialogFragment<T extends BasePresenter> extends DialogFragment
-        implements IWolmoFragment<T> {
-    private WolmoFragmentHandler<T> mFragmentHandler;
+public abstract class WolmoDialogFragment<T extends BasePresenter<?>> extends DialogFragment
+        implements IWolmoFragment {
+
+    @Inject WolmoFragmentHandler<T> mFragmentHandler;
+    @Inject PermissionManager mPermissionManager;
 
     @NonNull
     @Override
@@ -101,7 +106,7 @@ public abstract class WolmoDialogFragment<T extends BasePresenter> extends Dialo
     @CallSuper
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFragmentHandler = new WolmoFragmentHandler<T>(this);
+        mFragmentHandler.setFragment(this);
     }
 
     @Override
@@ -223,7 +228,6 @@ public abstract class WolmoDialogFragment<T extends BasePresenter> extends Dialo
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionManager.getInstance()
-                .onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

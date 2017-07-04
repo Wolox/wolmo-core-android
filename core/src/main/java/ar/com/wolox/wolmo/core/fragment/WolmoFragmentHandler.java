@@ -32,7 +32,13 @@ import android.view.ViewGroup;
 
 import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
+import ar.com.wolox.wolmo.core.util.ReflectionUtils;
 import ar.com.wolox.wolmo.core.util.ToastUtils;
+
+import java.lang.reflect.Type;
+
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -40,41 +46,48 @@ import butterknife.Unbinder;
  * This class is used to separate Wolox Fragments logic so that different subclasses of
  * Fragment can implement MVP without re-writing this.
  */
-class WolmoFragmentHandler<T extends BasePresenter> {
+public final class WolmoFragmentHandler<T extends BasePresenter> {
 
     private static final String TAG = "WolmoFragmentHandler";
 
-    private final Fragment mFragment;
-    private final IWolmoFragment<T> mWoloxFragment;
+    private Fragment mFragment;
+    private IWolmoFragment mWolmoFragment;
+
     private boolean mCreated;
-    private T mPresenter;
     private boolean mMenuVisible;
     private boolean mVisible;
     private Unbinder mUnbinder;
 
-    WolmoFragmentHandler(@NonNull IWolmoFragment<T> woloxFragment) {
+    @Inject T mPresenter;
+    @Inject ToastUtils mToastUtils;
+
+    @Inject
+    public WolmoFragmentHandler() {}
+
+    /**
+     * Sets the fragment for this fragment handler.
+     *
+     * @param woloxFragment Wolox fragment to attach.
+     */
+    void setFragment(@NonNull IWolmoFragment woloxFragment) {
         if (!(woloxFragment instanceof Fragment)) {
             throw new IllegalArgumentException("WolmoFragment should be a Fragment instance");
         }
         mFragment = (Fragment) woloxFragment;
-        mWoloxFragment = woloxFragment;
+        mWolmoFragment = woloxFragment;
     }
 
     /**
      * Method called from {@link WolmoFragment#onCreate(Bundle)}, it calls to {@link
-     * WolmoFragment#handleArguments(Bundle)}
-     * to check if the fragment has the correct arguments and creates a presenter calling {@link
-     * WolmoFragment#createPresenter()}.
+     * WolmoFragment#handleArguments(Bundle)} to check if the fragment has the correct arguments.
      *
      * @param savedInstanceState Saved instance state
      */
     void onCreate(@Nullable Bundle savedInstanceState) {
-        if (mWoloxFragment.handleArguments(mFragment.getArguments())) {
-            mPresenter = mWoloxFragment.createPresenter();
-        } else {
+        if (!mWolmoFragment.handleArguments(mFragment.getArguments())) {
             Log.e(TAG, mFragment.getClass().getSimpleName() +
-                    " - The fragment's handleArguments returned false.");
-            ToastUtils.show(R.string.unknown_error);
+                " - The fragment's handleArguments() returned false.");
+            mToastUtils.show(R.string.unknown_error);
             mFragment.getActivity().finish();
         }
     }
@@ -92,26 +105,40 @@ class WolmoFragmentHandler<T extends BasePresenter> {
      * </ul><p>
      */
     View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                      @Nullable Bundle savedInstanceState) {
+        @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(mWoloxFragment.layout(), container, false);
+        View v = inflater.inflate(mWolmoFragment.layout(), container, false);
         mUnbinder = ButterKnife.bind(mFragment, v);
-        mWoloxFragment.setUi(v);
-        mWoloxFragment.init();
-        mWoloxFragment.populate();
-        mWoloxFragment.setListeners();
+        mWolmoFragment.setUi(v);
+        mWolmoFragment.init();
+        mWolmoFragment.populate();
+        mWolmoFragment.setListeners();
 
         mCreated = true;
         return v;
     }
 
     /**
-     * Method called from {@link WolmoFragment#onViewCreated(View, Bundle)}, it notifies the {@link
-     * BasePresenter} that the view was created calling {@link BasePresenter#onViewCreated()}.
+     * Method called from {@link WolmoFragment#onViewCreated(View, Bundle)}, it attaches the
+     * fragment to the {@link BasePresenter} calling {@link BasePresenter#onViewAttached()}.
      */
+    @SuppressWarnings("unchecked")
     void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        // We check if the fragment implements or extends the required type for the presenter's view.
+        // If it does, we try to assign it as a view, otherwise we fail and no view will be available for the presenter
         if (getPresenter() != null) {
-            getPresenter().onViewCreated();
+            try {
+                Type[] viewTypes = ReflectionUtils.getParameterizedTypes(getPresenter());
+                if (viewTypes != null && ReflectionUtils.getClass(viewTypes[0])
+                    .isAssignableFrom(mWolmoFragment.getClass())) {
+                    mPresenter.attachView(mWolmoFragment);
+                }
+            } catch (ClassNotFoundException | NullPointerException e) {
+                Log.e(TAG, mFragment.getClass().getSimpleName() +
+                    " - The fragment should implement the presenter type argument.");
+                mToastUtils.show(R.string.unknown_error);
+                mFragment.getActivity().finish();
+            }
         }
     }
 
@@ -128,10 +155,10 @@ class WolmoFragmentHandler<T extends BasePresenter> {
     private void onVisibilityChanged() {
         if (!mCreated) return;
         if (mFragment.isResumed() && mMenuVisible && !mVisible) {
-            mWoloxFragment.onVisible();
+            mWolmoFragment.onVisible();
             mVisible = true;
         } else if ((!mMenuVisible || !mFragment.isResumed()) && mVisible) {
-            mWoloxFragment.onHide();
+            mWolmoFragment.onHide();
             mVisible = false;
         }
     }
@@ -165,11 +192,11 @@ class WolmoFragmentHandler<T extends BasePresenter> {
 
     /**
      * Called from {@link WolmoFragment#onDestroyView()}, it notifies the {@link BasePresenter} that
-     * the view is destroyed, calling {@link BasePresenter#onViewDestroyed()}
+     * the view is destroyed, calling {@link BasePresenter#onViewDetached()}
      */
     void onDestroyView() {
         if (getPresenter() != null) {
-            getPresenter().onViewDestroyed();
+            getPresenter().onViewDetached();
         }
         mUnbinder.unbind();
     }
@@ -181,4 +208,5 @@ class WolmoFragmentHandler<T extends BasePresenter> {
     void onDestroy() {
         if (getPresenter() != null) getPresenter().detachView();
     }
+
 }

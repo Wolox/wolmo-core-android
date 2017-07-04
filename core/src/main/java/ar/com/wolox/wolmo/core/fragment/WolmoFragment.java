@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +33,11 @@ import android.view.ViewGroup;
 
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
+
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerFragment;
 
 /**
  * Base implementation for {@link IWolmoFragment}. This is in charge of inflating the view returned
@@ -44,15 +47,17 @@ import butterknife.ButterKnife;
  *
  * @param <T> Presenter for this fragment. It should extend {@link BasePresenter}
  */
-public abstract class WolmoFragment<T extends BasePresenter> extends Fragment
-        implements IWolmoFragment<T> {
+public abstract class WolmoFragment<T extends BasePresenter> extends DaggerFragment
+        implements IWolmoFragment {
 
-    private WolmoFragmentHandler<T> mFragmentHandler = new WolmoFragmentHandler<>(this);
+    @Inject WolmoFragmentHandler<T> mFragmentHandler;
+    @Inject PermissionManager mPermissionManager;
 
     @Override
     @CallSuper
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFragmentHandler.setFragment(this);
         mFragmentHandler.onCreate(savedInstanceState);
     }
 
@@ -114,8 +119,7 @@ public abstract class WolmoFragment<T extends BasePresenter> extends Fragment
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionManager.getInstance()
-                .onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**
