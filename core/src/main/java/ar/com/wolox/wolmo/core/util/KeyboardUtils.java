@@ -33,6 +33,8 @@ import android.widget.EditText;
  */
 public class KeyboardUtils {
 
+    private KeyboardUtils() {}
+
     /**
      * Forces the device's soft keyboard (that means the software keyboard, not a physical one)
      * to show for a specific {@link EditText}
