@@ -11,7 +11,6 @@ import dagger.Provides;
 @Module
 public class ContextModule {
 
-    public static final String SHARED_PREFERENCES = "private-shared-prefs";
 
     @Provides
     Context provideContext(Application application) {
@@ -19,8 +18,8 @@ public class ContextModule {
     }
 
     @Provides
-    SharedPreferences provideSharedPreferences(Context context) {
-        return context.getSharedPreferences(SHARED_PREFERENCES, Activity.MODE_PRIVATE);
+    SharedPreferences provideSharedPreferences(String sharedPrefName, Context context) {
+        return context.getSharedPreferences(sharedPrefName, Activity.MODE_PRIVATE);
     }
 
 }
