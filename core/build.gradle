@@ -3,7 +3,7 @@ apply plugin: 'com.jakewharton.butterknife'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
         minSdkVersion 11
@@ -12,21 +12,21 @@ android {
     }
 }
 
+buildscript {
+    ext.support_library_version = '25.3.1'
+    ext.butterknife_version = '8.6.0'
+    ext.joda_time_version = '2.9.9'
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     // Support
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile "com.android.support:appcompat-v7:$support_library_version"
 
-    // Third-party
-    provided 'com.jakewharton:butterknife:8.5.1'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.5.0'
-    compile 'com.squareup.okhttp3:okhttp:3.5.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
-    compile 'joda-time:joda-time:2.9.4'
+    // Butterknife
+    provided "com.jakewharton:butterknife:$butterknife_version"
 
-    // Test
-    testCompile 'junit:junit:4.12'
+    // Joda Time
+    compile "joda-time:joda-time:$joda_time_version"
 }
