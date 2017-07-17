@@ -14,8 +14,10 @@ android {
 
 buildscript {
     ext.support_library_version = '25.3.1'
-    ext.butterknife_version = '8.6.0'
     ext.joda_time_version = '2.9.9'
+    ext.dagger_version = '2.11-rc2'
+    ext.butterknife_version = '8.6.0'
+    ext.powermock_version = '1.7.0'
 }
 
 dependencies {
@@ -28,11 +30,18 @@ dependencies {
     provided "com.jakewharton:butterknife:$butterknife_version"
 
     // Dagger
-    provided 'com.google.dagger:dagger:2.11-rc2'
-    provided 'com.google.dagger:dagger-android-support:2.11-rc2'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.11-rc2'
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11-rc2'
+    provided "com.google.dagger:dagger:$dagger_version"
+    provided "com.google.dagger:dagger-android-support:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
 
     // Joda Time
     compile "joda-time:joda-time:$joda_time_version"
+
+    // Test
+    testCompile "junit:junit:4.12"
+    testCompile "org.mockito:mockito-inline:2.8.47" // Mockito inline adds support for mocking final classes and methods
+    testCompile "org.powermock:powermock-module-junit4:$powermock_version"
+    testCompile "org.powermock:powermock-api-mockito2:$powermock_version"
+    testCompile "org.assertj:assertj-core:3.8.0"
 }

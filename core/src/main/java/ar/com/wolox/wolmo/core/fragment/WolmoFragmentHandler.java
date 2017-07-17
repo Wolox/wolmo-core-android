@@ -109,12 +109,6 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
 
         View v = inflater.inflate(mWolmoFragment.layout(), container, false);
         mUnbinder = ButterKnife.bind(mFragment, v);
-        mWolmoFragment.setUi(v);
-        mWolmoFragment.init();
-        mWolmoFragment.populate();
-        mWolmoFragment.setListeners();
-
-        mCreated = true;
         return v;
     }
 
@@ -140,6 +134,12 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
                 mFragment.getActivity().finish();
             }
         }
+
+        mWolmoFragment.setUi(view);
+        mWolmoFragment.init();
+        mWolmoFragment.populate();
+        mWolmoFragment.setListeners();
+        mCreated = true;
     }
 
     /**
@@ -196,9 +196,11 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
      */
     void onDestroyView() {
         if (getPresenter() != null) {
-            getPresenter().onViewDetached();
+            getPresenter().detachView();
         }
-        mUnbinder.unbind();
+        if (mUnbinder != null) {
+            mUnbinder.unbind();
+        }
     }
 
     /**

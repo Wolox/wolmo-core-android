@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -93,7 +94,7 @@ public abstract class WolmoActivity extends DaggerAppCompatActivity {
      * @return true if arguments were read successfully, false otherwise.
      * Default implementation returns true.
      */
-    protected boolean handleArguments(Bundle args) {
+    protected boolean handleArguments(@Nullable Bundle args) {
         return true;
     }
 
@@ -102,9 +103,7 @@ public abstract class WolmoActivity extends DaggerAppCompatActivity {
      * provided in {@link WolmoActivity#layout()}
      * Override if needed. If using {@link ButterKnife}, there is no need to use this method.
      */
-    protected void setUi() {
-
-    }
+    protected void setUi() {}
 
     /**
      * Entry point for the Activity's specific code.
@@ -117,17 +116,13 @@ public abstract class WolmoActivity extends DaggerAppCompatActivity {
      * Populates the view elements of the activity.
      * Override if needed.
      */
-    protected void populate() {
-
-    }
+    protected void populate() {}
 
     /**
      * Sets the listeners for the views of the activity.
      * Override if needed.
      */
-    protected void setListeners() {
-
-    }
+    protected void setListeners() {}
 
     /**
      * Replaces the current {@link Fragment} in a given container layout with a new {@link Fragment}
