@@ -27,10 +27,12 @@ import android.support.annotation.StringRes;
 import android.widget.Toast;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * An utility class to work with Android's {@link Toast} messages
  */
+@Singleton
 public class ToastUtils {
 
     private Context mContext;

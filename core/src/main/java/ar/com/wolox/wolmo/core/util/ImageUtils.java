@@ -43,11 +43,13 @@ import java.io.IOException;
 import java.lang.annotation.Retention;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Utils class to manipulate images, through {@link Bitmap}s or their corresponding {@link Uri}, and
  * for retrieving pictures from gallery/taking them from the camera.
  */
+@Singleton
 public class ImageUtils {
 
     @Retention(SOURCE)

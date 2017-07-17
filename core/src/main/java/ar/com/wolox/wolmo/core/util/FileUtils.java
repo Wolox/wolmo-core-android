@@ -33,10 +33,12 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Utils class for managing {@link File}s.
  */
+@Singleton
 public class FileUtils {
 
     private Context mContext;
@@ -61,7 +63,7 @@ public class FileUtils {
             @NonNull String filename, @NonNull String extension) throws IOException {
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
-        //The suffix will be appended as it is, we need to add the dot manually
+        // The suffix will be appended as it is, we need to add the dot manually
         if (!extension.startsWith(".")) {
             extension = "." + extension;
         }

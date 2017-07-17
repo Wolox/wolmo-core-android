@@ -1,5 +1,7 @@
 package ar.com.wolox.wolmo.core.util;
 
+import android.support.annotation.RestrictTo;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -20,6 +22,7 @@ import java.lang.reflect.Type;
  *
  * @link http://qussay.com/2013/09/28/handling-java-generic-types-with-reflection
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 public class ReflectionUtils {
 
 	/**
@@ -38,7 +41,7 @@ public class ReflectionUtils {
 
 	/**
 	 * {@link Type#toString()} value is the fully qualified class name prefixed
-	 * with {@link ReflectionUtils#TYPE_NAME_PREFIX}. This method will substring it, for it to be eligible
+	 * with {@link ReflectionUtils#TYPE_CLASS_NAME_PREFIX}. This method will substring it, for it to be eligible
 	 * for {@link Class#forName(String)}.
 	 *
 	 * @param type the {@code Type} value whose class name is needed.

@@ -3,12 +3,13 @@ package ar.com.wolox.wolmo.core.util;
 import android.content.SharedPreferences;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Storage utils to query and store values in {@link SharedPreferences}.
- * TODO: Add javadoc to each method
  */
-public final class StorageUtils {
+@Singleton
+public class StorageUtils {
 
     private SharedPreferences mSharedPreferences;
 
@@ -17,7 +18,7 @@ public final class StorageUtils {
         mSharedPreferences = sharedPreferences;
     }
 
-    /**
+    /*
      * A bunch of shared preferences utils methods to get and set different types of values
      */
     public void storeInSharedPreferences(String key, String value) {
