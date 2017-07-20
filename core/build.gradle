@@ -14,9 +14,8 @@ android {
 
 buildscript {
     ext.support_library_version = '25.3.1'
-    ext.joda_time_version = '2.9.9'
-    ext.dagger_version = '2.11-rc2'
     ext.butterknife_version = '8.6.0'
+    ext.dagger_version = '2.11-rc2'
     ext.powermock_version = '1.7.0'
 }
 
@@ -29,14 +28,14 @@ dependencies {
     // Butterknife
     provided "com.jakewharton:butterknife:$butterknife_version"
 
+    // Joda Time
+    compile "joda-time:joda-time:2.9.9"
+
     // Dagger
     provided "com.google.dagger:dagger:$dagger_version"
     provided "com.google.dagger:dagger-android-support:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
-
-    // Joda Time
-    compile "joda-time:joda-time:$joda_time_version"
 
     // Test
     testCompile "junit:junit:4.12"
