@@ -57,8 +57,7 @@ public abstract class WolmoFragment<T extends BasePresenter> extends DaggerFragm
     @CallSuper
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFragmentHandler.setFragment(this);
-        mFragmentHandler.onCreate(savedInstanceState);
+        mFragmentHandler.onCreate(this, savedInstanceState);
     }
 
     @Override
@@ -101,13 +100,6 @@ public abstract class WolmoFragment<T extends BasePresenter> extends DaggerFragm
     public void onDestroyView() {
         mFragmentHandler.onDestroyView();
         super.onDestroyView();
-    }
-
-    @Override
-    @CallSuper
-    public void onDestroy() {
-        mFragmentHandler.onDestroy();
-        super.onDestroy();
     }
 
     /**

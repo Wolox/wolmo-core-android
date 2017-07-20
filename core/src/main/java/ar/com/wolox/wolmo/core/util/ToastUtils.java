@@ -26,13 +26,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 
+import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope;
+
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * An utility class to work with Android's {@link Toast} messages
  */
-@Singleton
+@ApplicationScope
 public class ToastUtils {
 
     private Context mContext;

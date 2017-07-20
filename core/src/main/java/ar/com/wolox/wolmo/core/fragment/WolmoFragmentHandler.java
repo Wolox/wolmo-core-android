@@ -67,14 +67,14 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
     /**
      * Sets the fragment for this fragment handler.
      *
-     * @param woloxFragment Wolox fragment to attach.
+     * @param wolmoFragment Wolox fragment to attach.
      */
-    void setFragment(@NonNull IWolmoFragment woloxFragment) {
-        if (!(woloxFragment instanceof Fragment)) {
+    private void setFragment(@NonNull IWolmoFragment wolmoFragment) {
+        if (!(wolmoFragment instanceof Fragment)) {
             throw new IllegalArgumentException("WolmoFragment should be a Fragment instance");
         }
-        mFragment = (Fragment) woloxFragment;
-        mWolmoFragment = woloxFragment;
+        mFragment = (Fragment) wolmoFragment;
+        mWolmoFragment = wolmoFragment;
     }
 
     /**
@@ -83,7 +83,8 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
      *
      * @param savedInstanceState Saved instance state
      */
-    void onCreate(@Nullable Bundle savedInstanceState) {
+    void onCreate(@NonNull IWolmoFragment wolmoFragment, @Nullable Bundle savedInstanceState) {
+        setFragment(wolmoFragment);
         if (!mWolmoFragment.handleArguments(mFragment.getArguments())) {
             Log.e(TAG, mFragment.getClass().getSimpleName() +
                 " - The fragment's handleArguments() returned false.");
@@ -202,13 +203,4 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
             mUnbinder.unbind();
         }
     }
-
-    /**
-     * Called from {@link WolmoFragment#onDestroy()}. It calls {@link
-     * BasePresenter#detachView()}
-     */
-    void onDestroy() {
-        if (getPresenter() != null) getPresenter().detachView();
-    }
-
 }

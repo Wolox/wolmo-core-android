@@ -37,19 +37,20 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 
+import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Utils class to manipulate images, through {@link Bitmap}s or their corresponding {@link Uri}, and
  * for retrieving pictures from gallery/taking them from the camera.
  */
-@Singleton
+@ApplicationScope
 public class ImageUtils {
 
     @Retention(SOURCE)

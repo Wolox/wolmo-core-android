@@ -106,7 +106,7 @@ public abstract class WolmoDialogFragment<T extends BasePresenter<?>> extends Di
     @CallSuper
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFragmentHandler.setFragment(this);
+        mFragmentHandler.onCreate(this, savedInstanceState);
     }
 
     @Override
@@ -114,6 +114,12 @@ public abstract class WolmoDialogFragment<T extends BasePresenter<?>> extends Di
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return mFragmentHandler.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mFragmentHandler.onViewCreated(view, savedInstanceState);
     }
 
     @Override

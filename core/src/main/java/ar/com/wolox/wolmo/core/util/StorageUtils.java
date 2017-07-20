@@ -2,13 +2,14 @@ package ar.com.wolox.wolmo.core.util;
 
 import android.content.SharedPreferences;
 
+import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope;
+
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Storage utils to query and store values in {@link SharedPreferences}.
  */
-@Singleton
+@ApplicationScope
 public class StorageUtils {
 
     private SharedPreferences mSharedPreferences;

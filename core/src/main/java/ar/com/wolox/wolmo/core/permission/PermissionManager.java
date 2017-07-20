@@ -32,6 +32,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
 
+import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope;
+
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -39,6 +41,7 @@ import javax.inject.Inject;
 /**
  * Helper class to handle Android's runtime permissions
  */
+@ApplicationScope
 public class PermissionManager {
 
     private int mRequestCount = 1;

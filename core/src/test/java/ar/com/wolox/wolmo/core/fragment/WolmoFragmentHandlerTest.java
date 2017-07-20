@@ -46,14 +46,14 @@ public class WolmoFragmentHandlerTest {
         mWolmoFragment = mock(WolmoFragment.class);
 
         mWolmoFragmentHandler = new WolmoFragmentHandler<>();
-        mWolmoFragmentHandler.setFragment(mWolmoFragment);
+        mWolmoFragmentHandler.onCreate(mWolmoFragment, null);
     }
 
     @Test
     public void setWolmoFragmentNotExtendingFragment() {
         IWolmoFragment wolmoFragment = mock(IWolmoFragment.class);
         exception.expect(IllegalArgumentException.class);
-        mWolmoFragmentHandler.setFragment(wolmoFragment);
+        mWolmoFragmentHandler.onCreate(wolmoFragment, null);
     }
 
     @Test
@@ -63,10 +63,10 @@ public class WolmoFragmentHandlerTest {
         when(mWolmoFragment.handleArguments(any(Bundle.class))).thenReturn(false);
         when(mWolmoFragment.getActivity()).thenReturn(activity);
 
-        mWolmoFragmentHandler.setFragment(mWolmoFragment);
+        mWolmoFragmentHandler.onCreate(mWolmoFragment, null);
         mWolmoFragmentHandler.mToastUtils = mToastUtils;
 
-        mWolmoFragmentHandler.onCreate(null);
+        mWolmoFragmentHandler.onCreate(mWolmoFragment, null);
         verify(mToastUtils, times(1)).show(R.string.unknown_error);
         verify(activity, times(1)).finish();
     }
