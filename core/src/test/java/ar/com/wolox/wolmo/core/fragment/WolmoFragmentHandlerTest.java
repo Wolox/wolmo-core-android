@@ -1,6 +1,9 @@
 package ar.com.wolox.wolmo.core.fragment;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyChar;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -46,7 +49,7 @@ public class WolmoFragmentHandlerTest {
         mWolmoFragment = mock(WolmoFragment.class);
 
         mWolmoFragmentHandler = new WolmoFragmentHandler<>();
-        mWolmoFragmentHandler.onCreate(mWolmoFragment, null);
+        mWolmoFragmentHandler.mToastUtils = mToastUtils;
     }
 
     @Test
@@ -60,13 +63,10 @@ public class WolmoFragmentHandlerTest {
     public void handlerFinishActivityIfWrongArguments() {
         FragmentActivity activity = mock(FragmentActivity.class);
 
-        when(mWolmoFragment.handleArguments(any(Bundle.class))).thenReturn(false);
+        when(mWolmoFragment.handleArguments(nullable(Bundle.class))).thenReturn(false);
         when(mWolmoFragment.getActivity()).thenReturn(activity);
 
-        mWolmoFragmentHandler.onCreate(mWolmoFragment, null);
-        mWolmoFragmentHandler.mToastUtils = mToastUtils;
-
-        mWolmoFragmentHandler.onCreate(mWolmoFragment, null);
+        mWolmoFragmentHandler.onCreate(mWolmoFragment, new Bundle());
         verify(mToastUtils, times(1)).show(R.string.unknown_error);
         verify(activity, times(1)).finish();
     }
@@ -74,7 +74,9 @@ public class WolmoFragmentHandlerTest {
     @Test
     public void onViewCreatedCallsWolmoFragmentMethods() {
         View mockView = mock(View.class);
+        when(mWolmoFragment.handleArguments(nullable(Bundle.class))).thenReturn(true);
 
+        mWolmoFragmentHandler.onCreate(mWolmoFragment, new Bundle());
         mWolmoFragmentHandler.onViewCreated(mockView, null);
 
         // Verify that the methods in wolmoFragment are called in order
@@ -91,7 +93,9 @@ public class WolmoFragmentHandlerTest {
         mWolmoFragmentHandler.setMenuVisibility(true);
 
         when(mWolmoFragment.isResumed()).thenReturn(true);
+        when(mWolmoFragment.handleArguments(nullable(Bundle.class))).thenReturn(true);
 
+        mWolmoFragmentHandler.onCreate(mWolmoFragment, new Bundle());
         mWolmoFragmentHandler.onViewCreated(mock(View.class), null);
         mWolmoFragmentHandler.onResume();
         verify(mWolmoFragment, times(1)).onVisible();
