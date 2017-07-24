@@ -40,9 +40,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import ar.com.wolox.wolmo.core.permission.PermissionManager;
-import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;

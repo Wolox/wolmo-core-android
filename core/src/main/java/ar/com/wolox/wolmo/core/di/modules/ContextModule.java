@@ -35,7 +35,6 @@ import dagger.Provides;
 @Module
 public class ContextModule {
 
-
     @Provides
     @ApplicationScope
     Context provideContext(Application application) {

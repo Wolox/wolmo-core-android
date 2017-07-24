@@ -1,8 +1,5 @@
 package ar.com.wolox.wolmo.core.fragment;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyChar;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -16,8 +13,6 @@ import android.util.Log;
 import android.view.View;
 
 import ar.com.wolox.wolmo.core.R;
-import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-import ar.com.wolox.wolmo.core.util.ToastUtils;
 
 import org.junit.Before;
 import org.junit.Rule;

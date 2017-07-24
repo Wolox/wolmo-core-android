@@ -31,9 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ar.com.wolox.wolmo.core.R;
-import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.ReflectionUtils;
-import ar.com.wolox.wolmo.core.util.ToastUtils;
 
 import java.lang.reflect.Type;
 
@@ -119,6 +117,7 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
      */
     @SuppressWarnings("unchecked")
     void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        mCreated = true;
         // We check if the fragment implements or extends the required type for the presenter's view.
         // If it does, we try to assign it as a view, otherwise we fail and no view will be available for the presenter
         if (getPresenter() != null) {
@@ -140,7 +139,6 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
         mWolmoFragment.init();
         mWolmoFragment.populate();
         mWolmoFragment.setListeners();
-        mCreated = true;
     }
 
     /**
