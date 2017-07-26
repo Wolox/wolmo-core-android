@@ -29,6 +29,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
 import ar.com.wolox.wolmo.core.permission.PermissionListener;
+import ar.com.wolox.wolmo.core.permission.PermissionManager;
+import ar.com.wolox.wolmo.core.presenter.BasePresenter;
+import ar.com.wolox.wolmo.core.util.FileUtils;
+import ar.com.wolox.wolmo.core.util.ImageUtils;
 
 import java.io.File;
 

@@ -34,6 +34,8 @@ import android.util.Log;
 import android.view.View;
 
 import ar.com.wolox.wolmo.core.R;
+import ar.com.wolox.wolmo.core.presenter.BasePresenter;
+import ar.com.wolox.wolmo.core.util.ToastUtils;
 
 import org.junit.Before;
 import org.junit.Rule;

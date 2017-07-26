@@ -32,6 +32,7 @@ import android.view.MenuItem;
 
 import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.fragment.IWolmoFragment;
+import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.util.ToastUtils;
 
 import java.util.List;

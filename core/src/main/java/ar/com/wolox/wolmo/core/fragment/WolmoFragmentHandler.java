@@ -31,7 +31,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ar.com.wolox.wolmo.core.R;
+import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.ReflectionUtils;
+import ar.com.wolox.wolmo.core.util.ToastUtils;
 
 import java.lang.reflect.Type;
 
