@@ -102,6 +102,7 @@ public abstract class WolmoDialogFragment<T extends BasePresenter> extends Dialo
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragmentHandler = new WolmoFragmentHandler<T>(this);
+        mFragmentHandler.onCreate(savedInstanceState);
     }
 
     @Override
