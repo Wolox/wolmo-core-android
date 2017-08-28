@@ -33,7 +33,7 @@ import android.view.MenuItem;
 import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.fragment.IWolmoFragment;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
-import ar.com.wolox.wolmo.core.util.ToastUtils;
+import ar.com.wolox.wolmo.core.util.provider.ToastProvider;
 
 import java.util.List;
 
@@ -47,8 +47,9 @@ import dagger.android.support.DaggerAppCompatActivity;
  */
 public abstract class WolmoActivity extends DaggerAppCompatActivity {
 
-    @Inject ToastUtils mToastUtils;
+    @Inject ToastProvider mToastProvider;
     @Inject PermissionManager mPermissionManager;
+    @Inject WolmoActivityHandler mActivityHandler;
 
     /**
      * Handles the custom lifecycle of Wolmo's Activity. It provides a set of callbacks to structure
@@ -59,19 +60,9 @@ public abstract class WolmoActivity extends DaggerAppCompatActivity {
      */
     @Override
     @CallSuper
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(layout());
-        ButterKnife.bind(this);
-        if (handleArguments(getIntent().getExtras())) {
-            setUi();
-            init();
-            populate();
-            setListeners();
-        } else {
-            mToastUtils.show(R.string.unknown_error);
-            finish();
-        }
+        mActivityHandler.onCreate(this, savedInstanceState);
     }
 
     /**
@@ -186,9 +177,9 @@ public abstract class WolmoActivity extends DaggerAppCompatActivity {
      * If any of those returns 'true', the method returns. Else, it calls
      * {@link AppCompatActivity#onBackPressed()}.
      */
-    @SuppressWarnings("RestrictedApi")
     @Override
     @CallSuper
+    @SuppressWarnings("RestrictedApi")
     public void onBackPressed() {
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
 
@@ -202,5 +193,12 @@ public abstract class WolmoActivity extends DaggerAppCompatActivity {
         }
 
         super.onBackPressed();
+    }
+
+    @Override
+    @CallSuper
+    protected void onDestroy() {
+        mActivityHandler.onDestroy();
+        super.onDestroy();
     }
 }
