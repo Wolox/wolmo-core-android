@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.util;
+package ar.com.wolox.wolmo.core.util.provider;
 
 import android.content.SharedPreferences;
 
@@ -31,12 +31,12 @@ import javax.inject.Inject;
  * Storage utils to query and store values in {@link SharedPreferences}.
  */
 @ApplicationScope
-public class StorageUtils {
+public class StorageProvider {
 
     private SharedPreferences mSharedPreferences;
 
     @Inject
-    public StorageUtils(SharedPreferences sharedPreferences) {
+    public StorageProvider(SharedPreferences sharedPreferences) {
         mSharedPreferences = sharedPreferences;
     }
 

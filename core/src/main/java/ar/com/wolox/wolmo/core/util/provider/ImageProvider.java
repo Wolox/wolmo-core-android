@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.util;
+package ar.com.wolox.wolmo.core.util.provider;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
@@ -38,6 +38,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 
 import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope;
+import ar.com.wolox.wolmo.core.util.provider.ToastProvider;
+import ar.com.wolox.wolmo.core.util.provider.WolmoFileProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -51,7 +53,7 @@ import javax.inject.Inject;
  * for retrieving pictures from gallery/taking them from the camera.
  */
 @ApplicationScope
-public class ImageUtils {
+public class ImageProvider {
 
     @Retention(SOURCE)
     @StringDef({
@@ -68,14 +70,14 @@ public class ImageUtils {
     public static final String JPG = "jpg";
 
     private Context mContext;
-    private ToastUtils mToastUtils;
-    private FileUtils mFileUtils;
+    private ToastProvider mToastProvider;
+    private WolmoFileProvider mWolmoFileProvider;
 
     @Inject
-    public ImageUtils(Context context, ToastUtils toastUtils, FileUtils fileUtils) {
+    public ImageProvider(Context context, ToastProvider toastProvider, WolmoFileProvider wolmoFileProvider) {
         mContext = context;
-        mToastUtils = toastUtils;
-        mFileUtils = fileUtils;
+        mToastProvider = toastProvider;
+        mWolmoFileProvider = wolmoFileProvider;
     }
 
     /**
@@ -99,7 +101,7 @@ public class ImageUtils {
         if (i.resolveActivity(mContext.getPackageManager()) != null) {
             fragment.startActivityForResult(i, requestCode);
         } else {
-            mToastUtils.show(errorResId);
+            mToastProvider.show(errorResId);
         }
     }
 
@@ -140,15 +142,15 @@ public class ImageUtils {
 
         // Ensure that there's a camera app to handle the intent
         if (i.resolveActivity(mContext.getPackageManager()) == null) {
-            mToastUtils.show(errorResId);
+            mToastProvider.show(errorResId);
             return null;
         }
 
         File photoFile;
         try {
-            photoFile = mFileUtils.createFile(filename, format);
+            photoFile = mWolmoFileProvider.createFile(filename, format);
         } catch (IOException ex) {
-            mToastUtils.show(errorResId);
+            mToastProvider.show(errorResId);
             return null;
         }
 
@@ -208,7 +210,7 @@ public class ImageUtils {
             int maxHeight) {
 
         return getImageAsByteArray(
-                BitmapFactory.decodeFile(mFileUtils.getRealPathFromUri(imageFileUri)),
+                BitmapFactory.decodeFile(mWolmoFileProvider.getRealPathFromUri(imageFileUri)),
                 format,
                 quality,
                 maxWidth,

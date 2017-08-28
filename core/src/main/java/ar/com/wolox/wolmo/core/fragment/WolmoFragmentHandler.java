@@ -33,7 +33,7 @@ import android.view.ViewGroup;
 import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.ReflectionUtils;
-import ar.com.wolox.wolmo.core.util.ToastUtils;
+import ar.com.wolox.wolmo.core.util.provider.ToastProvider;
 
 import java.lang.reflect.Type;
 
@@ -59,7 +59,7 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
     private Unbinder mUnbinder;
 
     @Inject T mPresenter;
-    @Inject ToastUtils mToastUtils;
+    @Inject ToastProvider mToastProvider;
 
     @Inject
     public WolmoFragmentHandler() {}
@@ -88,7 +88,7 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
         if (!mWolmoFragment.handleArguments(mFragment.getArguments())) {
             Log.e(TAG, mFragment.getClass().getSimpleName() +
                 " - The fragment's handleArguments() returned false.");
-            mToastUtils.show(R.string.unknown_error);
+            mToastProvider.show(R.string.unknown_error);
             mFragment.getActivity().finish();
         }
     }
@@ -132,7 +132,7 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
             } catch (ClassNotFoundException | NullPointerException e) {
                 Log.e(TAG, mFragment.getClass().getSimpleName() +
                     " - The fragment should implement the presenter type argument.");
-                mToastUtils.show(R.string.unknown_error);
+                mToastProvider.show(R.string.unknown_error);
                 mFragment.getActivity().finish();
             }
         }

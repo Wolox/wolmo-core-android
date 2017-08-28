@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.util;
+package ar.com.wolox.wolmo.core.util.provider;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -40,12 +40,12 @@ import javax.inject.Inject;
  * Utils class for managing {@link File}s.
  */
 @ApplicationScope
-public class FileUtils {
+public class WolmoFileProvider {
 
     private Context mContext;
 
     @Inject
-    public FileUtils(Context context) {
+    public WolmoFileProvider(Context context) {
         mContext = context;
     }
 

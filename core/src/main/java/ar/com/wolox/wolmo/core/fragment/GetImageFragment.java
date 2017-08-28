@@ -31,8 +31,8 @@ import android.support.annotation.StringRes;
 import ar.com.wolox.wolmo.core.permission.PermissionListener;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-import ar.com.wolox.wolmo.core.util.FileUtils;
-import ar.com.wolox.wolmo.core.util.ImageUtils;
+import ar.com.wolox.wolmo.core.util.provider.WolmoFileProvider;
+import ar.com.wolox.wolmo.core.util.provider.ImageProvider;
 
 import java.io.File;
 
@@ -59,8 +59,8 @@ public abstract class GetImageFragment<T extends BasePresenter<?>> extends Wolmo
     private OnImageReturnCallback mImageCallback;
 
     @Inject PermissionManager mPermissionManager;
-    @Inject ImageUtils mImageUtils;
-    @Inject FileUtils mFileUtils;
+    @Inject ImageProvider mImageProvider;
+    @Inject WolmoFileProvider mWolmoFileProvider;
 
     /* Error types */
 
@@ -112,7 +112,7 @@ public abstract class GetImageFragment<T extends BasePresenter<?>> extends Wolmo
             switch (requestCode) {
                 case INTENT_CODE_IMAGE_GALLERY:
                     if (data != null) {
-                        String pathUri = mFileUtils.getRealPathFromUri(data.getData());
+                        String pathUri = mWolmoFileProvider.getRealPathFromUri(data.getData());
                         mImageCallback.success(new File(pathUri));
                     } else {
                         notifyError(Error.ERROR_DATA);
@@ -120,7 +120,7 @@ public abstract class GetImageFragment<T extends BasePresenter<?>> extends Wolmo
                     break;
 
                 case INTENT_CODE_IMAGE_CAMERA:
-                    mImageUtils.addPictureToDeviceGallery(Uri.fromFile(mPictureTakenFile));
+                    mImageProvider.addPictureToDeviceGallery(Uri.fromFile(mPictureTakenFile));
                     mImageCallback.success(mPictureTakenFile);
                     break;
 
@@ -189,7 +189,7 @@ public abstract class GetImageFragment<T extends BasePresenter<?>> extends Wolmo
             public void onPermissionsGranted() {
                 mImageCallback = onImageReturnCallback;
 
-                mImageUtils.getImageFromGallery(GetImageFragment.this, INTENT_CODE_IMAGE_GALLERY,
+                mImageProvider.getImageFromGallery(GetImageFragment.this, INTENT_CODE_IMAGE_GALLERY,
                     galleryErrorResId());
             }
 
@@ -214,11 +214,11 @@ public abstract class GetImageFragment<T extends BasePresenter<?>> extends Wolmo
                         mImageCallback = onImageReturnCallback;
 
                         mPictureTakenFile =
-                                mImageUtils.getImageFromCamera(
+                                mImageProvider.getImageFromCamera(
                                         GetImageFragment.this,
                                         INTENT_CODE_IMAGE_CAMERA,
                                         pictureTakenFilename(),
-                                        ImageUtils.PNG,
+                                        ImageProvider.PNG,
                                         cameraErrorResId());
                     }
 
