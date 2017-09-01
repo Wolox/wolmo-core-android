@@ -30,10 +30,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.fragment.IWolmoFragment;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
-import ar.com.wolox.wolmo.core.util.provider.ToastProvider;
+import ar.com.wolox.wolmo.core.util.ToastFactory;
 
 import java.util.List;
 
@@ -47,7 +46,7 @@ import dagger.android.support.DaggerAppCompatActivity;
  */
 public abstract class WolmoActivity extends DaggerAppCompatActivity {
 
-    @Inject ToastProvider mToastProvider;
+    @Inject ToastFactory mToastFactory;
     @Inject PermissionManager mPermissionManager;
     @Inject WolmoActivityHandler mActivityHandler;
 

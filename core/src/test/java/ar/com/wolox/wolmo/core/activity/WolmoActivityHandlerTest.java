@@ -11,7 +11,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import ar.com.wolox.wolmo.core.util.provider.ToastProvider;
+import ar.com.wolox.wolmo.core.util.ToastFactory;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,16 +29,16 @@ import butterknife.Unbinder;
 @PrepareForTest({ ButterKnife.class})
 public class WolmoActivityHandlerTest {
 
-    private ToastProvider mToastProvider;
+    private ToastFactory mToastFactory;
     private WolmoActivity mWolmoActivity;
     private WolmoActivityHandler mWolmoActivityHandler;
 
     @Before
     public void beforeTest() {
         mWolmoActivity = mock(WolmoActivity.class);
-        mToastProvider = mock(ToastProvider.class);
+        mToastFactory = mock(ToastFactory.class);
 
-        mWolmoActivityHandler = new WolmoActivityHandler(mToastProvider);
+        mWolmoActivityHandler = new WolmoActivityHandler(mToastFactory);
 
         // Mock calls to android.util.Log
         PowerMockito.mockStatic(ButterKnife.class);

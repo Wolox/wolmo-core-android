@@ -35,7 +35,7 @@ import android.view.View;
 
 import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-import ar.com.wolox.wolmo.core.util.provider.ToastProvider;
+import ar.com.wolox.wolmo.core.util.ToastFactory;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -55,7 +55,7 @@ public class WolmoFragmentHandlerTest {
 
     private WolmoFragmentHandler<BasePresenter> mWolmoFragmentHandler;
     private WolmoFragment mWolmoFragment;
-    private ToastProvider mToastProvider;
+    private ToastFactory mToastFactory;
 
     @Before
     @SuppressWarnings("unchecked")
@@ -63,11 +63,11 @@ public class WolmoFragmentHandlerTest {
         // Mock calls to android.util.Log
         PowerMockito.mockStatic(Log.class);
 
-        mToastProvider = mock(ToastProvider.class);
+        mToastFactory = mock(ToastFactory.class);
         mWolmoFragment = mock(WolmoFragment.class);
 
         mWolmoFragmentHandler = new WolmoFragmentHandler<>();
-        mWolmoFragmentHandler.mToastProvider = mToastProvider;
+        mWolmoFragmentHandler.mToastFactory = mToastFactory;
     }
 
     @Test
@@ -85,7 +85,7 @@ public class WolmoFragmentHandlerTest {
         when(mWolmoFragment.getActivity()).thenReturn(activity);
 
         mWolmoFragmentHandler.onCreate(mWolmoFragment, new Bundle());
-        verify(mToastProvider, times(1)).show(R.string.unknown_error);
+        verify(mToastFactory, times(1)).show(R.string.unknown_error);
         verify(activity, times(1)).finish();
     }
 

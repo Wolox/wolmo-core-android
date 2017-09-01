@@ -1,12 +1,11 @@
 package ar.com.wolox.wolmo.core.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import ar.com.wolox.wolmo.core.R;
-import ar.com.wolox.wolmo.core.util.provider.ToastProvider;
+import ar.com.wolox.wolmo.core.util.ToastFactory;
 
 import javax.inject.Inject;
 
@@ -15,13 +14,13 @@ import butterknife.Unbinder;
 
 public class WolmoActivityHandler {
 
-    private ToastProvider mToastProvider;
+    private ToastFactory mToastFactory;
     private WolmoActivity mWolmoActivity;
     private Unbinder mUnbinder;
 
     @Inject
-    public WolmoActivityHandler(ToastProvider toastProvider) {
-        mToastProvider = toastProvider;
+    public WolmoActivityHandler(ToastFactory toastFactory) {
+        mToastFactory = toastFactory;
     }
 
     /**
@@ -42,7 +41,7 @@ public class WolmoActivityHandler {
             mWolmoActivity.populate();
             mWolmoActivity.setListeners();
         } else {
-            mToastProvider.show(R.string.unknown_error);
+            mToastFactory.show(R.string.unknown_error);
             mWolmoActivity.finish();
         }
     }

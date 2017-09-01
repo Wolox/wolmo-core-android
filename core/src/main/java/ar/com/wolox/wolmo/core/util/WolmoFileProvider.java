@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.util.provider;
+package ar.com.wolox.wolmo.core.util;
 
 import android.content.Context;
 import android.database.Cursor;

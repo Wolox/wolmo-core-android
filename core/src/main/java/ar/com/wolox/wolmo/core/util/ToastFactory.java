@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.util.provider;
+package ar.com.wolox.wolmo.core.util;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -34,12 +34,12 @@ import javax.inject.Inject;
  * An utility class to work with Android's {@link Toast} messages
  */
 @ApplicationScope
-public class ToastProvider {
+public class ToastFactory {
 
     private Context mContext;
 
     @Inject
-    public ToastProvider(Context context) {
+    public ToastFactory(Context context) {
         mContext = context;
     }
 

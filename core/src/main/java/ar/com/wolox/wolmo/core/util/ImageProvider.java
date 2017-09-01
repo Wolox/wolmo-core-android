@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.util.provider;
+package ar.com.wolox.wolmo.core.util;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
@@ -38,8 +38,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 
 import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope;
-import ar.com.wolox.wolmo.core.util.provider.ToastProvider;
-import ar.com.wolox.wolmo.core.util.provider.WolmoFileProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -70,13 +68,13 @@ public class ImageProvider {
     public static final String JPG = "jpg";
 
     private Context mContext;
-    private ToastProvider mToastProvider;
+    private ToastFactory mToastFactory;
     private WolmoFileProvider mWolmoFileProvider;
 
     @Inject
-    public ImageProvider(Context context, ToastProvider toastProvider, WolmoFileProvider wolmoFileProvider) {
+    public ImageProvider(Context context, ToastFactory toastFactory, WolmoFileProvider wolmoFileProvider) {
         mContext = context;
-        mToastProvider = toastProvider;
+        mToastFactory = toastFactory;
         mWolmoFileProvider = wolmoFileProvider;
     }
 
@@ -101,7 +99,7 @@ public class ImageProvider {
         if (i.resolveActivity(mContext.getPackageManager()) != null) {
             fragment.startActivityForResult(i, requestCode);
         } else {
-            mToastProvider.show(errorResId);
+            mToastFactory.show(errorResId);
         }
     }
 
@@ -142,7 +140,7 @@ public class ImageProvider {
 
         // Ensure that there's a camera app to handle the intent
         if (i.resolveActivity(mContext.getPackageManager()) == null) {
-            mToastProvider.show(errorResId);
+            mToastFactory.show(errorResId);
             return null;
         }
 
@@ -150,7 +148,7 @@ public class ImageProvider {
         try {
             photoFile = mWolmoFileProvider.createFile(filename, format);
         } catch (IOException ex) {
-            mToastProvider.show(errorResId);
+            mToastFactory.show(errorResId);
             return null;
         }
 
