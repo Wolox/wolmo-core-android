@@ -30,24 +30,52 @@ import android.support.v4.util.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.inject.Inject;
+
+/**
+ * Basic implementation of {@link FragmentPagerAdapter} with support for Titles.
+ *
+ * To use it with dagger you need to provide the {@link FragmentManager} from the activity you wish
+ * to use the adapter from.
+ *
+ * <pre>{@code
+ *      @literal @Module
+ *       public class ActivityModule {
+ *
+ *          @literal @Provides
+ *          @literal @PerActivity
+ *           FragmentManager fragmentManager() {
+ *               return activity.getFragmentManager();
+ *           }
+ *       }
+ *   }</pre>
+ */
 public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    private ArrayList<Pair<Fragment, String>> mFragmentsAndTitles = new ArrayList<>();
+    @Inject
+    ArrayList<Pair<Fragment, String>> mFragmentsAndTitles;
 
     /**
-     * Constructor, requires an instance of a {@link FragmentManager} and a variable length
-     * argument with instances of {@link Pair} containing a {@link Fragment} and corresponding
-     * {@link String} with the title for that {@link Fragment}
+     * Constructor, requires an instance of a {@link FragmentManager}.
      *
      * @param fm    An instance of {@link FragmentManager}. Cannot be null.
+     */
+    @Inject
+    public SimpleFragmentPagerAdapter(@NonNull FragmentManager fm) {
+        super(fm);
+    }
+
+    /**
+     * Adds a variable length argument with instances of {@link Pair} containing a {@link Fragment}
+     * and corresponding {@link String} with the title for that {@link Fragment}.
+     *
      * @param pairs A variable length of pairs of fragments and titles. Can be empty, but each
      *              element cannot be null.
      */
     @SafeVarargs
-    public SimpleFragmentPagerAdapter(@NonNull FragmentManager fm,
-                                      @NonNull Pair<Fragment, String>... pairs) {
-        super(fm);
+    public final void addFragments(@NonNull Pair<Fragment, String>... pairs) {
         Collections.addAll(mFragmentsAndTitles, pairs);
+        notifyDataSetChanged();
     }
 
     /**

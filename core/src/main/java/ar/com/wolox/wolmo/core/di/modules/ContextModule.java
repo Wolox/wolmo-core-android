@@ -32,6 +32,10 @@ import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope;
 import dagger.Module;
 import dagger.Provides;
 
+/**
+ * Provides objects that depends of the Application {@link Context}.
+ * The objects provided by this module uses {@link ApplicationScope}.
+ */
 @Module
 public class ContextModule {
 
