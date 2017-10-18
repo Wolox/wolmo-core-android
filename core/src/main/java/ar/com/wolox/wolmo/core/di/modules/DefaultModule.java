@@ -2,6 +2,10 @@ package ar.com.wolox.wolmo.core.di.modules;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
+import android.util.SparseArray;
+
+import ar.com.wolox.wolmo.core.permission.PermissionListener;
+import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 
 import java.util.ArrayList;
 
@@ -19,5 +23,15 @@ public class DefaultModule {
     @Provides
     ArrayList<Pair<Fragment, String>> provideFragmentsAndTitles() {
         return new ArrayList<>();
+    }
+
+    @Provides
+    SparseArray<PermissionListener> providesPermissionManagerArray() {
+        return new SparseArray<>();
+    }
+
+    @Provides
+    static BasePresenter providesBasePresenter() {
+        return new BasePresenter();
     }
 }

@@ -44,7 +44,7 @@ import javax.inject.Inject;
  *
  *          @literal @Provides
  *          @literal @PerActivity
- *           FragmentManager fragmentManager() {
+ *           FragmentManager provideFragmentManager(Activity activity) {
  *               return activity.getFragmentManager();
  *           }
  *       }
