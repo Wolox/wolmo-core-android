@@ -28,9 +28,6 @@ dependencies {
     // Butterknife
     provided "com.jakewharton:butterknife:$butterknife_version"
 
-    // Joda Time
-    compile "joda-time:joda-time:2.9.9"
-
     // Dagger
     provided "com.google.dagger:dagger:$dagger_version"
     provided "com.google.dagger:dagger-android-support:$dagger_version"
