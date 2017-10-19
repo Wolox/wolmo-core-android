@@ -21,12 +21,12 @@ import dagger.Provides;
 public class DefaultModule {
 
     @Provides
-    ArrayList<Pair<Fragment, String>> provideFragmentsAndTitles() {
+    static ArrayList<Pair<Fragment, String>> provideFragmentsAndTitles() {
         return new ArrayList<>();
     }
 
     @Provides
-    SparseArray<PermissionListener> providesPermissionManagerArray() {
+    static SparseArray<PermissionListener> providesPermissionManagerArray() {
         return new SparseArray<>();
     }
 
