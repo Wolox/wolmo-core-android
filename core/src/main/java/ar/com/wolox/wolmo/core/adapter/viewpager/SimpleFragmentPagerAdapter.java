@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.util.Pair;
 
 import java.util.ArrayList;
@@ -50,10 +51,9 @@ import javax.inject.Inject;
  *       }
  *   }</pre>
  */
-public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
+public class SimpleFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
-    @Inject
-    ArrayList<Pair<Fragment, String>> mFragmentsAndTitles;
+    private ArrayList<Pair<Fragment, String>> mFragmentsAndTitles;
 
     /**
      * Constructor, requires an instance of a {@link FragmentManager}.
@@ -63,6 +63,7 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
     @Inject
     public SimpleFragmentPagerAdapter(@NonNull FragmentManager fm) {
         super(fm);
+        mFragmentsAndTitles = new ArrayList<>();
     }
 
     /**

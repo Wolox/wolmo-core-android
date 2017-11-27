@@ -17,15 +17,6 @@ import java.util.ArrayList;
 public class DefaultModuleTest {
 
     @Test
-    public void provideFragmentsAndTitlesShouldReturnNewArrayList() {
-        ArrayList<Pair<Fragment, String>> list1 = DefaultModule.provideFragmentsAndTitles();
-        ArrayList<Pair<Fragment, String>> list2 = DefaultModule.provideFragmentsAndTitles();
-
-        assertThat(list1).isNotNull().isNotSameAs(list2);
-        assertThat(list1).isEmpty();
-    }
-
-    @Test
     public void providePermissionManagerShouldReturnNewArray() {
         SparseArray<PermissionListener> array1 = DefaultModule.providesPermissionManagerArray();
         SparseArray<PermissionListener> array2 = DefaultModule.providesPermissionManagerArray();

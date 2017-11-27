@@ -21,16 +21,13 @@ public class SimpleFragmentPagerAdapterTest {
 
     private SimpleFragmentPagerAdapter mSimpleFragmentPagerAdapter;
     private FragmentManager mFragmentManager;
-    private ArrayList<Pair<Fragment, String>> mFragmentsAndTitles;
 
     @Before
     public void beforeTest() {
         mFragmentManager = mock(FragmentManager.class);
-        mFragmentsAndTitles = new ArrayList<>();
 
         // We need to create the object to test and inject it manually!
         mSimpleFragmentPagerAdapter = spy(new SimpleFragmentPagerAdapter(mFragmentManager));
-        mSimpleFragmentPagerAdapter.mFragmentsAndTitles = mFragmentsAndTitles;
         // Do nothing when calling notifyDataSetChanged because it uses DataSetObservable
         doNothing().when(mSimpleFragmentPagerAdapter).notifyDataSetChanged();
     }
@@ -42,9 +39,8 @@ public class SimpleFragmentPagerAdapterTest {
         mSimpleFragmentPagerAdapter.addFragment(fragment, "Title");
 
         assertThat(mSimpleFragmentPagerAdapter.getCount()).isEqualTo(1);
-        assertThat(mFragmentsAndTitles).extracting("first", "second").containsOnly(
-            tuple(fragment, "Title"));
-
+        assertThat(mSimpleFragmentPagerAdapter.getItem(0)).isSameAs(fragment);
+        assertThat(mSimpleFragmentPagerAdapter.getPageTitle(0)).isEqualTo("Title");
         verify(mSimpleFragmentPagerAdapter, times(1)).notifyDataSetChanged();
     }
 
@@ -57,9 +53,10 @@ public class SimpleFragmentPagerAdapterTest {
             new Pair<>(fragment2, "Title2"));
 
         assertThat(mSimpleFragmentPagerAdapter.getCount()).isEqualTo(2);
-        assertThat(mFragmentsAndTitles).extracting("first", "second").containsExactly(
-            tuple(fragment1, "Title1"), tuple(fragment2, "Title2"));
-
+        assertThat(mSimpleFragmentPagerAdapter.getItem(0)).isSameAs(fragment1);
+        assertThat(mSimpleFragmentPagerAdapter.getPageTitle(0)).isEqualTo("Title1");
+        assertThat(mSimpleFragmentPagerAdapter.getItem(1)).isSameAs(fragment2);
+        assertThat(mSimpleFragmentPagerAdapter.getPageTitle(1)).isEqualTo("Title2");
         verify(mSimpleFragmentPagerAdapter, times(1)).notifyDataSetChanged();
     }
 
