@@ -58,11 +58,11 @@ public class ImageProvider {
             PNG,
             JPG
     })
-    /**
+
+    /*
      * Image compression formats supported.
      */
-    public @interface ImageFormat {
-    }
+    public @interface ImageFormat {}
 
     public static final String PNG = "png";
     public static final String JPG = "jpg";

@@ -62,7 +62,7 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
     @Inject ToastFactory mToastFactory;
 
     @Inject
-    public WolmoFragmentHandler() {}
+    WolmoFragmentHandler() {}
 
     /**
      * Sets the fragment for this fragment handler.
@@ -86,8 +86,8 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
     void onCreate(@NonNull IWolmoFragment wolmoFragment, @Nullable Bundle savedInstanceState) {
         setFragment(wolmoFragment);
         if (!mWolmoFragment.handleArguments(mFragment.getArguments())) {
-            Log.e(TAG, mFragment.getClass().getSimpleName() +
-                " - The fragment's handleArguments() returned false.");
+            Log.e(TAG, mFragment.getClass().getSimpleName()
+                    + " - The fragment's handleArguments() returned false.");
             mToastFactory.show(R.string.unknown_error);
             mFragment.getActivity().finish();
         }
@@ -106,7 +106,7 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
      * </ul><p>
      */
     View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-        @Nullable Bundle savedInstanceState) {
+            @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(mWolmoFragment.layout(), container, false);
         mUnbinder = ButterKnife.bind(mFragment, v);
@@ -126,12 +126,12 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
             try {
                 Type[] viewTypes = ReflectionUtils.getParameterizedTypes(getPresenter());
                 if (viewTypes != null && ReflectionUtils.getClass(viewTypes[0])
-                    .isAssignableFrom(mWolmoFragment.getClass())) {
+                        .isAssignableFrom(mWolmoFragment.getClass())) {
                     mPresenter.attachView(mWolmoFragment);
                 }
             } catch (ClassNotFoundException | NullPointerException e) {
-                Log.e(TAG, mFragment.getClass().getSimpleName() +
-                    " - The fragment should implement the presenter type argument.");
+                Log.e(TAG, mFragment.getClass().getSimpleName()
+                        + " - The fragment should implement the presenter type argument.");
                 mToastFactory.show(R.string.unknown_error);
                 mFragment.getActivity().finish();
             }

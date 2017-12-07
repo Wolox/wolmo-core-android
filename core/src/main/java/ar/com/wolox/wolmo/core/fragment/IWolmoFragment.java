@@ -49,6 +49,7 @@ public interface IWolmoFragment {
      * <b>NOTE: </b>Returning <i>false</i> will end the execution of the fragment.
      *
      * @param args The bundle obtainable by the {@link Fragment#getArguments()} method.
+     *
      * @return <b>true</b> if this fragment contains the required values, <b>false</b> otherwise.
      * Default implementation returns true.
      */

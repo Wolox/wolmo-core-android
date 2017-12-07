@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package ar.com.wolox.wolmo.core.di.modules;
 
 import android.app.Activity;
@@ -50,5 +49,4 @@ public class ContextModule {
     SharedPreferences provideSharedPreferences(String sharedPrefName, Context context) {
         return context.getSharedPreferences(sharedPrefName, Activity.MODE_PRIVATE);
     }
-
 }

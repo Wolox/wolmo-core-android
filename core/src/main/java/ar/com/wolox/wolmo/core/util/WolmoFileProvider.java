@@ -55,13 +55,13 @@ public class WolmoFileProvider {
      * The file ends up being stored as:
      * filename + "." + extension
      *
-     * @param filename  File name, used as described above
+     * @param filename File name, used as described above
      * @param extension ImageFormat of the file, used as described above
+     *
      * @return {@link File} result of the creation
      * @throws IOException If a file could not be created
      */
-    public File createFile(
-            @NonNull String filename, @NonNull String extension) throws IOException {
+    public File createFile(@NonNull String filename, @NonNull String extension) throws IOException {
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
         // The suffix will be appended as it is, we need to add the dot manually
@@ -76,13 +76,14 @@ public class WolmoFileProvider {
      * Get the physical path to a stored File by providing a URI of a content provider.
      *
      * @param fileUri A URI of a content provider pointing to an image resource
+     *
      * @return A path to the real file location, or null if it can't find it
      */
     @Nullable
     public String getRealPathFromUri(@NonNull Uri fileUri) {
         Cursor cursor = null;
         try {
-            String[] proj = {MediaStore.Images.Media.DATA};
+            String[] proj = { MediaStore.Images.Media.DATA };
             cursor = mContext.getContentResolver().query(fileUri, proj, null, null, null);
 
             if (cursor == null) return null;
@@ -96,5 +97,4 @@ public class WolmoFileProvider {
             }
         }
     }
-
 }

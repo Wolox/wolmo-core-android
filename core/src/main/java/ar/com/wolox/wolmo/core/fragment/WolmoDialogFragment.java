@@ -23,7 +23,6 @@ package ar.com.wolox.wolmo.core.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -66,15 +65,17 @@ public abstract class WolmoDialogFragment<T extends BasePresenter<?>> extends Di
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        }
         return dialog;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (getDialog() != null) {
+        if (getDialog() != null && getDialog().getWindow() != null) {
             getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT);
             Drawable backgroundDrawable = new ColorDrawable(Color.argb(1, 255, 0, 0));
@@ -94,12 +95,8 @@ public abstract class WolmoDialogFragment<T extends BasePresenter<?>> extends Di
      */
     private void setOnBackPressedListener() {
         if (getDialog() == null) return;
-        getDialog().setOnKeyListener(new Dialog.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface arg0, int keyCode, KeyEvent event) {
-                return keyCode == KeyEvent.KEYCODE_BACK && onBackPressed();
-            }
-        });
+        getDialog().setOnKeyListener(
+                (dialog, keyCode, event) -> keyCode == KeyEvent.KEYCODE_BACK && onBackPressed());
     }
 
     @Override
@@ -112,7 +109,7 @@ public abstract class WolmoDialogFragment<T extends BasePresenter<?>> extends Di
     @Override
     @CallSuper
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         return mFragmentHandler.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -154,6 +151,7 @@ public abstract class WolmoDialogFragment<T extends BasePresenter<?>> extends Di
      * Reads arguments sent as a Bundle extras.
      *
      * @param arguments The bundle obtainable by the getExtras method of the intent.
+     *
      * @return true if arguments were read successfully, false otherwise.
      * Default implementation returns true.
      */
@@ -166,39 +164,34 @@ public abstract class WolmoDialogFragment<T extends BasePresenter<?>> extends Di
      * provided in {@link IWolmoFragment#layout()}
      * Override if needed. If using {@link ButterKnife}, there is no need to use this method.
      */
-    public void setUi(View v) {
-    }
+    public void setUi(View v) {}
 
     /**
      * Sets the listeners for the views of the fragment.
      * Override if needed.
      */
-    public void setListeners() {
-    }
+    public void setListeners() {}
 
     /**
      * Callback called when the fragment becomes visible to the user.
      * Override if needed.
      */
     @Override
-    public void onVisible() {
-    }
+    public void onVisible() {}
 
     /**
      * Callback called when the fragment becomes hidden to the user.
      * Override if needed.
      */
     @Override
-    public void onHide() {
-    }
+    public void onHide() {}
 
     /**
      * Populates the view elements of the fragment.
      * Override if needed.
      */
     @Override
-    public void populate() {
-    }
+    public void populate() {}
 
     /**
      * Returns the instance of the presenter for this fragment.
@@ -221,7 +214,8 @@ public abstract class WolmoDialogFragment<T extends BasePresenter<?>> extends Di
     /**
      * @see IWolmoFragment#onBackPressed()
      * <p>
-     * Beware, when overriding, that returning 'true' will prevent default navigation behaviour such
+     * Beware, when overriding, that returning 'true' will prevent default navigation behaviour
+     * such
      * as {@link Dialog#dismiss()}.
      */
     @Override
@@ -230,9 +224,8 @@ public abstract class WolmoDialogFragment<T extends BasePresenter<?>> extends Di
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mPermissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }

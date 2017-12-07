@@ -58,7 +58,7 @@ public class SimpleFragmentPagerAdapter extends FragmentStatePagerAdapter {
     /**
      * Constructor, requires an instance of a {@link FragmentManager}.
      *
-     * @param fm    An instance of {@link FragmentManager}. Cannot be null.
+     * @param fm An instance of {@link FragmentManager}. Cannot be null.
      */
     @Inject
     public SimpleFragmentPagerAdapter(@NonNull FragmentManager fm) {
@@ -71,7 +71,7 @@ public class SimpleFragmentPagerAdapter extends FragmentStatePagerAdapter {
      * and corresponding {@link String} with the title for that {@link Fragment}.
      *
      * @param pairs A variable length of pairs of fragments and titles. Can be empty, but each
-     *              element cannot be null.
+     * element cannot be null.
      */
     @SafeVarargs
     public final void addFragments(@NonNull Pair<Fragment, String>... pairs) {
@@ -83,7 +83,7 @@ public class SimpleFragmentPagerAdapter extends FragmentStatePagerAdapter {
      * Adds a {@link Fragment} instance with a corresponding {@link String} title to the adapter
      *
      * @param fragment an instance of {@link Fragment} that will be displayed in the adapter.
-     * @param title    a title corresponding to the {@link Fragment} that will be added
+     * @param title a title corresponding to the {@link Fragment} that will be added
      */
     public void addFragment(@NonNull Fragment fragment, @NonNull String title) {
         mFragmentsAndTitles.add(new Pair<>(fragment, title));

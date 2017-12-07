@@ -81,6 +81,7 @@ public abstract class WolmoActivity extends DaggerAppCompatActivity {
      * Reads arguments sent as a Bundle and saves them as appropriate.
      *
      * @param args The bundle obtainable by the getExtras method of the intent.
+     *
      * @return true if arguments were read successfully, false otherwise.
      * Default implementation returns true.
      */
@@ -118,15 +119,12 @@ public abstract class WolmoActivity extends DaggerAppCompatActivity {
      * Replaces the current {@link Fragment} in a given container layout with a new {@link Fragment}
      *
      * @param resId The ID of the layout that holds the current {@link Fragment}. It should be the
-     *              same container that will be used for the new {@link Fragment}
-     * @param f     An instance of a {@link Fragment} that will replace the older one.
+     * same container that will be used for the new {@link Fragment}
+     * @param f An instance of a {@link Fragment} that will replace the older one.
      */
     // TODO We should delegate this methods to a helper
     protected void replaceFragment(int resId, Fragment f) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(resId, f)
-                .commit();
+        getSupportFragmentManager().beginTransaction().replace(resId, f).commit();
     }
 
     /**
@@ -134,16 +132,13 @@ public abstract class WolmoActivity extends DaggerAppCompatActivity {
      * using a custom tag ({@link String}) that allows the fragment to be more easily located.
      *
      * @param resId The ID of the layout that holds the current {@link Fragment}. It should be the
-     *              same container that will be used for the new {@link Fragment}
-     * @param f     An instance of a {@link Fragment} that will replace the older one.
-     * @param tag   A {@link String} that will be used to identify the {@link Fragment}
+     * same container that will be used for the new {@link Fragment}
+     * @param f An instance of a {@link Fragment} that will replace the older one.
+     * @param tag A {@link String} that will be used to identify the {@link Fragment}
      */
     // TODO We should delegate this methods to a helper
     protected void replaceFragment(int resId, Fragment f, String tag) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(resId, f, tag)
-                .commit();
+        getSupportFragmentManager().beginTransaction().replace(resId, f, tag).commit();
     }
 
     @Override
@@ -161,9 +156,8 @@ public abstract class WolmoActivity extends DaggerAppCompatActivity {
      */
     @Override
     @CallSuper
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mPermissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }

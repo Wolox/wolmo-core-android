@@ -55,7 +55,8 @@ public class BasePresenter<V> {
 
     /**
      * Call this method to attach a view to this presenter.
-     * The attached view should be ready to interact with it. This method calls {@link #onViewAttached()}
+     * The attached view should be ready to interact with it. This method calls {@link
+     * #onViewAttached()}
      * to notify subclasses that a view was attached.
      *
      * @param viewInstance Instance of the view to attach
@@ -113,7 +114,8 @@ public class BasePresenter<V> {
 
     /**
      * Functional interface to define a consumer method.
-     * A consumer is a interface with only a method that accepts a parameter and does not return anything.
+     * A consumer is a interface with only a method that accepts a parameter and does not return
+     * anything.
      *
      * @param <T> Parameter
      */
@@ -126,5 +128,4 @@ public class BasePresenter<V> {
          */
         void accept(T param);
     }
-
 }

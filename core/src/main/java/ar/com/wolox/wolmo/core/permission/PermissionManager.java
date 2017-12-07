@@ -58,15 +58,15 @@ public class PermissionManager {
      * Request one or more Android's runtime permissions using a {@link Fragment} to perform the
      * request.
      *
-     * @param fragment    An instance of the {@link Fragment} that requires the permissions.
-     * @param listener    A {@link PermissionListener} to receive the response of the request. Can
-     *                    be null if not interested in the response.
+     * @param fragment An instance of the {@link Fragment} that requires the permissions.
+     * @param listener A {@link PermissionListener} to receive the response of the request. Can
+     * be null if not interested in the response.
      * @param permissions One or more {@link String} objects with the permissions to be requested.
+     *
      * @return returns true if every requested permission was already granted, false otherwise.
      */
     public boolean requestPermission(@NonNull Fragment fragment,
-                                     @Nullable PermissionListener listener,
-                                     @NonNull String... permissions) {
+            @Nullable PermissionListener listener, @NonNull String... permissions) {
         String[] ungrantedPermissions = filterUngranted(permissions);
         if (ungrantedPermissions.length > 0) {
             fragment.requestPermissions(ungrantedPermissions, mRequestCount);
@@ -81,15 +81,15 @@ public class PermissionManager {
      * Request one or more Android's runtime permissions using an {@link Activity} to perform the
      * request.
      *
-     * @param activity    An instance of the {@link Activity} that requires the permissions.
-     * @param listener    A {@link PermissionListener} to receive the response of the request. Can
-     *                    be null if not interested in the response.
+     * @param activity An instance of the {@link Activity} that requires the permissions.
+     * @param listener A {@link PermissionListener} to receive the response of the request. Can
+     * be null if not interested in the response.
      * @param permissions One or more {@link String} objects with the permissions to be requested.
+     *
      * @return returns true if every requested permission was already granted, false otherwise.
      */
     public boolean requestPermission(@NonNull Activity activity,
-                                     @Nullable PermissionListener listener,
-                                     @NonNull String... permissions) {
+            @Nullable PermissionListener listener, @NonNull String... permissions) {
         String[] ungrantedPermissions = filterUngranted(permissions);
         if (ungrantedPermissions.length > 0) {
             ActivityCompat.requestPermissions(activity, ungrantedPermissions, mRequestCount);
@@ -112,15 +112,14 @@ public class PermissionManager {
      * {@link Fragment#onRequestPermissionsResult(int, String[], int[])} should call THIS method
      * to delegate its behaviour.
      *
-     * @param requestCode  The request code passed when requesting the permissions.
-     * @param permissions  The requested permissions. Never null.
+     * @param requestCode The request code passed when requesting the permissions.
+     * @param permissions The requested permissions. Never null.
      * @param grantResults The grant results for the corresponding permissions which is either
-     *                     {@link android.content.pm.PackageManager#PERMISSION_GRANTED} or
-     *                     {@link android.content.pm.PackageManager#PERMISSION_DENIED}. Never null.
+     * {@link android.content.pm.PackageManager#PERMISSION_GRANTED} or
+     * {@link android.content.pm.PackageManager#PERMISSION_DENIED}. Never null.
      */
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull final String[] permissions,
-                                           @NonNull final int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions,
+            @NonNull final int[] grantResults) {
         final PermissionListener listener = mRequestListeners.get(requestCode);
         if (listener != null) {
             mRequestListeners.remove(requestCode);
@@ -142,6 +141,7 @@ public class PermissionManager {
      * Filters a list of permissions and returns only the ones which have not been granted.
      *
      * @param permissions An array of {@link String} with the permissions that will be filtered.
+     *
      * @return An array of {@link String} representing permissions that are not currently granted.
      */
     @NonNull
@@ -161,7 +161,8 @@ public class PermissionManager {
      * {@link PermissionManager#onRequestPermissionsResult(int, String[], int[])}.
      *
      * @param results An array of int provided by
-     *                {@link PermissionManager#onRequestPermissionsResult(int, String[], int[])}
+     * {@link PermissionManager#onRequestPermissionsResult(int, String[], int[])}
+     *
      * @return returns true if every permission was granted, false otherwise.
      */
     private boolean allGranted(int[] results) {

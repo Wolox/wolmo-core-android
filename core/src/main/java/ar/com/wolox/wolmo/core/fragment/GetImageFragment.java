@@ -31,8 +31,8 @@ import android.support.annotation.StringRes;
 import ar.com.wolox.wolmo.core.permission.PermissionListener;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-import ar.com.wolox.wolmo.core.util.WolmoFileProvider;
 import ar.com.wolox.wolmo.core.util.ImageProvider;
+import ar.com.wolox.wolmo.core.util.WolmoFileProvider;
 
 import java.io.File;
 
@@ -45,12 +45,13 @@ import javax.inject.Inject;
  */
 public abstract class GetImageFragment<T extends BasePresenter<?>> extends WolmoFragment {
 
-    private static final String[] CAMERA_PERMISSIONS = new String[]{
-            Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private static final String[] CAMERA_PERMISSIONS = new String[] {
+            Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
-    private static final String[] GALLERY_PERMISSIONS = new String[]{
-            Manifest.permission.READ_EXTERNAL_STORAGE};
+    private static final String[] GALLERY_PERMISSIONS = new String[] {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
 
     private static final int INTENT_CODE_IMAGE_GALLERY = 9000;
     private static final int INTENT_CODE_IMAGE_CAMERA = 9001;
@@ -89,8 +90,8 @@ public abstract class GetImageFragment<T extends BasePresenter<?>> extends Wolmo
          * Method for when the image retrieval was a success, exposing the {@link Uri} of the image.
          *
          * @param file retrieved image file
-         *             Returning the Uri brought us some trouble. Anyway, it can be easily retrieved
-         *             calling {@link Uri#fromFile(File)}
+         * Returning the Uri brought us some trouble. Anyway, it can be easily retrieved
+         * calling {@link Uri#fromFile(File)}
          */
         void success(@NonNull File file);
 
@@ -101,7 +102,6 @@ public abstract class GetImageFragment<T extends BasePresenter<?>> extends Wolmo
          * @param error describing the failure reason
          */
         void error(@NonNull Error error);
-
     }
 
     @Override
@@ -111,7 +111,7 @@ public abstract class GetImageFragment<T extends BasePresenter<?>> extends Wolmo
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case INTENT_CODE_IMAGE_GALLERY:
-                    if (data != null) {
+                    if (data != null && data.getData() != null) {
                         String pathUri = mWolmoFileProvider.getRealPathFromUri(data.getData());
                         mImageCallback.success(new File(pathUri));
                     } else {
@@ -137,7 +137,6 @@ public abstract class GetImageFragment<T extends BasePresenter<?>> extends Wolmo
                 default:
                     notifyError(Error.ERROR_UNKNOWN);
             }
-
         }
 
         clearCallbacks();
@@ -183,14 +182,14 @@ public abstract class GetImageFragment<T extends BasePresenter<?>> extends Wolmo
      * @param onImageReturnCallback callback for request result
      */
     protected void selectImageFromGallery(
-          @NonNull final OnImageReturnCallback onImageReturnCallback) {
+            @NonNull final OnImageReturnCallback onImageReturnCallback) {
         mPermissionManager.requestPermission(this, new PermissionListener() {
             @Override
             public void onPermissionsGranted() {
                 mImageCallback = onImageReturnCallback;
 
                 mImageProvider.getImageFromGallery(GetImageFragment.this, INTENT_CODE_IMAGE_GALLERY,
-                    galleryErrorResId());
+                        galleryErrorResId());
             }
 
             @Override
@@ -206,28 +205,20 @@ public abstract class GetImageFragment<T extends BasePresenter<?>> extends Wolmo
      * @param onImageReturnCallback callback for request result
      */
     protected void takePicture(@NonNull final OnImageReturnCallback onImageReturnCallback) {
-        mPermissionManager.requestPermission(
-                this,
-                new PermissionListener() {
-                    @Override
-                    public void onPermissionsGranted() {
-                        mImageCallback = onImageReturnCallback;
+        mPermissionManager.requestPermission(this, new PermissionListener() {
+            @Override
+            public void onPermissionsGranted() {
+                mImageCallback = onImageReturnCallback;
 
-                        mPictureTakenFile =
-                                mImageProvider.getImageFromCamera(
-                                        GetImageFragment.this,
-                                        INTENT_CODE_IMAGE_CAMERA,
-                                        pictureTakenFilename(),
-                                        ImageProvider.PNG,
-                                        cameraErrorResId());
-                    }
+                mPictureTakenFile = mImageProvider
+                        .getImageFromCamera(GetImageFragment.this, INTENT_CODE_IMAGE_CAMERA,
+                                pictureTakenFilename(), ImageProvider.PNG, cameraErrorResId());
+            }
 
-                    @Override
-                    public void onPermissionsDenied(@NonNull String[] deniedPermissions) {
-                        onImageReturnCallback.error(Error.PERMISSION_DENIED);
-                    }
-                },
-                CAMERA_PERMISSIONS);
+            @Override
+            public void onPermissionsDenied(@NonNull String[] deniedPermissions) {
+                onImageReturnCallback.error(Error.PERMISSION_DENIED);
+            }
+        }, CAMERA_PERMISSIONS);
     }
-
 }
