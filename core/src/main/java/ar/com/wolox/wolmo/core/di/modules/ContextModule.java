@@ -19,24 +19,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.permission;
+package ar.com.wolox.wolmo.core.di.modules;
 
-import android.support.annotation.NonNull;
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope;
+
+import dagger.Module;
+import dagger.Provides;
 
 /**
- * Callback used by {@link PermissionManager} when requesting permissions to the user
+ * Provides objects that depends of the Application {@link Context}.
+ * The objects provided by this module uses {@link ApplicationScope}.
  */
-public abstract class PermissionListener {
+@Module
+public class ContextModule {
 
-    /**
-     * Called when the required permissions are granted by the user
-     */
-    public void onPermissionsGranted() {}
+    @Provides
+    @ApplicationScope
+    Context provideContext(Application application) {
+        return application.getApplicationContext();
+    }
 
-    /**
-     * Called when all or some of the requested permissions are rejected by the user
-     *
-     * @param deniedPermissions Array of {@link String} that contains the denied permissions
-     */
-    public void onPermissionsDenied(@NonNull String[] deniedPermissions) {}
+    @Provides
+    @ApplicationScope
+    SharedPreferences provideSharedPreferences(String sharedPrefName, Context context) {
+        return context.getSharedPreferences(sharedPrefName, Activity.MODE_PRIVATE);
+    }
 }

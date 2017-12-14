@@ -1,32 +1,58 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'jacoco-android'
+apply plugin: 'com.github.kt3k.coveralls'
 
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
 
-    defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 26
-        consumerProguardFiles 'proguard-joda-time.pro', 'proguard-butterknife.pro'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 26
+        consumerProguardFiles 'proguard-joda-time.pro', 'proguard-butterknife.pro', 'proguard-dagger.pro'
+    }
+}
+
+jacocoAndroidUnitTestReport {
+    excludes = defaultExcludes + ['**/*_Factory.class']
+}
+
+coveralls {
+    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoTestReleaseUnitTestReport/jacocoTestReleaseUnitTestReport.xml"
 }
 
 buildscript {
     ext.support_library_version = '26.1.0'
-    ext.butterknife_version = '8.6.0'
-    ext.joda_time_version = '2.9.9'
+    ext.butterknife_version = '8.8.1'
+    ext.dagger_version = '2.13'
+    ext.powermock_version = '1.7.0'
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Support
-    compile "com.android.support:appcompat-v7:$support_library_version"
+    api "com.android.support:appcompat-v7:$support_library_version"
 
-    // Butterknife
-    provided "com.jakewharton:butterknife:$butterknife_version"
+    // ButterKnife
+    api "com.jakewharton:butterknife:$butterknife_version"
 
-    // Joda Time
-    compile "joda-time:joda-time:$joda_time_version"
+    // Dagger
+    api "com.google.dagger:dagger:$dagger_version"
+    api "com.google.dagger:dagger-android-support:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
+
+    // Test
+    testImplementation "junit:junit:4.12"
+    testImplementation "org.mockito:mockito-inline:2.8.47" // Mockito inline adds support for mocking final classes and methods
+    testImplementation "org.powermock:powermock-module-junit4:$powermock_version"
+    testImplementation "org.powermock:powermock-api-mockito2:$powermock_version"
+    testImplementation "org.assertj:assertj-core:3.8.0"
 }

@@ -21,35 +21,26 @@
  */
 package ar.com.wolox.wolmo.core.presenter;
 
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
+import javax.inject.Inject;
 
 /**
  * Base presenter that provides the view to the specific presenters.
  */
-public class BasePresenter<T> {
+public class BasePresenter<V> {
 
-    private final T mViewInstance;
-    private boolean mViewCreated;
-    private boolean mViewAttached;
+    private V mViewInstance;
 
-    public BasePresenter(@NonNull T viewInstance) {
-        mViewInstance = viewInstance;
-        mViewAttached = true;
-    }
+    @Inject
+    public BasePresenter() {}
 
     /**
      * Returns the view attached this presenter.
-     * <b>NOTE: </b> You should check if the view is created, or at least attached calling the
-     * methods {@link BasePresenter#isViewCreated()} and
-     * {@link BasePresenter#isViewAttached()} before calling any method of the view.
-     * It's not safe to call methods if the view isn't created and you should not call methods
-     * if the view is not attached.
+     * <b>NOTE: </b> You should check if the view is attached calling the
+     * method {@link BasePresenter#isViewAttached before calling any method of the view.
      *
-     * @return Attached view
+     * @return Attached view, if any. Otherwise return null.
      */
-    @NonNull
-    protected final T getView() {
+    protected final V getView() {
         return mViewInstance;
     }
 
@@ -59,76 +50,72 @@ public class BasePresenter<T> {
      * @return <b>true</b> if the view is attached, <b>false</b> otherwise.
      */
     public final boolean isViewAttached() {
-        return mViewAttached;
+        return mViewInstance != null;
     }
 
     /**
-     * Returns the status of the attached view.
-     * <b>NOTE: </b> The view can be attached but not yet created.
+     * Call this method to attach a view to this presenter.
+     * The attached view should be ready to interact with it. This method calls {@link
+     * #onViewAttached()}
+     * to notify subclasses that a view was attached.
      *
-     * @return <b>true</b> if the view is created, <b>false</b> otherwise.
+     * @param viewInstance Instance of the view to attach
      */
-    public final boolean isViewCreated() {
-        return mViewCreated;
+    public final void attachView(V viewInstance) {
+        mViewInstance = viewInstance;
+        onViewAttached();
     }
 
     /**
      * Method called to detach the view of this presenter.
+     * This method calls {@link #onViewDetached()} to notify subclasses.
      */
-    @CallSuper
-    public void detachView() {
-        mViewAttached = false;
-        mViewCreated = false;
+    public final void detachView() {
+        mViewInstance = null;
+        onViewDetached();
     }
 
     /**
-     * Method called when the view is created and it's safe for the presenter to interact with it.
-     * If the view is not attached this doesn't have any effect, because you shouldn't have a
-     * view created but not attached.
+     * Listener called when a view is attached and it's safe to interact with it.
      */
-    @CallSuper
-    public void onViewCreated() {
-        mViewCreated = mViewAttached;
-    }
+    public void onViewAttached() {}
 
     /**
      * Method called when the view is destroyed and it's no longer safe for the presenter to
      * interact with it.
      */
-    @CallSuper
-    public void onViewDestroyed() {
-        mViewCreated = false;
-    }
+    public void onViewDetached() {}
 
     /**
-     * Runs the {@link Consumer<T>} if the view is attached to the presenter and created.
-     * If the view is not created, the expression will not run.
+     * Runs the {@link Consumer<V>} if the view is attached to the presenter.
+     * If the view is not attached, the expression will not run.
      * The consumer receives the view instance as argument.
      *
      * @param method Expression to run if the view is created.
      */
-    protected void runIfViewCreated(Consumer<T> method) {
-        if (isViewCreated()) {
+    protected void runIfViewAttached(Consumer<V> method) {
+        if (isViewAttached()) {
             method.accept(mViewInstance);
         }
     }
 
     /**
-     * Runs the {@link {@link Runnable}} if the view is attached to the presenter and created.
-     * If the view is not created, the expression will not run.
+     * Runs the {@link {@link Runnable}} if the view is attached to the presenter.
+     * If the view is not attached, the expression will not run.
      * The runnable will not run in another thread.
      *
      * @param method Expression to run if the view is created.
      */
-    protected void runIfViewCreated(Runnable method) {
-        if (isViewCreated()) {
+    protected void runIfViewAttached(Runnable method) {
+        if (isViewAttached()) {
             method.run();
         }
     }
 
     /**
      * Functional interface to define a consumer method.
-     * A consumer is a interface with only a method that accepts a parameter and does not return anything.
+     * A consumer is a interface with only a method that accepts a parameter and does not return
+     * anything.
      *
      * @param <T> Parameter
      */
@@ -141,5 +128,4 @@ public class BasePresenter<T> {
          */
         void accept(T param);
     }
-
 }

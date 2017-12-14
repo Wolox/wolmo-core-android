@@ -19,24 +19,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.permission;
+package ar.com.wolox.wolmo.core.di.scopes;
 
-import android.support.annotation.NonNull;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-/**
- * Callback used by {@link PermissionManager} when requesting permissions to the user
- */
-public abstract class PermissionListener {
+import javax.inject.Scope;
 
-    /**
-     * Called when the required permissions are granted by the user
-     */
-    public void onPermissionsGranted() {}
-
-    /**
-     * Called when all or some of the requested permissions are rejected by the user
-     *
-     * @param deniedPermissions Array of {@link String} that contains the denied permissions
-     */
-    public void onPermissionsDenied(@NonNull String[] deniedPermissions) {}
-}
+@Scope
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ApplicationScope {}

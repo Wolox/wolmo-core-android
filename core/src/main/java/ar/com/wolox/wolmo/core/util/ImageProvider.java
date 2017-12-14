@@ -21,6 +21,9 @@
  */
 package ar.com.wolox.wolmo.core.util;
 
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -34,34 +37,45 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 
+import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import javax.inject.Inject;
 
 /**
  * Utils class to manipulate images, through {@link Bitmap}s or their corresponding {@link Uri}, and
  * for retrieving pictures from gallery/taking them from the camera.
  */
-public class ImageUtils {
+@ApplicationScope
+public class ImageProvider {
 
     @Retention(SOURCE)
     @StringDef({
             PNG,
             JPG
     })
-    /**
+
+    /*
      * Image compression formats supported.
      */
-    public @interface ImageFormat {
-    }
+    public @interface ImageFormat {}
 
     public static final String PNG = "png";
     public static final String JPG = "jpg";
 
-    private ImageUtils() {
+    private Context mContext;
+    private ToastFactory mToastFactory;
+    private WolmoFileProvider mWolmoFileProvider;
+
+    @Inject
+    public ImageProvider(Context context, ToastFactory toastFactory, WolmoFileProvider wolmoFileProvider) {
+        mContext = context;
+        mToastFactory = toastFactory;
+        mWolmoFileProvider = wolmoFileProvider;
     }
 
     /**
@@ -76,16 +90,16 @@ public class ImageUtils {
      * @param requestCode of the result call to be identified with
      * @param errorResId  {@link StringRes} to be displayed in case of error
      */
-    public static void getImageFromGallery(
+    public void getImageFromGallery(
             @NonNull Fragment fragment, int requestCode, @StringRes int errorResId) {
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         i.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
 
         // Ensure that there's a gallery app to handle the intent
-        if (i.resolveActivity(ContextUtils.getAppContext().getPackageManager()) != null) {
+        if (i.resolveActivity(mContext.getPackageManager()) != null) {
             fragment.startActivityForResult(i, requestCode);
         } else {
-            ToastUtils.show(errorResId);
+            mToastFactory.show(errorResId);
         }
     }
 
@@ -94,10 +108,10 @@ public class ImageUtils {
      *
      * @param imageUri The {@link Uri} of the image
      */
-    public static void addPictureToDeviceGallery(@NonNull Uri imageUri) {
+    public void addPictureToDeviceGallery(@NonNull Uri imageUri) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         mediaScanIntent.setData(imageUri);
-        ContextUtils.getAppContext().sendBroadcast(mediaScanIntent);
+        mContext.sendBroadcast(mediaScanIntent);
     }
 
     /**
@@ -118,23 +132,23 @@ public class ImageUtils {
      * @return {@link Uri} of the newly stored image
      */
     @Nullable
-    public static File getImageFromCamera(
+    public File getImageFromCamera(
             @NonNull Fragment fragment, int requestCode, @NonNull String filename,
             @ImageFormat String format, @StringRes int errorResId) {
 
         Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         // Ensure that there's a camera app to handle the intent
-        if (i.resolveActivity(ContextUtils.getAppContext().getPackageManager()) == null) {
-            ToastUtils.show(errorResId);
+        if (i.resolveActivity(mContext.getPackageManager()) == null) {
+            mToastFactory.show(errorResId);
             return null;
         }
 
         File photoFile;
         try {
-            photoFile = FileUtils.createFile(filename, format);
+            photoFile = mWolmoFileProvider.createFile(filename, format);
         } catch (IOException ex) {
-            ToastUtils.show(errorResId);
+            mToastFactory.show(errorResId);
             return null;
         }
 
@@ -186,7 +200,7 @@ public class ImageUtils {
      * @return byte array with the formatted information of the image file, if the image exceeded
      * boundaries, it's re scaled.
      */
-    public static byte[] getImageAsByteArray(
+    public byte[] getImageAsByteArray(
             @NonNull Uri imageFileUri,
             @NonNull Bitmap.CompressFormat format,
             @IntRange(from = 0, to = 100) int quality,
@@ -194,7 +208,7 @@ public class ImageUtils {
             int maxHeight) {
 
         return getImageAsByteArray(
-                BitmapFactory.decodeFile(FileUtils.getRealPathFromUri(imageFileUri)),
+                BitmapFactory.decodeFile(mWolmoFileProvider.getRealPathFromUri(imageFileUri)),
                 format,
                 quality,
                 maxWidth,

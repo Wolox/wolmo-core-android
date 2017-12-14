@@ -19,24 +19,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.permission;
+package ar.com.wolox.wolmo.core.di.modules;
 
-import android.support.annotation.NonNull;
+import android.util.SparseArray;
+
+import ar.com.wolox.wolmo.core.permission.PermissionListener;
+import ar.com.wolox.wolmo.core.presenter.BasePresenter;
+
+import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
 
 /**
- * Callback used by {@link PermissionManager} when requesting permissions to the user
+ * Provides default implementations for Wolmo's dependencies and utils.
+ * You can add this module to your {@link Component} if you don't need to customize any dependency.
  */
-public abstract class PermissionListener {
+@Module
+public class DefaultModule {
 
-    /**
-     * Called when the required permissions are granted by the user
-     */
-    public void onPermissionsGranted() {}
+    @Provides
+    static SparseArray<PermissionListener> providesPermissionManagerArray() {
+        return new SparseArray<>();
+    }
 
-    /**
-     * Called when all or some of the requested permissions are rejected by the user
-     *
-     * @param deniedPermissions Array of {@link String} that contains the denied permissions
-     */
-    public void onPermissionsDenied(@NonNull String[] deniedPermissions) {}
+    @Provides
+    static BasePresenter providesBasePresenter() {
+        return new BasePresenter();
+    }
 }

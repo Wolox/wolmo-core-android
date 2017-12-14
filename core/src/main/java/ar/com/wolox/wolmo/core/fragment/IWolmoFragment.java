@@ -26,14 +26,10 @@ import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-
 /**
  * This interface defines a set of methods that compose the lifecycle of Wolmo's fragments
- *
- * @param <T> an MVP Presenter, the class implementing this interface will act as an MVP View
  */
-public interface IWolmoFragment<T extends BasePresenter> {
+public interface IWolmoFragment {
 
     /**
      * This method provides a way for populating the view with a layout defined in an XML resource.
@@ -53,15 +49,11 @@ public interface IWolmoFragment<T extends BasePresenter> {
      * <b>NOTE: </b>Returning <i>false</i> will end the execution of the fragment.
      *
      * @param args The bundle obtainable by the {@link Fragment#getArguments()} method.
+     *
      * @return <b>true</b> if this fragment contains the required values, <b>false</b> otherwise.
      * Default implementation returns true.
      */
     boolean handleArguments(Bundle args);
-
-    /**
-     * Create the presenter for this fragment
-     */
-    T createPresenter();
 
     /**
      * Loads the view elements for the fragment
