@@ -20,9 +20,7 @@ android {
 }
 
 jacocoAndroidUnitTestReport {
-    csv.enabled false
-    html.enabled true
-    xml.enabled true
+    excludes = defaultExcludes + ['**/*_Factory.class']
 }
 
 coveralls {
