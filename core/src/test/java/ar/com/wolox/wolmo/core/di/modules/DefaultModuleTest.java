@@ -19,26 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.util;
+package ar.com.wolox.wolmo.core.di.modules;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 
-import ar.com.wolox.wolmo.core.WolmoApplication;
+import android.util.SparseArray;
 
-/**
- * An utility class to work with Android's {@link Context}
- */
-public class ContextUtils {
+import ar.com.wolox.wolmo.core.permission.PermissionListener;
+import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 
-    /**
-     * Returns a singleton {@link Context} from the running application
-     *
-     * @return a singleton instance of {@link Context} that can be used for almost everything
-     */
-    @NonNull
-    public static Context getAppContext() {
-        return WolmoApplication.getInstance().getApplicationContext();
+import org.junit.Test;
+
+public class DefaultModuleTest {
+
+    @Test
+    public void providePermissionManagerShouldReturnNewArray() {
+        SparseArray<PermissionListener> array1 = DefaultModule.providesPermissionManagerArray();
+        SparseArray<PermissionListener> array2 = DefaultModule.providesPermissionManagerArray();
+
+        assertThat(array1).isNotNull().isNotSameAs(array2);
     }
 
+    @Test
+    public void provideBasePresenterShouldReturnNewInstance() {
+        BasePresenter basePresenter = DefaultModule.providesBasePresenter();
+        BasePresenter basePresenter2 = DefaultModule.providesBasePresenter();
+
+        assertThat(basePresenter).isNotNull().isNotSameAs(basePresenter2);
+    }
 }

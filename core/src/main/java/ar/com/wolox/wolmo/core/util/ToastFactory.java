@@ -21,22 +21,35 @@
  */
 package ar.com.wolox.wolmo.core.util;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 
+import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope;
+
+import javax.inject.Inject;
+
 /**
  * An utility class to work with Android's {@link Toast} messages
  */
-public class ToastUtils {
+@ApplicationScope
+public class ToastFactory {
+
+    private Context mContext;
+
+    @Inject
+    public ToastFactory(Context context) {
+        mContext = context;
+    }
 
     /**
      * Displays a text message from a resource ID inside a {@link Toast}, briefly
      *
      * @param resId A resource ID from a {@link String} with the message to be displayed
      */
-    public static void show(@StringRes int resId) {
-        Toast.makeText(ContextUtils.getAppContext(), resId, Toast.LENGTH_SHORT).show();
+    public void show(@StringRes int resId) {
+        Toast.makeText(mContext, resId, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -44,8 +57,8 @@ public class ToastUtils {
      *
      * @param message An {@link String} with the message to be displayed
      */
-    public static void show(@NonNull String message) {
-        Toast.makeText(ContextUtils.getAppContext(), message, Toast.LENGTH_SHORT).show();
+    public void show(@NonNull String message) {
+        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -54,8 +67,8 @@ public class ToastUtils {
      *
      * @param resId A resource ID from a {@link String} with the message to be displayed
      */
-    public static void showLong(@StringRes int resId) {
-        Toast.makeText(ContextUtils.getAppContext(), resId, Toast.LENGTH_LONG).show();
+    public void showLong(@StringRes int resId) {
+        Toast.makeText(mContext, resId, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -64,7 +77,7 @@ public class ToastUtils {
      *
      * @param message An {@link String} with the message to be displayed
      */
-    public static void showLong(@NonNull String message) {
-        Toast.makeText(ContextUtils.getAppContext(), message, Toast.LENGTH_LONG).show();
+    public void showLong(@NonNull String message) {
+        Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
     }
 }

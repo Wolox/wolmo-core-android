@@ -25,22 +25,30 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import java.util.List;
-
-import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.fragment.IWolmoFragment;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
-import ar.com.wolox.wolmo.core.util.ToastUtils;
+import ar.com.wolox.wolmo.core.util.ToastFactory;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerAppCompatActivity;
 
 /**
  * A base {@link AppCompatActivity} that implements Wolmo's custom lifecycle.
  */
-public abstract class WolmoActivity extends AppCompatActivity {
+public abstract class WolmoActivity extends DaggerAppCompatActivity {
+
+    @Inject ToastFactory mToastFactory;
+    @Inject PermissionManager mPermissionManager;
+    @Inject WolmoActivityHandler mActivityHandler;
 
     /**
      * Handles the custom lifecycle of Wolmo's Activity. It provides a set of callbacks to structure
@@ -51,19 +59,9 @@ public abstract class WolmoActivity extends AppCompatActivity {
      */
     @Override
     @CallSuper
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(layout());
-        ButterKnife.bind(this);
-        if (handleArguments(getIntent().getExtras())) {
-            setUi();
-            init();
-            populate();
-            setListeners();
-        } else {
-            ToastUtils.show(R.string.unknown_error);
-            finish();
-        }
+        mActivityHandler.onCreate(this, savedInstanceState);
     }
 
     /**
@@ -83,10 +81,11 @@ public abstract class WolmoActivity extends AppCompatActivity {
      * Reads arguments sent as a Bundle and saves them as appropriate.
      *
      * @param args The bundle obtainable by the getExtras method of the intent.
+     *
      * @return true if arguments were read successfully, false otherwise.
      * Default implementation returns true.
      */
-    protected boolean handleArguments(Bundle args) {
+    protected boolean handleArguments(@Nullable Bundle args) {
         return true;
     }
 
@@ -95,9 +94,7 @@ public abstract class WolmoActivity extends AppCompatActivity {
      * provided in {@link WolmoActivity#layout()}
      * Override if needed. If using {@link ButterKnife}, there is no need to use this method.
      */
-    protected void setUi() {
-
-    }
+    protected void setUi() {}
 
     /**
      * Entry point for the Activity's specific code.
@@ -110,31 +107,24 @@ public abstract class WolmoActivity extends AppCompatActivity {
      * Populates the view elements of the activity.
      * Override if needed.
      */
-    protected void populate() {
-
-    }
+    protected void populate() {}
 
     /**
      * Sets the listeners for the views of the activity.
      * Override if needed.
      */
-    protected void setListeners() {
-
-    }
+    protected void setListeners() {}
 
     /**
      * Replaces the current {@link Fragment} in a given container layout with a new {@link Fragment}
      *
      * @param resId The ID of the layout that holds the current {@link Fragment}. It should be the
-     *              same container that will be used for the new {@link Fragment}
-     * @param f     An instance of a {@link Fragment} that will replace the older one.
+     * same container that will be used for the new {@link Fragment}
+     * @param f An instance of a {@link Fragment} that will replace the older one.
      */
     // TODO We should delegate this methods to a helper
     protected void replaceFragment(int resId, Fragment f) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(resId, f)
-                .commit();
+        getSupportFragmentManager().beginTransaction().replace(resId, f).commit();
     }
 
     /**
@@ -142,16 +132,13 @@ public abstract class WolmoActivity extends AppCompatActivity {
      * using a custom tag ({@link String}) that allows the fragment to be more easily located.
      *
      * @param resId The ID of the layout that holds the current {@link Fragment}. It should be the
-     *              same container that will be used for the new {@link Fragment}
-     * @param f     An instance of a {@link Fragment} that will replace the older one.
-     * @param tag   A {@link String} that will be used to identify the {@link Fragment}
+     * same container that will be used for the new {@link Fragment}
+     * @param f An instance of a {@link Fragment} that will replace the older one.
+     * @param tag A {@link String} that will be used to identify the {@link Fragment}
      */
     // TODO We should delegate this methods to a helper
     protected void replaceFragment(int resId, Fragment f, String tag) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(resId, f, tag)
-                .commit();
+        getSupportFragmentManager().beginTransaction().replace(resId, f, tag).commit();
     }
 
     @Override
@@ -169,12 +156,10 @@ public abstract class WolmoActivity extends AppCompatActivity {
      */
     @Override
     @CallSuper
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionManager.getInstance()
-                .onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**
@@ -185,9 +170,9 @@ public abstract class WolmoActivity extends AppCompatActivity {
      * If any of those returns 'true', the method returns. Else, it calls
      * {@link AppCompatActivity#onBackPressed()}.
      */
-    @SuppressWarnings("RestrictedApi")
     @Override
     @CallSuper
+    @SuppressWarnings("RestrictedApi")
     public void onBackPressed() {
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
 
@@ -201,5 +186,12 @@ public abstract class WolmoActivity extends AppCompatActivity {
         }
 
         super.onBackPressed();
+    }
+
+    @Override
+    @CallSuper
+    protected void onDestroy() {
+        mActivityHandler.onDestroy();
+        super.onDestroy();
     }
 }
