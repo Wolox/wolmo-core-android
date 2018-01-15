@@ -152,9 +152,7 @@ public class ImageProvider {
             return null;
         }
 
-        // Change in API 24 to get the file
-        Uri photoFileUri = FileProvider.getUriForFile(fragment.getContext(),
-                fragment.getContext().getPackageName() + ".provider", photoFile);
+        Uri photoFileUri = mWolmoFileProvider.getUriForFile(photoFile);
 
         i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
