@@ -63,8 +63,6 @@ public abstract class GetImageFragment<T extends BasePresenter<?>> extends Wolmo
     @Inject ImageProvider mImageProvider;
     @Inject WolmoFileProvider mWolmoFileProvider;
 
-    /* Error types */
-
     /**
      * Error Types returned on {@link OnImageReturnCallback#error(Error)}
      * <li>

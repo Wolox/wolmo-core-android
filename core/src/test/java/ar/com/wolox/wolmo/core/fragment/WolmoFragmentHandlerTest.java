@@ -21,14 +21,19 @@
  */
 package ar.com.wolox.wolmo.core.fragment;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -55,7 +60,7 @@ public class WolmoFragmentHandlerTest {
 
     @Before
     @SuppressWarnings("unchecked")
-    public void beforeTests() {
+    public void beforeTest() {
         mLoggerMock = mock(Logger.class);
         mToastFactoryMock = mock(ToastFactory.class);
         mWolmoFragmentMock = mock(WolmoFragment.class);
@@ -86,6 +91,37 @@ public class WolmoFragmentHandlerTest {
         verify(mToastFactoryMock, times(1)).show(R.string.unknown_error);
         verify(mLoggerMock, times(1)).e(eq(mWolmoFragmentMock.getClass().getSimpleName() +
                                            " - The fragment's handleArguments() returned false."));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void onViewCreatedShouldCheckPresenterAndCallAttachView() {
+        TestFragment testFragment = new TestFragment();
+
+        when(mWolmoFragmentMock.handleArguments(isNull())).thenReturn(true);
+        mWolmoFragmentHandler.mPresenter = spy(new TestPresenter());
+        mWolmoFragmentHandler.onCreate(testFragment, null);
+
+        mWolmoFragmentHandler.onViewCreated(mock(View.class), null);
+        verify(mWolmoFragmentHandler.mPresenter, times(1)).attachView(eq(testFragment));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void onViewCreatedNotAssignableShouldFinishActivity() {
+        FragmentActivity activityMock = mock(FragmentActivity.class);
+
+        when(mWolmoFragmentMock.handleArguments(isNull())).thenReturn(true);
+        when(mWolmoFragmentMock.getActivity()).thenReturn(activityMock);
+        mWolmoFragmentHandler.mPresenter = spy(new TestPresenter());
+
+        // The presenter is expecting a "TestFragment"
+        mWolmoFragmentHandler.onCreate(mWolmoFragmentMock, null);
+        mWolmoFragmentHandler.onViewCreated(mock(View.class), null);
+
+        verify(activityMock, times(1)).finish();
+        verify(mToastFactoryMock, times(1)).show(eq(R.string.unknown_error));
+        verify(mLoggerMock, times(1)).e(anyString());
     }
 
     @Test
@@ -133,5 +169,18 @@ public class WolmoFragmentHandlerTest {
         mWolmoFragmentHandler.onDestroyView();
         verify(presenter, times(1)).detachView();
     }
+
+
+    static class TestFragment extends WolmoFragment<TestPresenter> {
+        @Override
+        public int layout() {
+            return 0;
+        }
+
+        @Override
+        public void init() {}
+    }
+
+    static class TestPresenter extends BasePresenter<TestFragment> {}
 
 }

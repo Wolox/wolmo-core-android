@@ -20,7 +20,8 @@
  * THE SOFTWARE.
  */
 package ar.com.wolox.wolmo.core.util;
-import static org.assertj.core.api.Assertions.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -58,7 +59,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(shadows = {ImageProviderTest.WolmoShadowIntent.class, ImageProviderTest.WolmoShadowBitmap.class})
+@Config(manifest = Config.NONE, shadows = {ImageProviderTest.WolmoShadowIntent.class, ImageProviderTest.WolmoShadowBitmap.class})
 public class ImageProviderTest {
 
     static ComponentName sComponentNameMock;
@@ -73,7 +74,7 @@ public class ImageProviderTest {
 
     @Before
     @SuppressWarnings("unchecked")
-    public void beforeTests() {
+    public void beforeTest() {
         mContextSpy = spy(RuntimeEnvironment.application);
         mToastFactoryMock = mock(ToastFactory.class);
         mWolmoFileProviderMock = mock(WolmoFileProvider.class);
@@ -131,7 +132,7 @@ public class ImageProviderTest {
     public void getImageFromCameraWithExceptionShowsToast() throws IOException {
         Fragment fragmentMock = mock(Fragment.class);
         sComponentNameMock = mock(ComponentName.class);
-        when(mWolmoFileProviderMock.createFile(anyString(), anyString())).thenThrow(new IOException());
+        when(mWolmoFileProviderMock.createTempFile(anyString(), anyString(), anyString())).thenThrow(new IOException());
 
         assertThat(mImageProviderSpy.getImageFromCamera(fragmentMock, 123, "Filename", "JPG", 123456)).isNull();
         verify(mToastFactoryMock, times(1)).show(eq(123456));
@@ -145,7 +146,7 @@ public class ImageProviderTest {
         sComponentNameMock = mock(ComponentName.class);
 
         when(fragmentMock.getContext()).thenReturn(mContextSpy);
-        when(mWolmoFileProviderMock.createFile(anyString(), anyString())).thenReturn(fileMock);
+        when(mWolmoFileProviderMock.createTempFile(anyString(), anyString(), anyString())).thenReturn(fileMock);
         when(mWolmoFileProviderMock.getUriForFile(any(File.class))).thenReturn(uriMock);
 
         assertThat(mImageProviderSpy.getImageFromCamera(fragmentMock, 123, "Filename", "JPG", 123456)).isSameAs(fileMock);

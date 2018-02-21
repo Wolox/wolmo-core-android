@@ -125,9 +125,10 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
         if (getPresenter() != null) {
             try {
                 Type[] viewTypes = ReflectionUtils.getParameterizedTypes(getPresenter());
-                if (viewTypes != null && ReflectionUtils.getClass(viewTypes[0]).isAssignableFrom(
-                    mWolmoFragment.getClass())) {
+                if (ReflectionUtils.getClass(viewTypes[0]).isAssignableFrom(mWolmoFragment.getClass())) {
                     mPresenter.attachView(mWolmoFragment);
+                } else {
+                    throw new ClassNotFoundException();
                 }
             } catch (ClassNotFoundException | NullPointerException e) {
                 mLogger.e(mFragment.getClass().getSimpleName() +

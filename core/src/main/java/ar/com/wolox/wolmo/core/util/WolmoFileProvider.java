@@ -55,22 +55,24 @@ public class WolmoFileProvider {
      * <p>
      * The file ends up being stored as:
      * filename + "." + extension
+     * Use {@link Environment} to see the available directories available to create the file
      *
-     * @param filename File name, used as described above
+     * @param suffix File name, used as described above
      * @param extension ImageFormat of the file, used as described above
+     * @param dirType Directory Type of where the file will be located, use {@see Environment#DIRECTORY_*}
      *
      * @return {@link File} result of the creation
      * @throws IOException If a file could not be created
      */
-    public File createFile(@NonNull String filename, @NonNull String extension) throws IOException {
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+    public File createTempFile(@NonNull String suffix, @NonNull String extension, @NonNull String dirType) throws IOException {
+        File storageDir = Environment.getExternalStoragePublicDirectory(dirType);
 
         // The suffix will be appended as it is, we need to add the dot manually
         if (!extension.startsWith(".")) {
             extension = "." + extension;
         }
 
-        return File.createTempFile(filename, extension, storageDir);
+        return File.createTempFile(suffix, extension, storageDir);
     }
 
     /**
@@ -97,7 +99,7 @@ public class WolmoFileProvider {
         Cursor cursor = null;
         try {
             String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = mContext.getContentResolver().query(fileUri, proj, null, null, null);
+            cursor = mContext.getContentResolver().query(fileUri, null, null, null, null);
 
             if (cursor == null) return null;
 
