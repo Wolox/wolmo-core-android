@@ -43,7 +43,7 @@ import javax.inject.Inject;
  *
  * @param <T> Presenter for this fragment
  */
-public abstract class GetImageFragment<T extends BasePresenter<?>> extends WolmoFragment {
+public abstract class GetImageFragment<T extends BasePresenter> extends WolmoFragment<T> {
 
     private static final String[] CAMERA_PERMISSIONS = new String[] {
             Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE

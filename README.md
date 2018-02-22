@@ -24,9 +24,9 @@ WOLMO is made up of several modules, each one supporting a different role in the
 * **AUTH:** Provides utilities for accounts, login and signup features.
 * **MAPS:** Google Maps helpers classes and views.
 
-### Usage
+## Installation
 
-Import the module as alibrary in your project using Gradle:
+Import the module as a library in your project using Gradle:
 
 **root build.gradle**
 ```groovy
@@ -43,11 +43,88 @@ dependencies {
         compile 'com.github.Wolox:wolmo-core-android:master-SNAPSHOT'
 }
 ```
-Note: The above line will download the latest version of the module, if you want to run an specific version replace `master-SNAPSHOT` with `1.0.0` or any other version. Avaiable versions can be found here: [Github releases](https://github.com/Wolox/wolmo-core-android/releases)
+Note: The above line will download the latest version of the module, if you want to run a specific version replace `master-SNAPSHOT` with `2.0.0` or any other version. Available versions can be found here: [Github releases](https://github.com/Wolox/wolmo-core-android/releases)
+
+## How to use
+
+WOLMO v2 uses Dagger as dependency injection framework. It provides default modules and dependencies for all the utils in WOLMO and the ones a basic project could need.
+You need to understand how Dagger Works to be able to use WOLMO the right way. In this examples we assume you know how `dagger-android` works. For more info see the [original documentation](https://google.github.io/dagger/android.html).
+
+To use WOLMO in your project you need to create at least one dagger `Component` to provide the dependencies for your project.
+WOLMO provides some `modules` that you need to add to your `Component` for it to work. These modules provide all the dependencies WOLMO classes need to work so the only thing you need to do is extend the base classes.
+
+In the package `ar.com.wolox.wolmo.core.di` you can find all the provided modules and scopes defined in WOLMO.
+
+The next example includes the modules: `DefaultModule`, `ContextModule` from WOLMO Core. `AndroidSupportInjectionModule` is needed by Dagger and `AppModule.class` is provided by the application.
+We are binding `sharedPrefName` used by `ContextModule.provideSharedPreferences(...)` so it's easier to customize the name.
+
+```java
+@ApplicationScope
+@Component( modules = { AndroidSupportInjectionModule.class, DefaultModule.class,
+                   ContextModule.class, AppModule.class})
+public interface AppComponent extends AndroidInjector<BootstrapApplication> {
+
+    @Component.Builder
+    abstract class Builder extends AndroidInjector.Builder<BootstrapApplication> {
+
+        @BindsInstance
+        public abstract Builder application(Application application);
+
+        @BindsInstance
+        public abstract Builder sharedPreferencesName(String sharedPrefName);
+
+    }
+}
+```
+
+Then you can use it in your app like this:
+
+```java
+public class BootstrapApplication extends WolmoApplication {
+
+    @Override
+    public void onInit() {
+	...
+    }
+
+    @Override
+    protected AndroidInjector<BootstrapApplication> applicationInjector() {
+        return DaggerAppComponent.builder()
+            .sharedPreferencesName(Configuration.SHARED_PREFERENCES_NAME).application(this)
+            .create(this);
+    }
+}
+```
+
+After adding your fragments and activities to your `AppModule` you can start using WOLMO. (See Dagger documentation for more info).
+
+```java
+@Module
+public abstract class AppModule {
+
+    @ContributesAndroidInjector
+    abstract ExampleActivity exampleActivity();
+
+    @ContributesAndroidInjector
+    abstract ExampleFragment exampleFragment();
+}
+```
+
+The only thing you need to do to inject dependencies in a `Fragment` is to extend `WolmoFragment`, add an entry to your `AppModule` and you are ready to go.
+*Note: WOLMO cannot provide other dependencies that are not defined in the modules provided, if you need extra dependencies for your Fragment or Presenter you need to create a Module and provide it in the same way as Dagger requires.*
+
+WOLMO also provides some scopes for you to use in your application, you can use:
+
+* ActivityScope
+* FragmentScope
+
+when you need to define a dependency only needed in those scopes or create your own.
+
+**ApplicationScope** is reserved for *singletons* or another dependencies with only one instance.
 
 ## Features
 
-CORE is the base module of the framework and provides all of the must have classes and utilities. This modules defines the opinionated character of the framework and may be used by other modules to fulfill their role.
+CORE is the base module of the framework and provides all of the must have classes and utilities. These modules define the opinionated character of the framework and may be used by other modules to fulfill their role.
 
 > Every module may depend on CORE, but not the other way around.
 
