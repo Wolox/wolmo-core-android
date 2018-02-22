@@ -32,6 +32,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,16 +79,30 @@ public abstract class WolmoDialogFragment<T extends BasePresenter<?>> extends Di
         if (getDialog() != null && getDialog().getWindow() != null) {
             getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT);
-            Drawable backgroundDrawable = new ColorDrawable(Color.argb(1, 255, 0, 0));
-            getDialog().getWindow().setBackgroundDrawable(backgroundDrawable);
+            Drawable backgroundDrawable = getBackgroundDrawable();
+            if (backgroundDrawable != null) {
+                getDialog().getWindow().setBackgroundDrawable(backgroundDrawable);
+            }
             setOnBackPressedListener();
         }
     }
 
     /**
+     * Returns a {@link Drawable} for use as background in the window.
+     * If you want to disable the background drawable return null.
+     * By default this method returns the color #01FFFFFF
+     *
+     * @return Background drawable
+     */
+    @Nullable
+    protected Drawable getBackgroundDrawable() {
+        return new ColorDrawable(Color.argb(1, 255, 255, 255));
+    }
+
+    /**
      * Sets a custom {@link android.content.DialogInterface.OnKeyListener} for the
      * {@link Dialog} returned by {@link #getDialog()} that calls {@link #onBackPressed()}
-     * if the key is the back key.
+     * if the key pressed is the back key.
      * <p>
      * Beware that, when clicking a key, the {@link android.content.DialogInterface.OnKeyListener}
      * is called before delegating the event to other structures. For example, the back is handled

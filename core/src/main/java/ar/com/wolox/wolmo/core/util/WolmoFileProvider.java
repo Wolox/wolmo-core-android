@@ -28,6 +28,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 
 import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope;
 
@@ -54,22 +55,36 @@ public class WolmoFileProvider {
      * <p>
      * The file ends up being stored as:
      * filename + "." + extension
+     * Use {@link Environment} to see the available directories available to create the file
      *
-     * @param filename File name, used as described above
+     * @param suffix File name, used as described above
      * @param extension ImageFormat of the file, used as described above
+     * @param dirType Directory Type of where the file will be located, use {@see Environment#DIRECTORY_*}
      *
      * @return {@link File} result of the creation
      * @throws IOException If a file could not be created
      */
-    public File createFile(@NonNull String filename, @NonNull String extension) throws IOException {
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+    public File createTempFile(@NonNull String suffix, @NonNull String extension, @NonNull String dirType) throws IOException {
+        File storageDir = Environment.getExternalStoragePublicDirectory(dirType);
 
         // The suffix will be appended as it is, we need to add the dot manually
         if (!extension.startsWith(".")) {
             extension = "." + extension;
         }
 
-        return File.createTempFile(filename, extension, storageDir);
+        return File.createTempFile(suffix, extension, storageDir);
+    }
+
+    /**
+     * Returns the {@link Uri} of the given file using a file provider.
+     * This method wraps {@link FileProvider#getUriForFile(Context, String, File)} building the
+     * provider name provided with wolmo and the application context.
+     *
+     * @param file A {@link File} pointing to the filename for which you want a {@link Uri}
+     * @return A content URI for the file.
+     */
+    public Uri getUriForFile(@NonNull File file) {
+        return FileProvider.getUriForFile(mContext, mContext.getPackageName() + ".provider", file);
     }
 
     /**
@@ -84,7 +99,7 @@ public class WolmoFileProvider {
         Cursor cursor = null;
         try {
             String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = mContext.getContentResolver().query(fileUri, proj, null, null, null);
+            cursor = mContext.getContentResolver().query(fileUri, null, null, null, null);
 
             if (cursor == null) return null;
 

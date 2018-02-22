@@ -23,6 +23,10 @@ package ar.com.wolox.wolmo.core.activity;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -30,44 +34,49 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import ar.com.wolox.wolmo.core.fragment.WolmoFragment;
+import ar.com.wolox.wolmo.core.permission.PermissionManager;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
 import java.util.List;
 
-import dagger.android.AndroidInjection;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ AndroidInjection.class})
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest = Config.NONE, sdk= Build.VERSION_CODES.LOLLIPOP)
 public class WolmoActivityTest {
 
     private WolmoActivity mWolmoActivity;
-    private WolmoActivityHandler mWolmoActivityHandler;
+    private WolmoActivityHandler mWolmoActivityHandlerMock;
+    private PermissionManager mPermissionManagerMock;
 
     @Before
     public void beforeTest() {
-        mWolmoActivityHandler = mock(WolmoActivityHandler.class);
+        mPermissionManagerMock = mock(PermissionManager.class);
+        mWolmoActivityHandlerMock = mock(WolmoActivityHandler.class);
 
-        mWolmoActivity = new WolmoActivity() {
-            @Override
-            protected int layout() {
-                return 0;
-            }
+        mWolmoActivity = Robolectric.buildActivity(TestActivity.class).get();
+        mWolmoActivity.mActivityHandler = mWolmoActivityHandlerMock;
+        mWolmoActivity.mPermissionManager = mPermissionManagerMock;
+    }
 
-            @Override
-            protected void init() {}
-        };
-        mWolmoActivity.mActivityHandler = mWolmoActivityHandler;
+    @Test
+    public void onRequestPermissionResultShouldCallManager() {
+        String[] permissions = new String[]{"asd"};
+        int[] grantResults = new int[]{321};
+        mWolmoActivity.onRequestPermissionsResult(123, permissions, grantResults);
+
+        verify(mPermissionManagerMock, times(1)).onRequestPermissionsResult(eq(123), eq(permissions), eq(grantResults));
     }
 
     @Test
@@ -147,5 +156,20 @@ public class WolmoActivityTest {
         mWolmoActivity.onBackPressed();
         verify(wolmoFragment, times(1)).onBackPressed();
         verify(wolmoFragment2, times(0)).onBackPressed();
+    }
+
+
+    public static class TestActivity extends WolmoActivity {
+
+        @Override
+        protected int layout() {
+            return 0;
+        }
+
+        @Override
+        protected void init() {}
+
+        @Override
+        public void setContentView(int layoutResID) {}
     }
 }

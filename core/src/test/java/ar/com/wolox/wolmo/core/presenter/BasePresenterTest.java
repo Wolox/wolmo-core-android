@@ -37,7 +37,7 @@ public class BasePresenterTest {
 
     @Before
     @SuppressWarnings("unchecked")
-    public void beforeTests() {
+    public void beforeTest() {
         mBasePresenter = spy(BasePresenter.class);
     }
 

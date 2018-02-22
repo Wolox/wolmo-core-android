@@ -21,53 +21,53 @@
  */
 package ar.com.wolox.wolmo.core.fragment;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 
 import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
+import ar.com.wolox.wolmo.core.util.Logger;
 import ar.com.wolox.wolmo.core.util.ToastFactory;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.mockito.InOrder;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Log.class})
 public class WolmoFragmentHandlerTest {
 
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     private WolmoFragmentHandler<BasePresenter> mWolmoFragmentHandler;
-    private WolmoFragment mWolmoFragment;
-    private ToastFactory mToastFactory;
+    private WolmoFragment mWolmoFragmentMock;
+    private ToastFactory mToastFactoryMock;
+    private Logger mLoggerMock;
 
     @Before
     @SuppressWarnings("unchecked")
-    public void beforeTests() {
-        // Mock calls to android.util.Log
-        PowerMockito.mockStatic(Log.class);
-
-        mToastFactory = mock(ToastFactory.class);
-        mWolmoFragment = mock(WolmoFragment.class);
+    public void beforeTest() {
+        mLoggerMock = mock(Logger.class);
+        mToastFactoryMock = mock(ToastFactory.class);
+        mWolmoFragmentMock = mock(WolmoFragment.class);
 
         mWolmoFragmentHandler = new WolmoFragmentHandler<>();
-        mWolmoFragmentHandler.mToastFactory = mToastFactory;
+        mWolmoFragmentHandler.mToastFactory = mToastFactoryMock;
+        mWolmoFragmentHandler.mLogger = mLoggerMock;
     }
 
     @Test
@@ -81,48 +81,83 @@ public class WolmoFragmentHandlerTest {
     public void handlerFinishActivityIfWrongArguments() {
         FragmentActivity activity = mock(FragmentActivity.class);
 
-        when(mWolmoFragment.handleArguments(nullable(Bundle.class))).thenReturn(false);
-        when(mWolmoFragment.getActivity()).thenReturn(activity);
+        when(mWolmoFragmentMock.handleArguments(nullable(Bundle.class))).thenReturn(false);
+        when(mWolmoFragmentMock.getActivity()).thenReturn(activity);
 
-        mWolmoFragmentHandler.onCreate(mWolmoFragment, new Bundle());
-        verify(mToastFactory, times(1)).show(R.string.unknown_error);
+        mWolmoFragmentHandler.onCreate(mWolmoFragmentMock, new Bundle());
+
+        verify(mLoggerMock, times(1)).setTag(eq(WolmoFragmentHandler.class.getSimpleName()));
         verify(activity, times(1)).finish();
+        verify(mToastFactoryMock, times(1)).show(R.string.unknown_error);
+        verify(mLoggerMock, times(1)).e(eq(mWolmoFragmentMock.getClass().getSimpleName() +
+                                           " - The fragment's handleArguments() returned false."));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void onViewCreatedShouldCheckPresenterAndCallAttachView() {
+        TestFragment testFragment = new TestFragment();
+
+        when(mWolmoFragmentMock.handleArguments(isNull())).thenReturn(true);
+        mWolmoFragmentHandler.mPresenter = spy(new TestPresenter());
+        mWolmoFragmentHandler.onCreate(testFragment, null);
+
+        mWolmoFragmentHandler.onViewCreated(mock(View.class), null);
+        verify(mWolmoFragmentHandler.mPresenter, times(1)).attachView(eq(testFragment));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void onViewCreatedNotAssignableShouldFinishActivity() {
+        FragmentActivity activityMock = mock(FragmentActivity.class);
+
+        when(mWolmoFragmentMock.handleArguments(isNull())).thenReturn(true);
+        when(mWolmoFragmentMock.getActivity()).thenReturn(activityMock);
+        mWolmoFragmentHandler.mPresenter = spy(new TestPresenter());
+
+        // The presenter is expecting a "TestFragment"
+        mWolmoFragmentHandler.onCreate(mWolmoFragmentMock, null);
+        mWolmoFragmentHandler.onViewCreated(mock(View.class), null);
+
+        verify(activityMock, times(1)).finish();
+        verify(mToastFactoryMock, times(1)).show(eq(R.string.unknown_error));
+        verify(mLoggerMock, times(1)).e(anyString());
     }
 
     @Test
     public void onViewCreatedCallsWolmoFragmentMethods() {
         View mockView = mock(View.class);
-        when(mWolmoFragment.handleArguments(nullable(Bundle.class))).thenReturn(true);
+        when(mWolmoFragmentMock.handleArguments(nullable(Bundle.class))).thenReturn(true);
 
-        mWolmoFragmentHandler.onCreate(mWolmoFragment, new Bundle());
+        mWolmoFragmentHandler.onCreate(mWolmoFragmentMock, new Bundle());
         mWolmoFragmentHandler.onViewCreated(mockView, null);
 
         // Verify that the methods in wolmoFragment are called in order
-        InOrder inOrder = inOrder(mWolmoFragment);
+        InOrder inOrder = inOrder(mWolmoFragmentMock);
 
-        inOrder.verify(mWolmoFragment, times(1)).setUi(mockView);
-        inOrder.verify(mWolmoFragment, times(1)).init();
-        inOrder.verify(mWolmoFragment, times(1)).populate();
-        inOrder.verify(mWolmoFragment, times(1)).setListeners();
+        inOrder.verify(mWolmoFragmentMock, times(1)).setUi(mockView);
+        inOrder.verify(mWolmoFragmentMock, times(1)).init();
+        inOrder.verify(mWolmoFragmentMock, times(1)).populate();
+        inOrder.verify(mWolmoFragmentMock, times(1)).setListeners();
     }
 
     @Test
     public void notifyFragmentOnVisibilityChanged() {
         mWolmoFragmentHandler.setMenuVisibility(true);
 
-        when(mWolmoFragment.isResumed()).thenReturn(true);
-        when(mWolmoFragment.handleArguments(nullable(Bundle.class))).thenReturn(true);
+        when(mWolmoFragmentMock.isResumed()).thenReturn(true);
+        when(mWolmoFragmentMock.handleArguments(nullable(Bundle.class))).thenReturn(true);
 
-        mWolmoFragmentHandler.onCreate(mWolmoFragment, new Bundle());
+        mWolmoFragmentHandler.onCreate(mWolmoFragmentMock, new Bundle());
         mWolmoFragmentHandler.onViewCreated(mock(View.class), null);
         mWolmoFragmentHandler.onResume();
-        verify(mWolmoFragment, times(1)).onVisible();
-        verify(mWolmoFragment, times(0)).onHide();
+        verify(mWolmoFragmentMock, times(1)).onVisible();
+        verify(mWolmoFragmentMock, times(0)).onHide();
 
         // Hide the fragment
-        when(mWolmoFragment.isResumed()).thenReturn(false);
+        when(mWolmoFragmentMock.isResumed()).thenReturn(false);
         mWolmoFragmentHandler.onPause();
-        verify(mWolmoFragment, times(1)).onHide();
+        verify(mWolmoFragmentMock, times(1)).onHide();
     }
 
     @Test
@@ -134,5 +169,18 @@ public class WolmoFragmentHandlerTest {
         mWolmoFragmentHandler.onDestroyView();
         verify(presenter, times(1)).detachView();
     }
+
+
+    static class TestFragment extends WolmoFragment<TestPresenter> {
+        @Override
+        public int layout() {
+            return 0;
+        }
+
+        @Override
+        public void init() {}
+    }
+
+    static class TestPresenter extends BasePresenter<TestFragment> {}
 
 }

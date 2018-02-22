@@ -32,15 +32,12 @@ public class ReflectionUtils {
     /*
      *  Utility class with static access methods, no need for constructor.
      */
-    private ReflectionUtils() {
-    }
+    private ReflectionUtils() {}
 
     /**
      * {@link Type#toString()} value is the fully qualified class name prefixed
      * with {@link ReflectionUtils#TYPE_CLASS_NAME_PREFIX}. This method will substring it, for
-     * it to
-     * be eligible
-     * for {@link Class#forName(String)}.
+     * it to be eligible for {@link Class#forName(String)}.
      *
      * @param type the {@code Type} value whose class name is needed.
      *
@@ -107,8 +104,7 @@ public class ReflectionUtils {
     /**
      * Returns an array of {@code Type} objects representing the actual type
      * arguments to this object.
-     * If the returned value is null, then this object represents a non-parameterized
-     * object.
+     * If the returned value is null, then this object represents a non-parameterized object.
      *
      * @param object the {@code object} whose type arguments are needed.
      *
@@ -192,9 +188,9 @@ public class ReflectionUtils {
     }
 
     /**
-     * Returns a {@code Class} object that identifies the
-     * declared class as a return type for the method represented by the given
-     * {@code String name} parameter inside the invoked {@code Class<?> clazz} parameter.
+     * Returns a {@code Class} object that identifies the declared class as a return type
+     * for the method represented by the given {@code String name} parameter inside the
+     * invoked {@code Class<?> clazz} parameter.
      *
      * @param clazz the {@code Class} object whose declared methods to be
      * checked for the wanted method name.
@@ -210,7 +206,6 @@ public class ReflectionUtils {
             return null;
         }
 
-        name = name.toLowerCase();
         Class<?> returnType = null;
 
         for (Method method : clazz.getDeclaredMethods()) {
@@ -221,29 +216,5 @@ public class ReflectionUtils {
         }
 
         return returnType;
-    }
-
-    /**
-     * Extracts the enum constant of the specified enum class with the
-     * specified name. The name must match exactly an identifier used
-     * to declare an enum constant in the given class.
-     *
-     * @param clazz the {@code Class} object of the enum type from which
-     * to return a constant.
-     * @param name the name of the constant to return.
-     *
-     * @return the enum constant of the specified enum type with the
-     * specified name.
-     * @throws IllegalArgumentException if the specified enum type has
-     * no constant with the specified name, or the specified
-     * class object does not represent an enum type.
-     * @see Enum#valueOf(Class, String)
-     */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static Object getEnumConstant(Class<?> clazz, String name) {
-        if (clazz == null || name == null || name.isEmpty()) {
-            return null;
-        }
-        return Enum.valueOf((Class<Enum>) clazz, name);
     }
 }

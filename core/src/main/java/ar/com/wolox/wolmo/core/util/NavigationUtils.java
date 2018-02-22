@@ -195,7 +195,7 @@ public class NavigationUtils {
         }
 
         public Builder addSharedElement(@NonNull View sharedView, @NonNull String sharedString) {
-            sharedElements.add(new Pair<View, String>(sharedView, sharedString));
+            sharedElements.add(new Pair<>(sharedView, sharedString));
             return this;
         }
 
@@ -225,7 +225,6 @@ public class NavigationUtils {
                         sharedElements.toArray(new Pair[sharedElements.size()])),
                         mIntentExtras.toArray(new IntentExtra[mIntentExtras.size()]));
             }
-
         }
     }
 
