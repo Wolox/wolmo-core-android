@@ -22,76 +22,91 @@
 package ar.com.wolox.wolmo.core.activity;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
+import android.os.Build;
 
+import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.util.ToastFactory;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
-import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ ButterKnife.class})
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest = Config.NONE, sdk = Build.VERSION_CODES.LOLLIPOP)
 public class WolmoActivityHandlerTest {
 
-    private ToastFactory mToastFactory;
-    private WolmoActivity mWolmoActivity;
-    private WolmoActivityHandler mWolmoActivityHandler;
+    private ToastFactory mToastFactoryMock;
+    private WolmoActivity mWolmoActivitySpy;
+    private WolmoActivityHandler mWolmoActivityHandlerSpy;
 
     @Before
     public void beforeTest() {
-        mWolmoActivity = mock(WolmoActivity.class);
-        mToastFactory = mock(ToastFactory.class);
+        mWolmoActivitySpy = spy(Robolectric.buildActivity(TestActivity.class).get());
+        mToastFactoryMock = mock(ToastFactory.class);
 
-        mWolmoActivityHandler = new WolmoActivityHandler(mToastFactory);
-
-        // Mock calls to android.util.Log
-        PowerMockito.mockStatic(ButterKnife.class);
+        mWolmoActivityHandlerSpy = spy(new WolmoActivityHandler(mToastFactoryMock));
     }
 
     @Test
     public void onCreateShouldCallWolmoMethods() {
-        when(mWolmoActivity.handleArguments(isNull(Bundle.class))).thenReturn(true);
-        when(mWolmoActivity.getIntent()).thenReturn(mock(Intent.class));
-
-        mWolmoActivityHandler.onCreate(mWolmoActivity, null);
+        mWolmoActivityHandlerSpy.onCreate(mWolmoActivitySpy, null);
 
         // Verify that the methods in wolmoFragment are called in order
-        InOrder inOrder = Mockito.inOrder(mWolmoActivity);
+        InOrder inOrder = Mockito.inOrder(mWolmoActivitySpy);
 
-        inOrder.verify(mWolmoActivity, times(1)).handleArguments(null);
-        inOrder.verify(mWolmoActivity, times(1)).setUi();
-        inOrder.verify(mWolmoActivity, times(1)).init();
-        inOrder.verify(mWolmoActivity, times(1)).populate();
-        inOrder.verify(mWolmoActivity, times(1)).setListeners();
+        inOrder.verify(mWolmoActivitySpy, times(1)).handleArguments(null);
+        inOrder.verify(mWolmoActivitySpy, times(1)).setUi();
+        inOrder.verify(mWolmoActivitySpy, times(1)).init();
+        inOrder.verify(mWolmoActivitySpy, times(1)).populate();
+        inOrder.verify(mWolmoActivitySpy, times(1)).setListeners();
+    }
+
+    @Test
+    public void onCreateWithFailHandlingArgsShouldFinishActivity() {
+        when(mWolmoActivitySpy.handleArguments(isNull())).thenReturn(false);
+        mWolmoActivityHandlerSpy.onCreate(mWolmoActivitySpy, null);
+
+        verify(mToastFactoryMock, times(1)).show(eq(R.string.unknown_error));
+        verify(mWolmoActivitySpy, times(1)).finish();
     }
 
     @Test
     public void onDestroyShouldCallUnbind() {
         Unbinder unbinderMock = mock(Unbinder.class);
-        when(ButterKnife.bind(any(Activity.class))).thenReturn(unbinderMock);
-        when(mWolmoActivity.handleArguments(isNull(Bundle.class))).thenReturn(true);
-        when(mWolmoActivity.getIntent()).thenReturn(mock(Intent.class));
+        doReturn(unbinderMock).when(mWolmoActivityHandlerSpy).bindViewActivity();
 
-        mWolmoActivityHandler.onCreate(mWolmoActivity, null);
-        mWolmoActivityHandler.onDestroy();
+        mWolmoActivityHandlerSpy.onCreate(mWolmoActivitySpy, null);
+        mWolmoActivityHandlerSpy.onDestroy();
 
         verify(unbinderMock, times(1)).unbind();
+    }
+
+    public static class TestActivity extends WolmoActivity {
+
+        @Override
+        protected int layout() {
+            return 0;
+        }
+
+        @Override
+        protected void init() {}
+
+        @Override
+        public void setContentView(int layoutResID) {}
     }
 }

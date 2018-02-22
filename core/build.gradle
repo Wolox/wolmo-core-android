@@ -4,7 +4,7 @@ apply plugin: 'jacoco-android'
 apply plugin: 'com.github.kt3k.coveralls'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion "26.0.2"
 
     compileOptions {
@@ -14,8 +14,16 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 27
         consumerProguardFiles 'proguard-joda-time.pro', 'proguard-butterknife.pro', 'proguard-dagger.pro'
+    }
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
     }
 }
 
@@ -28,7 +36,7 @@ coveralls {
 }
 
 buildscript {
-    ext.support_library_version = '26.1.0'
+    ext.support_library_version = '27.0.2'
     ext.butterknife_version = '8.8.1'
     ext.dagger_version = '2.13'
     ext.powermock_version = '1.7.0'
@@ -51,8 +59,10 @@ dependencies {
 
     // Test
     testImplementation "junit:junit:4.12"
-    testImplementation "org.mockito:mockito-inline:2.8.47" // Mockito inline adds support for mocking final classes and methods
-    testImplementation "org.powermock:powermock-module-junit4:$powermock_version"
-    testImplementation "org.powermock:powermock-api-mockito2:$powermock_version"
-    testImplementation "org.assertj:assertj-core:3.8.0"
+    testImplementation "org.robolectric:robolectric:3.6.1"
+    testImplementation "org.robolectric:shadows-supportv4:3.6.1"
+    testImplementation "org.mockito:mockito-inline:2.13.0" // Mockito inline adds support for mocking final classes and methods
+    testImplementation "org.assertj:assertj-core:3.9.0"
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
+    testAnnotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
 }

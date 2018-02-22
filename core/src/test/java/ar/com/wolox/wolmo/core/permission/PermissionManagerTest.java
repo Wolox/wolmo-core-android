@@ -30,11 +30,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Process;
 import android.support.v4.app.Fragment;
@@ -45,12 +45,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ Process.class, PermissionManager.class })
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest = Config.NONE, sdk = Build.VERSION_CODES.LOLLIPOP)
 public class PermissionManagerTest {
 
     private Context mContext;
@@ -59,10 +58,8 @@ public class PermissionManagerTest {
     private PermissionManager mPermissionManager;
 
     @Before
+    @SuppressWarnings({"unchecked", "ConstantConditions"})
     public void beforeTest() {
-        // ContextCompat uses Process to get PID and UID
-        PowerMockito.mockStatic(Process.class);
-
         mContext = mock(Context.class);
         mPermissionListener = mock(PermissionListener.class);
         mListenerSparseArray = mock(SparseArray.class);
@@ -125,18 +122,7 @@ public class PermissionManagerTest {
 
     @Test
     public void onPermissionGranted() throws Exception {
-        Handler handler = mock(Handler.class);
-        whenNew(Handler.class).withAnyArguments().thenReturn(handler);
         when(mListenerSparseArray.get(anyInt())).thenReturn(mPermissionListener);
-
-        // Call runnable
-        when(handler.post(any(Runnable.class))).thenAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((Runnable) invocation.getArgument(0)).run();
-                return null;
-            }
-        });
 
         mPermissionManager.onRequestPermissionsResult(1, new String[] { "GRANTED" },
             new int[] { PackageManager.PERMISSION_GRANTED });
@@ -148,18 +134,7 @@ public class PermissionManagerTest {
 
     @Test
     public void onPermissionDenied() throws Exception {
-        Handler handler = mock(Handler.class);
-        whenNew(Handler.class).withAnyArguments().thenReturn(handler);
         when(mListenerSparseArray.get(anyInt())).thenReturn(mPermissionListener);
-
-        // Call runnable
-        when(handler.post(any(Runnable.class))).thenAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((Runnable) invocation.getArgument(0)).run();
-                return null;
-            }
-        });
 
         mPermissionManager.onRequestPermissionsResult(1, new String[] { "DENIED", "GRANTED" },
             new int[] { PackageManager.PERMISSION_DENIED, PackageManager.PERMISSION_GRANTED });

@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 
 import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
+import ar.com.wolox.wolmo.core.util.Logger;
 import ar.com.wolox.wolmo.core.util.ReflectionUtils;
 import ar.com.wolox.wolmo.core.util.ToastFactory;
 
@@ -48,8 +49,6 @@ import butterknife.Unbinder;
  */
 public final class WolmoFragmentHandler<T extends BasePresenter> {
 
-    private static final String TAG = "WolmoFragmentHandler";
-
     private Fragment mFragment;
     private IWolmoFragment mWolmoFragment;
 
@@ -60,6 +59,7 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
 
     @Inject T mPresenter;
     @Inject ToastFactory mToastFactory;
+    @Inject Logger mLogger;
 
     @Inject
     WolmoFragmentHandler() {}
@@ -84,10 +84,11 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
      * @param savedInstanceState Saved instance state
      */
     void onCreate(@NonNull IWolmoFragment wolmoFragment, @Nullable Bundle savedInstanceState) {
+        mLogger.setTag(WolmoFragmentHandler.class.getSimpleName());
         setFragment(wolmoFragment);
         if (!mWolmoFragment.handleArguments(mFragment.getArguments())) {
-            Log.e(TAG, mFragment.getClass().getSimpleName()
-                    + " - The fragment's handleArguments() returned false.");
+            mLogger.e(mFragment.getClass().getSimpleName() +
+                     " - The fragment's handleArguments() returned false.");
             mToastFactory.show(R.string.unknown_error);
             mFragment.getActivity().finish();
         }
@@ -106,8 +107,7 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
      * </ul><p>
      */
     View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
-
+                         @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(mWolmoFragment.layout(), container, false);
         mUnbinder = ButterKnife.bind(mFragment, v);
         return v;
@@ -125,13 +125,14 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
         if (getPresenter() != null) {
             try {
                 Type[] viewTypes = ReflectionUtils.getParameterizedTypes(getPresenter());
-                if (viewTypes != null && ReflectionUtils.getClass(viewTypes[0])
-                        .isAssignableFrom(mWolmoFragment.getClass())) {
+                if (ReflectionUtils.getClass(viewTypes[0]).isAssignableFrom(mWolmoFragment.getClass())) {
                     mPresenter.attachView(mWolmoFragment);
+                } else {
+                    throw new ClassNotFoundException();
                 }
             } catch (ClassNotFoundException | NullPointerException e) {
-                Log.e(TAG, mFragment.getClass().getSimpleName()
-                        + " - The fragment should implement the presenter type argument.");
+                mLogger.e(mFragment.getClass().getSimpleName() +
+                           " - The fragment should implement the presenter type argument.");
                 mToastFactory.show(R.string.unknown_error);
                 mFragment.getActivity().finish();
             }
