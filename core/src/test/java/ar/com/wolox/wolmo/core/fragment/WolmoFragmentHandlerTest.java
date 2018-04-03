@@ -21,9 +21,9 @@
  */
 package ar.com.wolox.wolmo.core.fragment;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.inOrder;
@@ -33,7 +33,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -65,9 +64,7 @@ public class WolmoFragmentHandlerTest {
         mToastFactoryMock = mock(ToastFactory.class);
         mWolmoFragmentMock = mock(WolmoFragment.class);
 
-        mWolmoFragmentHandler = new WolmoFragmentHandler<>();
-        mWolmoFragmentHandler.mToastFactory = mToastFactoryMock;
-        mWolmoFragmentHandler.mLogger = mLoggerMock;
+        mWolmoFragmentHandler = new WolmoFragmentHandler<>(mToastFactoryMock, mLoggerMock);
     }
 
     @Test
@@ -95,33 +92,16 @@ public class WolmoFragmentHandlerTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void onViewCreatedShouldCheckPresenterAndCallAttachView() {
+    public void onViewCreatedShouldCallAttachView() {
         TestFragment testFragment = new TestFragment();
+        TestPresenter testPresenterSpy = spy(new TestPresenter());
+        mWolmoFragmentHandler = new WolmoFragmentHandler<>(testPresenterSpy, mToastFactoryMock, mLoggerMock);
 
         when(mWolmoFragmentMock.handleArguments(isNull())).thenReturn(true);
-        mWolmoFragmentHandler.mPresenter = spy(new TestPresenter());
         mWolmoFragmentHandler.onCreate(testFragment, null);
 
         mWolmoFragmentHandler.onViewCreated(mock(View.class), null);
-        verify(mWolmoFragmentHandler.mPresenter, times(1)).attachView(eq(testFragment));
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void onViewCreatedNotAssignableShouldFinishActivity() {
-        FragmentActivity activityMock = mock(FragmentActivity.class);
-
-        when(mWolmoFragmentMock.handleArguments(isNull())).thenReturn(true);
-        when(mWolmoFragmentMock.getActivity()).thenReturn(activityMock);
-        mWolmoFragmentHandler.mPresenter = spy(new TestPresenter());
-
-        // The presenter is expecting a "TestFragment"
-        mWolmoFragmentHandler.onCreate(mWolmoFragmentMock, null);
-        mWolmoFragmentHandler.onViewCreated(mock(View.class), null);
-
-        verify(activityMock, times(1)).finish();
-        verify(mToastFactoryMock, times(1)).show(eq(R.string.unknown_error));
-        verify(mLoggerMock, times(1)).e(anyString());
+        verify(testPresenterSpy, times(1)).attachView(eq(testFragment));
     }
 
     @Test
@@ -163,13 +143,40 @@ public class WolmoFragmentHandlerTest {
     @Test
     public void detachesPresenterOnDestroyView() {
         BasePresenter presenter = mock(BasePresenter.class);
-
-        mWolmoFragmentHandler.mPresenter = presenter;
+        mWolmoFragmentHandler = new WolmoFragmentHandler<BasePresenter>(presenter, mToastFactoryMock, mLoggerMock);
 
         mWolmoFragmentHandler.onDestroyView();
         verify(presenter, times(1)).detachView();
     }
 
+    @Test
+    public void getPresenterWithoutPresenterShouldReturnNull() {
+        assertThat(mWolmoFragmentHandler.getPresenter()).isNull();
+    }
+
+    @Test
+    public void getPresenterShouldReturnThePresenterInstance() {
+        BasePresenter presenter = mock(BasePresenter.class);
+        mWolmoFragmentHandler = new WolmoFragmentHandler<BasePresenter>(presenter, mToastFactoryMock, mLoggerMock);
+
+        assertThat(presenter).isSameAs(mWolmoFragmentHandler.getPresenter());
+    }
+
+    @Test
+    public void requirePresenterShouldReturnThePresenterInstance() {
+        BasePresenter presenter = mock(BasePresenter.class);
+        mWolmoFragmentHandler = new WolmoFragmentHandler<BasePresenter>(presenter, mToastFactoryMock, mLoggerMock);
+
+        assertThat(presenter).isSameAs(mWolmoFragmentHandler.requirePresenter());
+        assertThat(mWolmoFragmentHandler.getPresenter()).isSameAs(mWolmoFragmentHandler.requirePresenter());
+    }
+
+    @Test
+    public void requirePresenterShouldThrowExceptionIfPresenterIsNull() {
+        exception.expect(NullPointerException.class);
+        exception.expectMessage("The Presenter is null");
+        mWolmoFragmentHandler.requirePresenter();
+    }
 
     static class TestFragment extends WolmoFragment<TestPresenter> {
         @Override

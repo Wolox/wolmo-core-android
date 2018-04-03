@@ -23,8 +23,11 @@ package ar.com.wolox.wolmo.core.di.modules;
 
 import android.util.SparseArray;
 
+import ar.com.wolox.wolmo.core.fragment.WolmoFragmentHandler;
 import ar.com.wolox.wolmo.core.permission.PermissionListener;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
+import ar.com.wolox.wolmo.core.util.Logger;
+import ar.com.wolox.wolmo.core.util.ToastFactory;
 
 import dagger.Component;
 import dagger.Module;
@@ -43,7 +46,15 @@ public class DefaultModule {
     }
 
     @Provides
-    static BasePresenter providesBasePresenter() {
+    static BasePresenter providesDefaultBasePresenter() {
         return new BasePresenter();
+    }
+
+    /**
+     * Provides a default {@link WolmoFragmentHandler} with no presenter for fragments that don't need it.
+     */
+    @Provides
+    static WolmoFragmentHandler providesDefaultWolmoFragmentHandler(ToastFactory toastFactory, Logger logger) {
+        return new WolmoFragmentHandler(toastFactory, logger);
     }
 }

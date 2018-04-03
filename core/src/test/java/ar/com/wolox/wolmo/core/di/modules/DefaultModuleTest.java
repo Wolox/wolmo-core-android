@@ -25,10 +25,14 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 import android.util.SparseArray;
 
+import ar.com.wolox.wolmo.core.fragment.WolmoFragmentHandler;
 import ar.com.wolox.wolmo.core.permission.PermissionListener;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
+import ar.com.wolox.wolmo.core.util.Logger;
+import ar.com.wolox.wolmo.core.util.ToastFactory;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class DefaultModuleTest {
 
@@ -41,10 +45,23 @@ public class DefaultModuleTest {
     }
 
     @Test
-    public void provideBasePresenterShouldReturnNewInstance() {
-        BasePresenter basePresenter = DefaultModule.providesBasePresenter();
-        BasePresenter basePresenter2 = DefaultModule.providesBasePresenter();
+    public void provideDefaultBasePresenterShouldReturnNewInstance() {
+        BasePresenter basePresenter = DefaultModule.providesDefaultBasePresenter();
+        BasePresenter basePresenter2 = DefaultModule.providesDefaultBasePresenter();
 
         assertThat(basePresenter).isNotNull().isNotSameAs(basePresenter2);
+    }
+
+    @Test
+    public void provideDefaultWolmoFragmentHandlerShouldReturnNewInstance() {
+        ToastFactory toastFactoryMock = Mockito.mock(ToastFactory.class);
+        Logger loggerMock = Mockito.mock(Logger.class);
+
+        WolmoFragmentHandler wolmoFragmentHandler = DefaultModule.providesDefaultWolmoFragmentHandler(toastFactoryMock, loggerMock);
+        WolmoFragmentHandler wolmoFragmentHandler2 = DefaultModule.providesDefaultWolmoFragmentHandler(toastFactoryMock, loggerMock);
+
+        assertThat(wolmoFragmentHandler).isNotNull().isNotSameAs(wolmoFragmentHandler2);
+        assertThat(wolmoFragmentHandler).extracting("mToastFactory").containsExactly(toastFactoryMock);
+        assertThat(wolmoFragmentHandler).extracting("mLogger").containsExactly(loggerMock);
     }
 }

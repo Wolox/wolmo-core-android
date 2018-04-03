@@ -34,13 +34,9 @@ import android.view.ViewGroup;
 
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-import ar.com.wolox.wolmo.core.util.Logger;
-import ar.com.wolox.wolmo.core.util.ToastFactory;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class WolmoFragmentTest {
 
@@ -119,5 +115,11 @@ public class WolmoFragmentTest {
     public void getPresenterShouldDelegateCall() {
         mWolmoFragmentSpy.getPresenter();
         verify(mWolmoFragmentHandlerMock, times(1)).getPresenter();
+    }
+
+    @Test
+    public void requirePresenterShouldDelegateCall() {
+        mWolmoFragmentSpy.requirePresenter();
+        verify(mWolmoFragmentHandlerMock, times(1)).requirePresenter();
     }
 }

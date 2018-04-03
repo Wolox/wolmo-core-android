@@ -25,7 +25,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +32,7 @@ import android.view.ViewGroup;
 import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.Logger;
-import ar.com.wolox.wolmo.core.util.ReflectionUtils;
 import ar.com.wolox.wolmo.core.util.ToastFactory;
-
-import java.lang.reflect.Type;
 
 import javax.inject.Inject;
 
@@ -57,12 +53,20 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
     private boolean mVisible;
     private Unbinder mUnbinder;
 
-    @Inject T mPresenter;
-    @Inject ToastFactory mToastFactory;
-    @Inject Logger mLogger;
+    private @Nullable T mPresenter;
+    private ToastFactory mToastFactory;
+    private Logger mLogger;
 
     @Inject
-    WolmoFragmentHandler() {}
+    WolmoFragmentHandler(@Nullable T presenter, @NonNull ToastFactory toastFactory, @NonNull Logger logger) {
+        mPresenter = presenter;
+        mToastFactory = toastFactory;
+        mLogger = logger;
+    }
+
+    public WolmoFragmentHandler(@NonNull ToastFactory toastFactory, @NonNull Logger logger) {
+        this(null, toastFactory, logger);
+    }
 
     /**
      * Sets the fragment for this fragment handler.
@@ -118,26 +122,11 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
      * fragment to the {@link BasePresenter} calling {@link BasePresenter#onViewAttached()}.
      */
     @SuppressWarnings("unchecked")
-    void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mCreated = true;
-        // We check if the fragment implements or extends the required type for the presenter's view.
-        // If it does, we try to assign it as a view, otherwise we fail and no view will be available for the presenter
-        if (getPresenter() != null) {
-            try {
-                Type[] viewTypes = ReflectionUtils.getParameterizedTypes(getPresenter());
-                if (ReflectionUtils.getClass(viewTypes[0]).isAssignableFrom(mWolmoFragment.getClass())) {
-                    mPresenter.attachView(mWolmoFragment);
-                } else {
-                    throw new ClassNotFoundException();
-                }
-            } catch (ClassNotFoundException | NullPointerException e) {
-                mLogger.e(mFragment.getClass().getSimpleName() +
-                           " - The fragment should implement the presenter type argument.");
-                mToastFactory.show(R.string.unknown_error);
-                mFragment.getActivity().finish();
-            }
+        if (mPresenter != null) {
+            mPresenter.attachView(mWolmoFragment);
         }
-
         mWolmoFragment.setUi(view);
         mWolmoFragment.init();
         mWolmoFragment.populate();
@@ -145,12 +134,24 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
     }
 
     /**
-     * Returns the presenter {@link T} for this fragment
+     * Returns the presenter {@link T} for the fragment
      *
      * @return presenter
      */
     @Nullable
     T getPresenter() {
+        return mPresenter;
+    }
+
+    /**
+     * Tries to return a non null instance of the presenter {@link T} for the fragment.
+     * If the presenter is null this will throw a NullPointerException.
+     *
+     * @return presenter
+     */
+    @NonNull
+    T requirePresenter() {
+        if (mPresenter == null) throw new NullPointerException("The Presenter is null");
         return mPresenter;
     }
 
