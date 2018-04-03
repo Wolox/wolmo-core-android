@@ -37,7 +37,7 @@ coveralls {
 
 buildscript {
     ext.support_library_version = '27.1.0'
-    ext.butterknife_version = '8.8.1'
+    ext.butterknife_version = '9.0.0-SNAPSHOT'
     ext.dagger_version = '2.13'
     ext.powermock_version = '1.7.0'
 }
