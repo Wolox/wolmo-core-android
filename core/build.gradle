@@ -5,7 +5,7 @@ apply plugin: 'com.github.kt3k.coveralls'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "26.0.2"
+    buildToolsVersion "27.0.3"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -36,7 +36,7 @@ coveralls {
 }
 
 buildscript {
-    ext.support_library_version = '27.0.2'
+    ext.support_library_version = '27.1.0'
     ext.butterknife_version = '8.8.1'
     ext.dagger_version = '2.13'
     ext.powermock_version = '1.7.0'

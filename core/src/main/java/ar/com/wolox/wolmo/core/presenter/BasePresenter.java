@@ -21,6 +21,8 @@
  */
 package ar.com.wolox.wolmo.core.presenter;
 
+import android.support.annotation.NonNull;
+
 import javax.inject.Inject;
 
 /**
@@ -61,7 +63,7 @@ public class BasePresenter<V> {
      *
      * @param viewInstance Instance of the view to attach
      */
-    public final void attachView(V viewInstance) {
+    public final void attachView(@NonNull V viewInstance) {
         mViewInstance = viewInstance;
         onViewAttached();
     }
@@ -93,7 +95,7 @@ public class BasePresenter<V> {
      *
      * @param method Expression to run if the view is created.
      */
-    protected void runIfViewAttached(Consumer<V> method) {
+    protected void runIfViewAttached(@NonNull Consumer<V> method) {
         if (isViewAttached()) {
             method.accept(mViewInstance);
         }
@@ -106,7 +108,7 @@ public class BasePresenter<V> {
      *
      * @param method Expression to run if the view is created.
      */
-    protected void runIfViewAttached(Runnable method) {
+    protected void runIfViewAttached(@NonNull Runnable method) {
         if (isViewAttached()) {
             method.run();
         }
