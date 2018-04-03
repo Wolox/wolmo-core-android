@@ -21,6 +21,7 @@
  */
 package ar.com.wolox.wolmo.core.fragment;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -148,6 +149,34 @@ public class WolmoFragmentHandlerTest {
         verify(presenter, times(1)).detachView();
     }
 
+    @Test
+    public void getPresenterWithoutPresenterShouldReturnNull() {
+        assertThat(mWolmoFragmentHandler.getPresenter()).isNull();
+    }
+
+    @Test
+    public void getPresenterShouldReturnThePresenterInstance() {
+        BasePresenter presenter = mock(BasePresenter.class);
+        mWolmoFragmentHandler = new WolmoFragmentHandler<BasePresenter>(presenter, mToastFactoryMock, mLoggerMock);
+
+        assertThat(presenter).isSameAs(mWolmoFragmentHandler.getPresenter());
+    }
+
+    @Test
+    public void requirePresenterShouldReturnThePresenterInstance() {
+        BasePresenter presenter = mock(BasePresenter.class);
+        mWolmoFragmentHandler = new WolmoFragmentHandler<BasePresenter>(presenter, mToastFactoryMock, mLoggerMock);
+
+        assertThat(presenter).isSameAs(mWolmoFragmentHandler.requirePresenter());
+        assertThat(mWolmoFragmentHandler.getPresenter()).isSameAs(mWolmoFragmentHandler.requirePresenter());
+    }
+
+    @Test
+    public void requirePresenterShouldThrowExceptionIfPresenterIsNull() {
+        exception.expect(NullPointerException.class);
+        exception.expectMessage("The Presenter is null");
+        mWolmoFragmentHandler.requirePresenter();
+    }
 
     static class TestFragment extends WolmoFragment<TestPresenter> {
         @Override

@@ -172,6 +172,17 @@ public abstract class WolmoFragment<T extends BasePresenter> extends DaggerFragm
     }
 
     /**
+     * Tries to return a non null instance of the presenter {@link T} for this fragment.
+     * If the presenter is null this will throw a NullPointerException.
+     *
+     * @return presenter
+     */
+    @NonNull
+    T requirePresenter() {
+        return mFragmentHandler.requirePresenter();
+    }
+
+    /**
      * @see IWolmoFragment#onBackPressed()
      * <p>
      * Beware, when overriding, that returning 'true' will prevent default navigation behaviour

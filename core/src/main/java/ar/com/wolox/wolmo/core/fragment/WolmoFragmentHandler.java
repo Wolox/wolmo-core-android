@@ -58,13 +58,13 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
     private Logger mLogger;
 
     @Inject
-    WolmoFragmentHandler(@Nullable T presenter, ToastFactory toastFactory, Logger logger) {
+    WolmoFragmentHandler(@Nullable T presenter, @NonNull ToastFactory toastFactory, @NonNull Logger logger) {
         mPresenter = presenter;
         mToastFactory = toastFactory;
         mLogger = logger;
     }
 
-    public WolmoFragmentHandler(ToastFactory toastFactory, Logger logger) {
+    public WolmoFragmentHandler(@NonNull ToastFactory toastFactory, @NonNull Logger logger) {
         this(null, toastFactory, logger);
     }
 
@@ -122,7 +122,7 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
      * fragment to the {@link BasePresenter} calling {@link BasePresenter#onViewAttached()}.
      */
     @SuppressWarnings("unchecked")
-    void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mCreated = true;
         if (mPresenter != null) {
             mPresenter.attachView(mWolmoFragment);
@@ -134,12 +134,24 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
     }
 
     /**
-     * Returns the presenter {@link T} for this fragment
+     * Returns the presenter {@link T} for the fragment
      *
      * @return presenter
      */
     @Nullable
     T getPresenter() {
+        return mPresenter;
+    }
+
+    /**
+     * Tries to return a non null instance of the presenter {@link T} for the fragment.
+     * If the presenter is null this will throw a NullPointerException.
+     *
+     * @return presenter
+     */
+    @NonNull
+    T requirePresenter() {
+        if (mPresenter == null) throw new NullPointerException("The Presenter is null");
         return mPresenter;
     }
 

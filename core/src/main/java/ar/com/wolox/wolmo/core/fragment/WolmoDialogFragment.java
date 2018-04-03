@@ -218,6 +218,17 @@ public abstract class WolmoDialogFragment<T extends BasePresenter<?>> extends Di
     }
 
     /**
+     * Tries to return a non null instance of the presenter {@link T} for this fragment.
+     * If the presenter is null this will throw a NullPointerException.
+     *
+     * @return presenter
+     */
+    @NonNull
+    T requirePresenter() {
+        return mFragmentHandler.requirePresenter();
+    }
+
+    /**
      * Shows the {@link WolmoDialogFragment} using the fragment.
      *
      * @param manager Fragment Manager to show the dialog fragment
