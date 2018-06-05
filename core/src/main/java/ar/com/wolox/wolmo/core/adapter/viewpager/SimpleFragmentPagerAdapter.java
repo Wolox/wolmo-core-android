@@ -35,21 +35,6 @@ import javax.inject.Inject;
 
 /**
  * Basic implementation of {@link FragmentPagerAdapter} with support for Titles.
- *
- * To use it with dagger you need to provide the {@link FragmentManager} from the activity you wish
- * to use the adapter from.
- *
- * <pre>{@code
- *      @literal @Module
- *       public class ActivityModule {
- *
- *          @literal @Provides
- *          @literal @PerActivity
- *           FragmentManager provideFragmentManager(Activity activity) {
- *               return activity.getFragmentManager();
- *           }
- *       }
- *   }</pre>
  */
 public class SimpleFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -60,8 +45,7 @@ public class SimpleFragmentPagerAdapter extends FragmentStatePagerAdapter {
      *
      * @param fm An instance of {@link FragmentManager}. Cannot be null.
      */
-    @Inject
-    public SimpleFragmentPagerAdapter(@NonNull FragmentManager fm) {
+    public SimpleFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
         mFragmentsAndTitles = new ArrayList<>();
     }
