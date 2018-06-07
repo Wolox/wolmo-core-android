@@ -31,11 +31,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import ar.com.wolox.wolmo.core.permission.PermissionManager;
-import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-
 import javax.inject.Inject;
 
+import ar.com.wolox.wolmo.core.permission.PermissionManager;
+import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerFragment;
 
@@ -109,7 +108,6 @@ public abstract class WolmoFragment<T extends BasePresenter> extends DaggerFragm
     @CallSuper
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
             @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mPermissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 

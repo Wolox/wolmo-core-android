@@ -21,22 +21,22 @@
  */
 package ar.com.wolox.wolmo.core.fragment;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import ar.com.wolox.wolmo.core.permission.PermissionManager;
+import ar.com.wolox.wolmo.core.presenter.BasePresenter;
+
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import ar.com.wolox.wolmo.core.permission.PermissionManager;
-import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-
-import org.junit.Before;
-import org.junit.Test;
 
 public class WolmoFragmentTest {
 

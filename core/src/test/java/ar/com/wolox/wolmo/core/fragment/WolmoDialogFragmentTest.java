@@ -21,35 +21,23 @@
  */
 package ar.com.wolox.wolmo.core.fragment;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import ar.com.wolox.wolmo.core.permission.PermissionManager;
+import ar.com.wolox.wolmo.core.presenter.BasePresenter;
+
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startFragment;
 
-import android.app.Dialog;
-import android.os.Build;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-
-import ar.com.wolox.wolmo.core.permission.PermissionManager;
-import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-
-
-@RunWith(RobolectricTestRunner.class)
-@Config(manifest = Config.NONE, sdk = Build.VERSION_CODES.LOLLIPOP)
 public class WolmoDialogFragmentTest {
 
     private WolmoFragmentHandler<BasePresenter> mWolmoFragmentHandlerMock;
@@ -62,34 +50,9 @@ public class WolmoDialogFragmentTest {
         mWolmoFragmentHandlerMock = mock(WolmoFragmentHandler.class);
         mPermissionManagerMock = mock(PermissionManager.class);
 
-        mWolmoDialogFragmentSpy = spy(new TestDialog());
+        mWolmoDialogFragmentSpy = spy(WolmoDialogFragment.class);
         mWolmoDialogFragmentSpy.mFragmentHandler = mWolmoFragmentHandlerMock;
         mWolmoDialogFragmentSpy.mPermissionManager = mPermissionManagerMock;
-    }
-
-    @Test
-    public void onCreateDialogShouldConfigureSuper() {
-        startFragment(mWolmoDialogFragmentSpy);
-        Dialog dialog = mWolmoDialogFragmentSpy.getDialog();
-
-        assertThat(dialog.getWindow()).isNotNull();
-        assertThat(dialog.getWindow()).extracting("mFeatures").anyMatch(
-                feature -> ((int)feature & Window.FEATURE_NO_TITLE) == Window.FEATURE_NO_TITLE);
-        assertThat(dialog.getWindow().getAttributes().flags).matches(
-                flag -> (flag & WindowManager.LayoutParams.FLAG_DIM_BEHIND) == 0);
-    }
-
-    @Test
-    public void onStartShouldConfigureDialog() {
-        startFragment(mWolmoDialogFragmentSpy);
-        Dialog dialog = mWolmoDialogFragmentSpy.getDialog();
-
-        assertThat(dialog.getWindow()).isNotNull();
-        assertThat(dialog.getWindow().getAttributes().width).isEqualTo(ViewGroup.LayoutParams.MATCH_PARENT);
-        assertThat(dialog.getWindow().getAttributes().height).isEqualTo(ViewGroup.LayoutParams.MATCH_PARENT);
-
-        verify(mWolmoDialogFragmentSpy, times(1)).getBackgroundDrawable();
-        assertThat(dialog.getWindow().getDecorView().getBackground()).isEqualTo(mWolmoDialogFragmentSpy.getBackgroundDrawable());
     }
 
     @Test
