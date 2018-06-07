@@ -121,13 +121,14 @@ public abstract class WolmoDialogFragment<T extends BasePresenter>
 
     @Override
     @CallSuper
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return mFragmentHandler.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    @CallSuper
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mFragmentHandler.onViewCreated(view, savedInstanceState);
     }
@@ -168,7 +169,7 @@ public abstract class WolmoDialogFragment<T extends BasePresenter>
      * @return true if arguments were read successfully, false otherwise.
      * Default implementation returns true.
      */
-    public boolean handleArguments(Bundle arguments) {
+    public boolean handleArguments(@Nullable Bundle arguments) {
         return true;
     }
 
@@ -177,7 +178,7 @@ public abstract class WolmoDialogFragment<T extends BasePresenter>
      * provided in {@link IWolmoFragment#layout()}
      * Override if needed. If using {@link ButterKnife}, there is no need to use this method.
      */
-    public void setUi(View v) {}
+    public void setUi(@NonNull View v) {}
 
     /**
      * Sets the listeners for the views of the fragment.
@@ -231,7 +232,7 @@ public abstract class WolmoDialogFragment<T extends BasePresenter>
      *
      * @param manager Fragment Manager to show the dialog fragment
      */
-    public void show(FragmentManager manager) {
+    public void show(@NonNull FragmentManager manager) {
         super.show(manager, getClass().getName());
     }
 
@@ -250,7 +251,6 @@ public abstract class WolmoDialogFragment<T extends BasePresenter>
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
             @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mPermissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

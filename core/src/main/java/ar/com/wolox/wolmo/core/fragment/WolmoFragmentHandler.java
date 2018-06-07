@@ -29,13 +29,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
 import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.Logger;
 import ar.com.wolox.wolmo.core.util.ToastFactory;
-
-import javax.inject.Inject;
-
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -110,8 +109,8 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
      * <li>{@link WolmoFragment#setListeners()}
      * </ul><p>
      */
-    View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                         @Nullable Bundle savedInstanceState) {
+    View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                      @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(mWolmoFragment.layout(), container, false);
         mUnbinder = ButterKnife.bind(mFragment, v);
         return v;
