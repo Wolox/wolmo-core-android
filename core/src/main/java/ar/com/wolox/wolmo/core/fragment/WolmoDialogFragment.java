@@ -30,9 +30,7 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,12 +38,12 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import ar.com.wolox.wolmo.core.permission.PermissionManager;
-import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-
 import javax.inject.Inject;
 
+import ar.com.wolox.wolmo.core.permission.PermissionManager;
+import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerAppCompatDialogFragment;
 
 /**
  * Base implementation for {@link IWolmoFragment} for dialog fragments. This is in charge of
@@ -56,8 +54,8 @@ import butterknife.ButterKnife;
  *
  * @param <T> Presenter for this fragment. It should extend {@link BasePresenter}
  */
-public abstract class WolmoDialogFragment<T extends BasePresenter<?>> extends DialogFragment
-        implements IWolmoFragment {
+public abstract class WolmoDialogFragment<T extends BasePresenter>
+        extends DaggerAppCompatDialogFragment implements IWolmoFragment {
 
     @Inject WolmoFragmentHandler<T> mFragmentHandler;
     @Inject PermissionManager mPermissionManager;
