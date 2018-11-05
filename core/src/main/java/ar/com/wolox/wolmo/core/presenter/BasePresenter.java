@@ -25,6 +25,8 @@ import android.support.annotation.NonNull;
 
 import javax.inject.Inject;
 
+import ar.com.wolox.wolmo.core.java8.Consumer;
+
 /**
  * Base presenter that provides the view to the specific presenters.
  */
@@ -114,20 +116,4 @@ public class BasePresenter<V> {
         }
     }
 
-    /**
-     * Functional interface to define a consumer method.
-     * A consumer is a interface with only a method that accepts a parameter and does not return
-     * anything.
-     *
-     * @param <T> Parameter
-     */
-    public interface Consumer<T> {
-
-        /**
-         * Accept the argument
-         *
-         * @param param argument
-         */
-        void accept(T param);
-    }
 }

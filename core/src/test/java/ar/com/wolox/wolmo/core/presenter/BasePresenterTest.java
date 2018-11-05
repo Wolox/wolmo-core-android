@@ -31,6 +31,8 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
+import ar.com.wolox.wolmo.core.java8.Consumer;
+
 public class BasePresenterTest {
 
     private BasePresenter<Object> mBasePresenter;
@@ -80,7 +82,7 @@ public class BasePresenterTest {
     @Test
     @SuppressWarnings("unchecked")
     public void presenterRunIfViewAttachedConsumer() {
-        BasePresenter.Consumer<Object> consumerMock = mock(BasePresenter.Consumer.class);
+        Consumer<Object> consumerMock = mock(Consumer.class);
 
         mBasePresenter.runIfViewAttached(consumerMock);
         verify(consumerMock, times(0)).accept(any(Object.class));
