@@ -22,7 +22,7 @@
 package ar.com.wolox.wolmo.core;
 
 import android.app.Application;
-import android.support.annotation.CallSuper;
+import androidx.annotation.CallSuper;
 
 import dagger.android.support.DaggerApplication;
 

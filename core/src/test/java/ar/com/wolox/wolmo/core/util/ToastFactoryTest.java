@@ -26,28 +26,22 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.view.View;
+
+import androidx.core.app.ActivityOptionsCompat;
+
 import android.widget.Toast;
 
 import ar.com.wolox.wolmo.core.R;
-import ar.com.wolox.wolmo.core.activity.WolmoActivity;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;

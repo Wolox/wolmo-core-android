@@ -22,8 +22,8 @@
 package ar.com.wolox.wolmo.core.util;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import android.widget.Toast;
 
 import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope;

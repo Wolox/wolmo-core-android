@@ -37,17 +37,11 @@ import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startFr
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import ar.com.wolox.wolmo.core.permission.PermissionListener;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;

@@ -37,7 +37,7 @@ coveralls {
 
 buildscript {
     ext.support_library_version = '28.0.0'
-    ext.butterknife_version = '8.8.1'
+    ext.butterknife_version = '10.1.0'
     ext.dagger_version = '2.13'
     ext.powermock_version = '1.7.0'
 }
@@ -46,7 +46,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Support
-    api "com.android.support:appcompat-v7:$support_library_version"
+    api 'androidx.appcompat:appcompat:1.0.2'
 
     // ButterKnife
     implementation "com.jakewharton:butterknife:$butterknife_version"
@@ -60,8 +60,8 @@ dependencies {
 
     // Test
     testImplementation "junit:junit:4.12"
-    testImplementation "org.robolectric:robolectric:3.6.1"
-    testImplementation "org.robolectric:shadows-supportv4:3.6.1"
+    testImplementation "org.robolectric:robolectric:4.2"
+    testImplementation "org.robolectric:shadows-supportv4:3.8"
     testImplementation "org.mockito:mockito-inline:2.13.0" // Mockito inline adds support for mocking final classes and methods
     testImplementation "org.assertj:assertj-core:3.9.0"
     testAnnotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"

@@ -23,10 +23,12 @@ package ar.com.wolox.wolmo.core.util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+
+import androidx.fragment.app.Fragment;
 
 /**
  * An utility class to work with Android's keyboard
@@ -50,10 +52,10 @@ public class KeyboardUtils {
 
     /**
      * Forces the device's soft keyboard (that means the software keyboard, not a physical one)
-     * to hide, meant to be called from inside a {@link android.support.v4.app.Fragment}
+     * to hide, meant to be called from inside a {@link Fragment}
      *
      * @param context an instance of {@link Context}
-     * @param view    an instance of {@link android.support.v4.app.Fragment
+     * @param view    an instance of {@link Fragment
      */
     public static void hideKeyboard(@NonNull Context context, @NonNull View view) {
         InputMethodManager imm = (InputMethodManager) context
