@@ -21,28 +21,13 @@
  */
 package ar.com.wolox.wolmo.core.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityOptionsCompat;
-
 import android.view.View;
 
-import ar.com.wolox.wolmo.core.activity.WolmoActivity;
+import androidx.core.app.ActivityOptionsCompat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,29 +35,36 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+
+import ar.com.wolox.wolmo.core.activity.WolmoActivity;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, sdk = Build.VERSION_CODES.LOLLIPOP)
 public class NavigationUtilsTest {
 
-    private Context mContextSpy;
     private Activity mActivitySpy;
 
     @Before
     @SuppressWarnings("unchecked")
     public void beforeTest() {
         mActivitySpy = spy(Robolectric.buildActivity(Activity.class).create().start().get());
-        mContextSpy = spy(RuntimeEnvironment.application);
     }
 
     @Test
     public void openBrowserWithUrlShouldStartActivity() {
-        NavigationUtils.openBrowser(mContextSpy, "http://google.com");
+        NavigationUtils.openBrowser(mActivitySpy, "http://google.com");
 
         ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
-        verify(mContextSpy, times(1)).startActivity(intentCaptor.capture());
+        verify(mActivitySpy, times(1)).startActivity(intentCaptor.capture());
 
         Intent intent = intentCaptor.getValue();
         assertThat(intent.getData().toString()).isEqualTo("http://google.com");
@@ -81,13 +73,13 @@ public class NavigationUtilsTest {
 
     @Test
     public void jumpToShouldStartActivity() {
-        NavigationUtils.jumpTo(mContextSpy, WolmoActivity.class);
+        NavigationUtils.jumpTo(mActivitySpy, WolmoActivity.class);
 
         ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
-        verify(mContextSpy, times(1)).startActivity(intentCaptor.capture());
+        verify(mActivitySpy, times(1)).startActivity(intentCaptor.capture());
 
         Intent intent = intentCaptor.getValue();
-        assertThat(intent.getComponent().getPackageName()).isEqualTo(mContextSpy.getPackageName());
+        assertThat(intent.getComponent().getPackageName()).isEqualTo(mActivitySpy.getPackageName());
         assertThat(intent.getComponent().getClassName())
                 .isEqualTo(WolmoActivity.class.getCanonicalName());
     }
@@ -96,13 +88,13 @@ public class NavigationUtilsTest {
     public void jumpToWithExtrasShouldStartActivity() {
         NavigationUtils.IntentExtra extra = new NavigationUtils.IntentExtra("Tag", "Value");
 
-        NavigationUtils.jumpTo(mContextSpy, WolmoActivity.class, extra);
+        NavigationUtils.jumpTo(mActivitySpy, WolmoActivity.class, extra);
 
         ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
-        verify(mContextSpy, times(1)).startActivity(intentCaptor.capture());
+        verify(mActivitySpy, times(1)).startActivity(intentCaptor.capture());
 
         Intent intent = intentCaptor.getValue();
-        assertThat(intent.getComponent().getPackageName()).isEqualTo(mContextSpy.getPackageName());
+        assertThat(intent.getComponent().getPackageName()).isEqualTo(mActivitySpy.getPackageName());
         assertThat(intent.getComponent().getClassName())
                 .isEqualTo(WolmoActivity.class.getCanonicalName());
         assertThat(intent.getStringExtra("Tag")).isEqualTo("Value");
@@ -110,13 +102,13 @@ public class NavigationUtilsTest {
 
     @Test
     public void jumpToClearingTaskShouldAddFlags() {
-        NavigationUtils.jumpToClearingTask(mContextSpy, WolmoActivity.class);
+        NavigationUtils.jumpToClearingTask(mActivitySpy, WolmoActivity.class);
 
         ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
-        verify(mContextSpy, times(1)).startActivity(intentCaptor.capture());
+        verify(mActivitySpy, times(1)).startActivity(intentCaptor.capture());
 
         Intent intent = intentCaptor.getValue();
-        assertThat(intent.getComponent().getPackageName()).isEqualTo(mContextSpy.getPackageName());
+        assertThat(intent.getComponent().getPackageName()).isEqualTo(mActivitySpy.getPackageName());
         assertThat(intent.getComponent().getClassName())
                 .isEqualTo(WolmoActivity.class.getCanonicalName());
         assertThat(intent.getFlags()).matches(
@@ -129,13 +121,13 @@ public class NavigationUtilsTest {
     public void jumpToClearingTaskShouldAddFlagsAndExtras() {
         NavigationUtils.IntentExtra extra = new NavigationUtils.IntentExtra("Tag", "Value");
 
-        NavigationUtils.jumpToClearingTask(mContextSpy, WolmoActivity.class, extra);
+        NavigationUtils.jumpToClearingTask(mActivitySpy, WolmoActivity.class, extra);
 
         ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
-        verify(mContextSpy, times(1)).startActivity(intentCaptor.capture());
+        verify(mActivitySpy, times(1)).startActivity(intentCaptor.capture());
 
         Intent intent = intentCaptor.getValue();
-        assertThat(intent.getComponent().getPackageName()).isEqualTo(mContextSpy.getPackageName());
+        assertThat(intent.getComponent().getPackageName()).isEqualTo(mActivitySpy.getPackageName());
         assertThat(intent.getComponent().getClassName())
                 .isEqualTo(WolmoActivity.class.getCanonicalName());
         assertThat(intent.getFlags()).matches(

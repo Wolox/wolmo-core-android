@@ -21,31 +21,23 @@
  */
 package ar.com.wolox.wolmo.core.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
-
-import androidx.core.app.ActivityOptionsCompat;
-
 import android.widget.Toast;
-
-import ar.com.wolox.wolmo.core.R;
-
+import androidx.test.core.app.ApplicationProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowToast;
+import ar.com.wolox.wolmo.core.R;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, sdk = Build.VERSION_CODES.LOLLIPOP)
@@ -56,7 +48,7 @@ public class ToastFactoryTest {
 
     @Before
     public void beforeTest() {
-        mContextSpy = spy(RuntimeEnvironment.application);
+        mContextSpy = spy(ApplicationProvider.getApplicationContext());
         mToastFactory = new ToastFactory(mContextSpy);
 
         Resources resourcesMock = mock(Resources.class);

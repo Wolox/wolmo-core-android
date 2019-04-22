@@ -21,30 +21,23 @@
  */
 package ar.com.wolox.wolmo.core.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
-
+import androidx.test.core.app.ApplicationProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
-
 import java.io.File;
 import java.io.IOException;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.spy;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, sdk = Build.VERSION_CODES.LOLLIPOP, shadows = WolmoFileProviderTest.ShadowFileProvider.class)
@@ -55,7 +48,7 @@ public class WolmoFileProviderTest {
 
     @Before
     public void beforeTest() {
-        mContextSpy = spy(RuntimeEnvironment.application);
+        mContextSpy = spy(ApplicationProvider.getApplicationContext());
         mWolmoFileProvider= new WolmoFileProvider(mContextSpy);
     }
 
@@ -76,7 +69,7 @@ public class WolmoFileProviderTest {
         // Check that we are calling FileProvider
         assertThat(mWolmoFileProvider.getUriForFile(file)).isEqualTo(Uri.EMPTY);
         assertThat(ShadowFileProvider.sContext).isSameAs(mContextSpy);
-        assertThat(ShadowFileProvider.sAuthority).isEqualTo("org.robolectric.default.provider");
+        assertThat(ShadowFileProvider.sAuthority).isEqualTo("ar.com.wolox.wolmo.core.test.provider");
         assertThat(ShadowFileProvider.sFile).isSameAs(file);
     }
 
