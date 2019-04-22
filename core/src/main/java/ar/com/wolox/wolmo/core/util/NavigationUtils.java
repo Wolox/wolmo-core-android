@@ -54,6 +54,9 @@ public class NavigationUtils {
         if (TextUtils.isEmpty(url)) url = BLANK_PAGE;
 
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        if (!(context instanceof Activity)) {
+            browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
         context.startActivity(browserIntent);
     }
 
@@ -64,7 +67,11 @@ public class NavigationUtils {
      * @param clazz   The {@link Class} of the {@link Activity} that will be opened. Can't be null.
      */
     public static void jumpTo(@NonNull Context context, @NonNull Class clazz) {
-        context.startActivity(new Intent(context, clazz));
+        Intent intent = new Intent(context, clazz);
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        context.startActivity(intent);
     }
 
     /**
@@ -82,6 +89,9 @@ public class NavigationUtils {
         Intent intent = new Intent(context, clazz);
         for (IntentExtra intentExtra : intentExtras) {
             intent.putExtra(intentExtra.reference, intentExtra.object);
+        }
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         context.startActivity(intent);
     }
