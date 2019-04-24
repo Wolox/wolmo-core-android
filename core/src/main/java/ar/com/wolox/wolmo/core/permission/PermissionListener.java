@@ -21,7 +21,7 @@
  */
 package ar.com.wolox.wolmo.core.permission;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Callback used by {@link PermissionManager} when requesting permissions to the user

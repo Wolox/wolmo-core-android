@@ -21,25 +21,20 @@
  */
 package ar.com.wolox.wolmo.core.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.View;
 
-import ar.com.wolox.wolmo.core.R;
-import ar.com.wolox.wolmo.core.util.ToastFactory;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import ar.com.wolox.wolmo.core.R;
+import ar.com.wolox.wolmo.core.util.ToastFactory;
 
 public class WolmoActivityHandler {
 
     private ToastFactory mToastFactory;
     private WolmoActivity mWolmoActivity;
-    private Unbinder mUnbinder;
 
     @Inject
     WolmoActivityHandler(ToastFactory toastFactory) {
@@ -49,7 +44,6 @@ public class WolmoActivityHandler {
     /**
      * Handles the custom lifecycle of Wolmo's Activity. It provides a set of callbacks to structure
      * the different aspects of the Activities initialization.
-     * Also, it provides initialization for Butterknife.
      *
      * @param savedInstanceState a {@link Bundle} provided by Android's lifecycle.
      * @param activity the {@link WolmoActivity} to be managed by this handler.
@@ -57,7 +51,6 @@ public class WolmoActivityHandler {
     void onCreate(@NonNull WolmoActivity activity, @Nullable Bundle savedInstanceState) {
         mWolmoActivity = activity;
         mWolmoActivity.setContentView(mWolmoActivity.layout());
-        mUnbinder = bindViewActivity();
         if (mWolmoActivity.handleArguments(mWolmoActivity.getIntent().getExtras())) {
             mWolmoActivity.setUi();
             mWolmoActivity.init();
@@ -69,18 +62,6 @@ public class WolmoActivityHandler {
         }
     }
 
-    /**
-     * Binds the views to WolmoActivity by calling {@link ButterKnife#bind(Activity)}
-     *
-     * @return Unbinder
-     */
-    Unbinder bindViewActivity() {
-        return ButterKnife.bind(mWolmoActivity);
-    }
-
     void onDestroy() {
-        if (mUnbinder != null) {
-            mUnbinder.unbind();
-        }
     }
 }

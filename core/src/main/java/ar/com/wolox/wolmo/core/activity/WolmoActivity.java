@@ -22,23 +22,22 @@
 package ar.com.wolox.wolmo.core.activity;
 
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import ar.com.wolox.wolmo.core.fragment.IWolmoFragment;
-import ar.com.wolox.wolmo.core.permission.PermissionManager;
-import ar.com.wolox.wolmo.core.util.ToastFactory;
+import androidx.annotation.CallSuper;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
+import ar.com.wolox.wolmo.core.fragment.IWolmoFragment;
+import ar.com.wolox.wolmo.core.permission.PermissionManager;
+import ar.com.wolox.wolmo.core.util.ToastFactory;
 import dagger.android.support.DaggerAppCompatActivity;
 
 /**
@@ -53,7 +52,6 @@ public abstract class WolmoActivity extends DaggerAppCompatActivity {
     /**
      * Handles the custom lifecycle of Wolmo's Activity. It provides a set of callbacks to structure
      * the different aspects of the Activities initialization.
-     * Also, it provides initialization for Butterknife.
      *
      * @param savedInstanceState a {@link Bundle} provided by Android's lifecycle.
      */
@@ -92,7 +90,7 @@ public abstract class WolmoActivity extends DaggerAppCompatActivity {
     /**
      * Associates variables to views inflated from the XML resource
      * provided in {@link WolmoActivity#layout()}
-     * Override if needed. If using {@link ButterKnife}, there is no need to use this method.
+     * Override if needed.
      */
     protected void setUi() {}
 

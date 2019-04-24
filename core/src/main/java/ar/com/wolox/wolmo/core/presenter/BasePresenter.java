@@ -21,7 +21,7 @@
  */
 package ar.com.wolox.wolmo.core.presenter;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import javax.inject.Inject;
 

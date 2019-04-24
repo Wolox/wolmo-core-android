@@ -27,10 +27,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,16 +34,20 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+
 import javax.inject.Inject;
 
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatDialogFragment;
 
 /**
  * Base implementation for {@link IWolmoFragment} for dialog fragments. This is in charge of
- * inflating the view returned by {@link #layout()} and calls {@link ButterKnife} to bind members.
+ * inflating the view returned by {@link #layout()}.
  * The presenter is created on {@link #onCreate(Bundle)} if {@link #handleArguments(Bundle)} returns
  * true. This class defines default implementations for most of the methods on {@link
  * IWolmoFragment}.
@@ -176,7 +176,7 @@ public abstract class WolmoDialogFragment<T extends BasePresenter>
     /**
      * Associates variables to views inflated from the XML resource
      * provided in {@link IWolmoFragment#layout()}
-     * Override if needed. If using {@link ButterKnife}, there is no need to use this method.
+     * Override if needed.
      */
     public void setUi(@NonNull View v) {}
 
