@@ -44,7 +44,6 @@ public class WolmoActivityHandler {
     /**
      * Handles the custom lifecycle of Wolmo's Activity. It provides a set of callbacks to structure
      * the different aspects of the Activities initialization.
-     * Also, it provides initialization for Butterknife.
      *
      * @param savedInstanceState a {@link Bundle} provided by Android's lifecycle.
      * @param activity the {@link WolmoActivity} to be managed by this handler.

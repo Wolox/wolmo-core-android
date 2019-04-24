@@ -127,7 +127,7 @@ public abstract class WolmoFragment<T extends BasePresenter> extends DaggerFragm
     /**
      * Associates variables to views inflated from the XML resource
      * provided in {@link IWolmoFragment#layout()}
-     * Override if needed. If using {@link ButterKnife}, there is no need to use this method.
+     * Override if needed.
      */
     @Override
     public void setUi(View v) {}

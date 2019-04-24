@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'jacoco-android'
 apply plugin: 'com.github.kt3k.coveralls'
 
@@ -16,7 +15,7 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
-        consumerProguardFiles 'proguard-joda-time.pro', 'proguard-butterknife.pro', 'proguard-dagger.pro'
+        consumerProguardFiles 'proguard-joda-time.pro', 'proguard-dagger.pro'
     }
 
     testOptions {
