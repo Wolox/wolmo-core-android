@@ -22,23 +22,22 @@
 package ar.com.wolox.wolmo.core.activity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.CallSuper;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
-import android.view.MenuItem;
-
-import ar.com.wolox.wolmo.core.fragment.IWolmoFragment;
-import ar.com.wolox.wolmo.core.permission.PermissionManager;
-import ar.com.wolox.wolmo.core.util.ToastFactory;
+import androidx.fragment.app.Fragment;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
+import ar.com.wolox.wolmo.core.fragment.IWolmoFragment;
+import ar.com.wolox.wolmo.core.permission.PermissionManager;
+import ar.com.wolox.wolmo.core.util.ToastFactory;
 import dagger.android.support.DaggerAppCompatActivity;
 
 /**
@@ -92,7 +91,7 @@ public abstract class WolmoActivity extends DaggerAppCompatActivity {
     /**
      * Associates variables to views inflated from the XML resource
      * provided in {@link WolmoActivity#layout()}
-     * Override if needed. If using {@link ButterKnife}, there is no need to use this method.
+     * Override if needed.
      */
     protected void setUi() {}
 

@@ -37,21 +37,21 @@ coveralls {
 }
 
 buildscript {
-    ext.support_library_version = '28.0.0'
-    ext.butterknife_version = '10.1.0'
+    ext.androidx_appcompat_version = '1.0.2'
     ext.dagger_version = '2.22.1'
     ext.powermock_version = '1.7.0'
+    ext.junit_version = '4.12'
+    ext.robolectric_version = '4.2'
+    ext.androidx_test_core_version = '1.1.0'
+    ext.mockito_inline_version = '2.13.0'
+    ext.assertj_version = '3.9.0';
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Support
-    api 'androidx.appcompat:appcompat:1.0.2'
-
-    // ButterKnife
-    implementation "com.jakewharton:butterknife:$butterknife_version"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife_version"
+    api "androidx.appcompat:appcompat:$androidx_appcompat_version"
 
     // Dagger
     api "com.google.dagger:dagger:$dagger_version"
@@ -61,11 +61,11 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
 
     // Test
-    testImplementation "junit:junit:4.12"
-    testImplementation "org.robolectric:robolectric:4.2"
-    testImplementation 'androidx.test:core:1.1.0'
-    testImplementation "org.mockito:mockito-inline:2.13.0" // Mockito inline adds support for mocking final classes and methods
-    testImplementation "org.assertj:assertj-core:3.9.0"
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "org.robolectric:robolectric:$robolectric_version"
+    testImplementation "androidx.test:core:$androidx_test_core_version"
+    testImplementation "org.mockito:mockito-inline:$mockito_inline_version" // Mockito inline adds support for mocking final classes and methods
+    testImplementation "org.assertj:assertj-core:$assertj_version"
     testAnnotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     testAnnotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
 }

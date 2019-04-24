@@ -22,12 +22,13 @@
 package ar.com.wolox.wolmo.core.fragment;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import javax.inject.Inject;
 
@@ -35,8 +36,6 @@ import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.Logger;
 import ar.com.wolox.wolmo.core.util.ToastFactory;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * This class is used to separate Wolox Fragments logic so that different subclasses of
@@ -50,7 +49,6 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
     private boolean mCreated;
     private boolean mMenuVisible;
     private boolean mVisible;
-    private Unbinder mUnbinder;
 
     private @Nullable T mPresenter;
     private ToastFactory mToastFactory;
@@ -99,8 +97,7 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
 
     /**
      * Method called from {@link WolmoFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}, it
-     * creates the view defined in
-     * {@link WolmoFragment#layout()} and binds it with the fragment with {@link ButterKnife}.
+     * creates the view defined in {@link WolmoFragment#layout()}.
      * Then it calls the following methods and returns the {@link View} created:
      * <p><ul>
      * <li>{@link WolmoFragment#setUi(View)}
@@ -111,9 +108,7 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
      */
     View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                       @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(mWolmoFragment.layout(), container, false);
-        mUnbinder = ButterKnife.bind(mFragment, v);
-        return v;
+        return inflater.inflate(mWolmoFragment.layout(), container, false);
     }
 
     /**
@@ -199,9 +194,6 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
     void onDestroyView() {
         if (getPresenter() != null) {
             getPresenter().detachView();
-        }
-        if (mUnbinder != null) {
-            mUnbinder.unbind();
         }
     }
 }

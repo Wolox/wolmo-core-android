@@ -21,24 +21,20 @@
  */
 package ar.com.wolox.wolmo.core.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import ar.com.wolox.wolmo.core.R;
-import ar.com.wolox.wolmo.core.util.ToastFactory;
-
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import ar.com.wolox.wolmo.core.R;
+import ar.com.wolox.wolmo.core.util.ToastFactory;
 
 public class WolmoActivityHandler {
 
     private ToastFactory mToastFactory;
     private WolmoActivity mWolmoActivity;
-    private Unbinder mUnbinder;
 
     @Inject
     WolmoActivityHandler(ToastFactory toastFactory) {
@@ -56,7 +52,6 @@ public class WolmoActivityHandler {
     void onCreate(@NonNull WolmoActivity activity, @Nullable Bundle savedInstanceState) {
         mWolmoActivity = activity;
         mWolmoActivity.setContentView(mWolmoActivity.layout());
-        mUnbinder = bindViewActivity();
         if (mWolmoActivity.handleArguments(mWolmoActivity.getIntent().getExtras())) {
             mWolmoActivity.setUi();
             mWolmoActivity.init();
@@ -68,18 +63,6 @@ public class WolmoActivityHandler {
         }
     }
 
-    /**
-     * Binds the views to WolmoActivity by calling {@link ButterKnife#bind(Activity)}
-     *
-     * @return Unbinder
-     */
-    Unbinder bindViewActivity() {
-        return ButterKnife.bind(mWolmoActivity);
-    }
-
     void onDestroy() {
-        if (mUnbinder != null) {
-            mUnbinder.unbind();
-        }
     }
 }

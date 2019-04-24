@@ -23,25 +23,25 @@ package ar.com.wolox.wolmo.core.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-import butterknife.ButterKnife;
 import dagger.android.support.DaggerFragment;
 
 /**
  * Base implementation for {@link IWolmoFragment}. This is in charge of inflating the view returned
- * by {@link #layout()} and calls {@link ButterKnife} to bind members. The presenter is created on
- * {@link #onCreate(Bundle)} if {@link #handleArguments(Bundle)} returns true.
+ * by {@link #layout()}. The presenter is created on {@link #onCreate(Bundle)}
+ * if {@link #handleArguments(Bundle)} returns true.
  * This class defines default implementations for most of the methods on {@link IWolmoFragment}.
  *
  * @param <T> Presenter for this fragment. It should extend {@link BasePresenter}

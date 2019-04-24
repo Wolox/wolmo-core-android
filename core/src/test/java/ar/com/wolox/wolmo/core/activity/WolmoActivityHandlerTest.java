@@ -21,20 +21,8 @@
  */
 package ar.com.wolox.wolmo.core.activity;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import android.os.Build;
 
-import ar.com.wolox.wolmo.core.R;
-import ar.com.wolox.wolmo.core.util.ToastFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +32,16 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import butterknife.Unbinder;
+import ar.com.wolox.wolmo.core.R;
+import ar.com.wolox.wolmo.core.util.ToastFactory;
+
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, sdk = Build.VERSION_CODES.LOLLIPOP)
@@ -83,17 +80,6 @@ public class WolmoActivityHandlerTest {
 
         verify(mToastFactoryMock, times(1)).show(eq(R.string.unknown_error));
         verify(mWolmoActivitySpy, times(1)).finish();
-    }
-
-    @Test
-    public void onDestroyShouldCallUnbind() {
-        Unbinder unbinderMock = mock(Unbinder.class);
-        doReturn(unbinderMock).when(mWolmoActivityHandlerSpy).bindViewActivity();
-
-        mWolmoActivityHandlerSpy.onCreate(mWolmoActivitySpy, null);
-        mWolmoActivityHandlerSpy.onDestroy();
-
-        verify(unbinderMock, times(1)).unbind();
     }
 
     public static class TestActivity extends WolmoActivity {
