@@ -1,4 +1,4 @@
-package ar.com.wolox.wolmo.core.di.scopes;
+package ar.com.wolox.wolmo.core.di.keys;
 
 import android.app.Activity;
 
