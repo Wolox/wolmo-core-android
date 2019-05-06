@@ -1,4 +1,4 @@
-package ar.com.wolox.wolmo.core
+package ar.com.wolox.wolmo.core.tests
 
 import ar.com.wolox.wolmo.core.presenter.BasePresenter
 import org.junit.Before
