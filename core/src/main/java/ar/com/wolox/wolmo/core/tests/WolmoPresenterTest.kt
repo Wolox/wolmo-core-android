@@ -44,4 +44,4 @@ abstract class WolmoPresenterTest<V : Any, P : BasePresenter<V>> {
      * @return the [BasePresenter] instance.
      */
     abstract fun getPresenterInstance(): P
-}w
+}
