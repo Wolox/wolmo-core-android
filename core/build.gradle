@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 apply plugin: 'jacoco-android'
 apply plugin: 'com.github.kt3k.coveralls'
 
@@ -49,8 +50,15 @@ buildscript {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
     // Support
     api "androidx.appcompat:appcompat:$androidx_appcompat_version"
+
+    // Testing as api to let tests package use it
+    api "junit:junit:$junit_version"
+    api "org.mockito:mockito-inline:$mockito_inline_version" // Mockito inline adds support for mocking final classes and methods
 
     // Dagger
     api "com.google.dagger:dagger:$dagger_version"
