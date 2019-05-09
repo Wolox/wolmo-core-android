@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 apply plugin: 'jacoco-android'
 apply plugin: 'com.github.kt3k.coveralls'
 
@@ -43,7 +45,7 @@ buildscript {
     ext.robolectric_version = '4.2'
     ext.androidx_test_core_version = '1.1.0'
     ext.mockito_inline_version = '2.13.0'
-    ext.assertj_version = '3.9.0';
+    ext.assertj_version = '3.9.0'
 }
 
 dependencies {
@@ -67,4 +69,9 @@ dependencies {
     testImplementation "org.assertj:assertj-core:$assertj_version"
     testAnnotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     testAnnotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
+    compile "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
