@@ -22,8 +22,8 @@ import java.io.IOException
 @Config(manifest = Config.NONE, sdk = [Build.VERSION_CODES.LOLLIPOP], shadows = [WolmoFileProviderTest.Companion.ShadowFileProvider::class])
 class WolmoFileProviderTest {
 
-    private var mContextSpy: Context? = null
-    private var mWolmoFileProvider: WolmoFileProvider? = null
+    private var contextSpy: Context? = null
+    private var wolmoFileProvider: WolmoFileProvider? = null
 
     companion object {
         @Implements(FileProvider::class)
@@ -45,15 +45,15 @@ class WolmoFileProviderTest {
 
     @Before
     fun beforeTest() {
-        mContextSpy = spy(ApplicationProvider.getApplicationContext<Context>())
-        mContextSpy?.let { mWolmoFileProvider = WolmoFileProvider(it) }
+        contextSpy = spy(ApplicationProvider.getApplicationContext<Context>())
+        contextSpy?.let { wolmoFileProvider = WolmoFileProvider(it) }
     }
 
     @Test
     @Throws(IOException::class)
     fun createTempFileShouldCreateNewFiles() {
-        mWolmoFileProvider?.createTempFile("TestFile", "txt", Environment.DIRECTORY_DCIM)
-        mWolmoFileProvider?.createTempFile("WithDot", ".txt", Environment.DIRECTORY_DCIM)
+        wolmoFileProvider?.createTempFile("TestFile", "txt", Environment.DIRECTORY_DCIM)
+        wolmoFileProvider?.createTempFile("WithDot", ".txt", Environment.DIRECTORY_DCIM)
 
         val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
         assertThat(storageDir.listFiles()).anyMatch { file -> file.name.matches("TestFile.*\\.txt".toRegex()) }
@@ -67,14 +67,14 @@ class WolmoFileProviderTest {
 
         // Check that we are calling FileProvider
 
-        assertThat(mWolmoFileProvider?.getUriForFile(file)).isEqualTo(Uri.EMPTY)
-        assertThat(ShadowFileProvider.sContext).isSameAs(mContextSpy)
+        assertThat(wolmoFileProvider?.getUriForFile(file)).isEqualTo(Uri.EMPTY)
+        assertThat(ShadowFileProvider.sContext).isSameAs(contextSpy)
         assertThat(ShadowFileProvider.sAuthority).isEqualTo("ar.com.wolox.wolmo.core.test.provider")
         assertThat(ShadowFileProvider.sFile).isSameAs(file)
     }
 
     @Test
     fun getRealPathFromUriShouldReturnExistingPath() {
-        assertThat(mWolmoFileProvider?.getRealPathFromUri(Uri.EMPTY)).isNull()
+        assertThat(wolmoFileProvider?.getRealPathFromUri(Uri.EMPTY)).isNull()
     }
 }

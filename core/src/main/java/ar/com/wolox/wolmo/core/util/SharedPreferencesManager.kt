@@ -8,32 +8,32 @@ import javax.inject.Inject
  * Utility class to query and store values in {@link SharedPreferences}.
  */
 @ApplicationScope
-class SharedPreferencesManager @Inject constructor(private val mSharedPreferences: SharedPreferences) {
+class SharedPreferencesManager @Inject constructor(private val sharedPreferences: SharedPreferences) {
 
     /*
      * A bunch of shared preferences utils methods to get and set different types of values
      */
-    fun store(key: String, value: String) = mSharedPreferences.edit().putString(key, value).apply()
+    fun store(key: String, value: String) = sharedPreferences.edit().putString(key, value).apply()
 
-    fun store(key: String, value: Int?) = mSharedPreferences.edit().putInt(key, value!!).apply()
+    fun store(key: String, value: Int?) = sharedPreferences.edit().putInt(key, value!!).apply()
 
-    fun store(key: String, value: Float?) = mSharedPreferences.edit().putFloat(key, value!!).apply()
+    fun store(key: String, value: Float?) = sharedPreferences.edit().putFloat(key, value!!).apply()
 
-    fun store(key: String, value: Boolean?) = mSharedPreferences.edit().putBoolean(key, value!!).apply()
+    fun store(key: String, value: Boolean?) = sharedPreferences.edit().putBoolean(key, value!!).apply()
 
-    fun store(key: String, value: Long?) = mSharedPreferences.edit().putLong(key, value!!).apply()
+    fun store(key: String, value: Long?) = sharedPreferences.edit().putLong(key, value!!).apply()
 
-    operator fun get(key: String, defValue: String) = mSharedPreferences.getString(key, defValue).orEmpty()
+    operator fun get(key: String, defValue: String) = sharedPreferences.getString(key, defValue).orEmpty()
 
-    operator fun get(key: String, defValue: Int) = mSharedPreferences.getInt(key, defValue)
+    operator fun get(key: String, defValue: Int) = sharedPreferences.getInt(key, defValue)
 
-    operator fun get(key: String, defValue: Float) = mSharedPreferences.getFloat(key, defValue)
+    operator fun get(key: String, defValue: Float) = sharedPreferences.getFloat(key, defValue)
 
-    operator fun get(key: String, defValue: Boolean) = mSharedPreferences.getBoolean(key, defValue)
+    operator fun get(key: String, defValue: Boolean) = sharedPreferences.getBoolean(key, defValue)
 
-    operator fun get(key: String, defValue: Long) = mSharedPreferences.getLong(key, defValue)
+    operator fun get(key: String, defValue: Long) = sharedPreferences.getLong(key, defValue)
 
-    fun clearKey(key: String) = mSharedPreferences.edit().remove(key).apply()
+    fun clearKey(key: String) = sharedPreferences.edit().remove(key).apply()
 
-    fun keyExists(key: String) = mSharedPreferences.contains(key)
+    fun keyExists(key: String) = sharedPreferences.contains(key)
 }

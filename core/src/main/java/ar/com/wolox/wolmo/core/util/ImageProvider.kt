@@ -22,7 +22,7 @@ import javax.inject.Inject
  * for retrieving pictures from gallery/taking them from the camera.
  */
 @ApplicationScope
-class ImageProvider @Inject constructor(context: Context, toastFactory: ToastFactory, wolmoFileProvider: WolmoFileProvider) {
+class ImageProvider @Inject constructor(val context: Context, val toastFactory: ToastFactory, val wolmoFileProvider: WolmoFileProvider) {
 
     @Retention(AnnotationRetention.SOURCE)
     @StringDef(PNG, JPG)
@@ -42,14 +42,10 @@ class ImageProvider @Inject constructor(context: Context, toastFactory: ToastFac
          * @param quality target quality
          * @return if below 0, returns 0, if above 100, return 100, else returns `quality` param
          */
-        private fun sanitizeQuality(quality: Int): Int {
-            if (quality < 0) {
-                return 0
-            } else if (quality > 100) {
-                return 100
-            }
-
-            return quality
+        private fun sanitizeQuality(quality: Int): Int = when {
+            quality < 0 -> 0
+            quality > 100 -> 100
+            else -> quality
         }
 
         /**
@@ -136,10 +132,6 @@ class ImageProvider @Inject constructor(context: Context, toastFactory: ToastFac
         }
     }
 
-    private var mContext: Context = context
-    private var mToastFactory: ToastFactory = toastFactory
-    private var mWolmoFileProvider: WolmoFileProvider = wolmoFileProvider
-
     /**
      * Triggers an intent to go to the device's image gallery and returns an URI with the file.
      *
@@ -159,10 +151,10 @@ class ImageProvider @Inject constructor(context: Context, toastFactory: ToastFac
         i.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
 
         // Ensure that there's a gallery app to handle the intent
-        if (i.resolveActivity(mContext.packageManager) != null) {
+        if (i.resolveActivity(context.packageManager) != null) {
             fragment.startActivityForResult(i, requestCode)
         } else {
-            mToastFactory.show(errorResId)
+            toastFactory.show(errorResId)
 
         }
     }
@@ -175,7 +167,7 @@ class ImageProvider @Inject constructor(context: Context, toastFactory: ToastFac
     fun addPictureToDeviceGallery(imageUri: Uri) {
         val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
         mediaScanIntent.data = imageUri
-        mContext.sendBroadcast(mediaScanIntent)
+        context.sendBroadcast(mediaScanIntent)
     }
 
     /**
@@ -203,21 +195,21 @@ class ImageProvider @Inject constructor(context: Context, toastFactory: ToastFac
         val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
         // Ensure that there's a camera app to handle the intent
-        if (i.resolveActivity(mContext.packageManager) == null) {
-            mToastFactory.show(errorResId)
+        if (i.resolveActivity(context.packageManager) == null) {
+            toastFactory.show(errorResId)
             return null
         }
 
         val photoFile: File?
         try {
-            photoFile = mWolmoFileProvider.createTempFile(filename, format, Environment.DIRECTORY_DCIM)
+            photoFile = wolmoFileProvider.createTempFile(filename, format, Environment.DIRECTORY_DCIM)
         } catch (ex: IOException) {
-            mToastFactory.show(errorResId)
+            toastFactory.show(errorResId)
             return null
         }
 
 
-        val photoFileUri = mWolmoFileProvider.getUriForFile(photoFile)
+        val photoFileUri = wolmoFileProvider.getUriForFile(photoFile)
 
         i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         i.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri)
@@ -246,7 +238,7 @@ class ImageProvider @Inject constructor(context: Context, toastFactory: ToastFac
             maxHeight: Int): ByteArray {
 
         return getImageAsByteArray(
-                BitmapFactory.decodeFile(mWolmoFileProvider.getRealPathFromUri(imageFileUri)),
+                BitmapFactory.decodeFile(wolmoFileProvider.getRealPathFromUri(imageFileUri)),
                 format,
                 quality,
                 maxWidth,

@@ -70,19 +70,19 @@ class ImageProviderTest {
         }
     }
 
-    private var mContextSpy: Context? = null
-    private var mToastFactoryMock: ToastFactory? = null
-    private var mWolmoFileProviderMock: WolmoFileProvider? = null
+    private var contextSpy: Context? = null
+    private var toastFactoryMock: ToastFactory? = null
+    private var wolmoFileProviderMock: WolmoFileProvider? = null
 
-    private var mImageProviderSpy: ImageProvider? = null
+    private var imageProviderSpy: ImageProvider? = null
 
     @Before
     fun beforeTest() {
-        mContextSpy = spy<Application>(RuntimeEnvironment.application)
-        mToastFactoryMock = mock<ToastFactory>(ToastFactory::class.java)
-        mWolmoFileProviderMock = mock<WolmoFileProvider>(WolmoFileProvider::class.java)
+        contextSpy = spy<Application>(RuntimeEnvironment.application)
+        toastFactoryMock = mock<ToastFactory>(ToastFactory::class.java)
+        wolmoFileProviderMock = mock<WolmoFileProvider>(WolmoFileProvider::class.java)
 
-        mImageProviderSpy = ImageProvider(mContextSpy as Application, mToastFactoryMock as ToastFactory, mWolmoFileProviderMock as WolmoFileProvider)
+        imageProviderSpy = ImageProvider(contextSpy as Application, toastFactoryMock as ToastFactory, wolmoFileProviderMock as WolmoFileProvider)
     }
 
     @Test
@@ -90,11 +90,11 @@ class ImageProviderTest {
         val fragmentMock = mock(Fragment::class.java)
         sComponentNameMock = mock(ComponentName::class.java)
 
-        mImageProviderSpy?.getImageFromGallery(fragmentMock, 1, 123)
+        imageProviderSpy?.getImageFromGallery(fragmentMock, 1, 123)
 
         assertThat(sIntentInstance?.getBooleanExtra(Intent.EXTRA_LOCAL_ONLY, false)).isEqualTo(true)
         verify<Fragment>(fragmentMock, times(1)).startActivityForResult(any<Intent>(Intent::class.java), eq(1))
-        verify<ToastFactory>(mToastFactoryMock, times(0)).show(eq(123))
+        verify<ToastFactory>(toastFactoryMock, times(0)).show(eq(123))
     }
 
     @Test
@@ -102,21 +102,21 @@ class ImageProviderTest {
         val fragmentMock = mock(Fragment::class.java)
         sComponentNameMock = null
 
-        mImageProviderSpy?.getImageFromGallery(fragmentMock, 1, 123)
+        imageProviderSpy?.getImageFromGallery(fragmentMock, 1, 123)
 
         assertThat(sIntentInstance?.getBooleanExtra(Intent.EXTRA_LOCAL_ONLY, false)).isEqualTo(true)
         verify(fragmentMock, times(0)).startActivityForResult(any(Intent::class.java), eq(1))
-        verify<ToastFactory>(mToastFactoryMock, times(1)).show(eq(123))
+        verify<ToastFactory>(toastFactoryMock, times(1)).show(eq(123))
     }
 
     @Test
     fun addImageToPictureGallerySendBroadcast() {
         val uriMock = mock(Uri::class.java)
 
-        mImageProviderSpy?.addPictureToDeviceGallery(uriMock)
+        imageProviderSpy?.addPictureToDeviceGallery(uriMock)
 
         assertThat(sIntentInstance?.data).isSameAs(uriMock)
-        verify<Context>(mContextSpy, times(1)).sendBroadcast(eq<Intent>(sIntentInstance))
+        verify<Context>(contextSpy, times(1)).sendBroadcast(eq<Intent>(sIntentInstance))
     }
 
     @Test
@@ -124,9 +124,9 @@ class ImageProviderTest {
         val fragmentMock = mock(Fragment::class.java)
         sComponentNameMock = null // No Camera app
 
-        mImageProviderSpy?.getImageFromCamera(fragmentMock, 123, "Filename", "JPG", 12345)
+        imageProviderSpy?.getImageFromCamera(fragmentMock, 123, "Filename", "JPG", 12345)
 
-        verify<ToastFactory>(mToastFactoryMock, times(1)).show(eq(12345))
+        verify<ToastFactory>(toastFactoryMock, times(1)).show(eq(12345))
     }
 
     @Test
@@ -134,10 +134,10 @@ class ImageProviderTest {
     fun getImageFromCameraWithExceptionShowsToast() {
         val fragmentMock = mock(Fragment::class.java)
         sComponentNameMock = mock(ComponentName::class.java)
-        `when`(mWolmoFileProviderMock?.createTempFile(anyString(), anyString(), anyString())).thenThrow(IOException())
+        `when`(wolmoFileProviderMock?.createTempFile(anyString(), anyString(), anyString())).thenThrow(IOException())
 
-        assertThat(mImageProviderSpy?.getImageFromCamera(fragmentMock, 123, "Filename", "JPG", 123456)).isNull()
-        verify<ToastFactory>(mToastFactoryMock, times(1)).show(eq(123456))
+        assertThat(imageProviderSpy?.getImageFromCamera(fragmentMock, 123, "Filename", "JPG", 123456)).isNull()
+        verify<ToastFactory>(toastFactoryMock, times(1)).show(eq(123456))
     }
 
     @Test
@@ -148,17 +148,17 @@ class ImageProviderTest {
         val uriMock = mock(Uri::class.java)
         sComponentNameMock = mock(ComponentName::class.java)
 
-        `when`<Context>(fragmentMock.context).thenReturn(mContextSpy)
-        `when`(mWolmoFileProviderMock?.createTempFile(anyString(), anyString(), anyString())).thenReturn(fileMock)
-        `when`(mWolmoFileProviderMock?.getUriForFile(fileMock)).thenReturn(uriMock)
+        `when`<Context>(fragmentMock.context).thenReturn(contextSpy)
+        `when`(wolmoFileProviderMock?.createTempFile(anyString(), anyString(), anyString())).thenReturn(fileMock)
+        `when`(wolmoFileProviderMock?.getUriForFile(fileMock)).thenReturn(uriMock)
 
 
-        assertThat(mImageProviderSpy?.getImageFromCamera(fragmentMock, 123, "Filename", "JPG", 123456)).isSameAs(fileMock)
+        assertThat(imageProviderSpy?.getImageFromCamera(fragmentMock, 123, "Filename", "JPG", 123456)).isSameAs(fileMock)
         assertThat(sIntentInstance?.action).isEqualTo(MediaStore.ACTION_IMAGE_CAPTURE)
         assertThat(sIntentInstance?.flags).matches { flags -> flags and Intent.FLAG_GRANT_READ_URI_PERMISSION == 1 }
         assertThat(sIntentInstance?.getParcelableExtra(MediaStore.EXTRA_OUTPUT) as Uri).isSameAs(uriMock)
 
-        verify<ToastFactory>(mToastFactoryMock, times(0)).show(anyInt())
+        verify<ToastFactory>(toastFactoryMock, times(0)).show(anyInt())
     }
 
     @Test

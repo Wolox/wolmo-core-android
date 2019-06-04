@@ -22,7 +22,7 @@ import org.robolectric.shadows.ShadowActivity
 @Config(manifest = Config.NONE)
 class KeyboardUtilsTest {
 
-    private var mContextMock: Context? = null
+    private var contextMock: Context? = null
 
     companion object {
         /**
@@ -35,13 +35,13 @@ class KeyboardUtilsTest {
          */
         @Implements(Activity::class)
         class WolmoShadowActivity : ShadowActivity() {
-            internal lateinit var mInputMethodManagerMock: InputMethodManager
+            internal lateinit var inputMethodManagerMock: InputMethodManager
 
             @Implementation
             fun getSystemService(name: String): Any {
                 if (name == Activity.INPUT_METHOD_SERVICE) {
-                    mInputMethodManagerMock = mock(InputMethodManager::class.java)
-                    return mInputMethodManagerMock
+                    inputMethodManagerMock = mock(InputMethodManager::class.java)
+                    return inputMethodManagerMock
                 }
                 return Shadow.directlyOn(realActivity, Activity::class.java).getSystemService(name)
             }
@@ -50,16 +50,16 @@ class KeyboardUtilsTest {
 
     @Before
     fun beforeTest() {
-        mContextMock = mock<Context>(Context::class.java)
+        contextMock = mock<Context>(Context::class.java)
     }
 
     @Test
     fun showKeyboardShouldCallInputMethodManager() {
         val managerMock = mock(InputMethodManager::class.java)
         val editTextMock = mock(EditText::class.java)
-        `when`(mContextMock?.getSystemService(eq<String>(Context.INPUT_METHOD_SERVICE))).thenReturn(managerMock)
+        `when`(contextMock?.getSystemService(eq<String>(Context.INPUT_METHOD_SERVICE))).thenReturn(managerMock)
 
-        mContextMock?.let { KeyboardUtils.showKeyboard(it, editTextMock) }
+        contextMock?.let { KeyboardUtils.showKeyboard(it, editTextMock) }
 
         verify<InputMethodManager>(managerMock, times(1)).showSoftInput(eq<EditText>(editTextMock), eq(InputMethodManager.SHOW_IMPLICIT))
     }
@@ -70,10 +70,10 @@ class KeyboardUtilsTest {
         val editTextMock = mock(EditText::class.java)
         val iBinderMock = mock(IBinder::class.java)
 
-        `when`(mContextMock?.getSystemService(eq(Context.INPUT_METHOD_SERVICE))).thenReturn(managerMock)
+        `when`(contextMock?.getSystemService(eq(Context.INPUT_METHOD_SERVICE))).thenReturn(managerMock)
         `when`(editTextMock.windowToken).thenReturn(iBinderMock)
 
-        mContextMock?.let { KeyboardUtils.hideKeyboard(it, editTextMock) }
+        contextMock?.let { KeyboardUtils.hideKeyboard(it, editTextMock) }
 
         verify(managerMock, times(1)).hideSoftInputFromWindow(eq(iBinderMock), eq(0))
     }
@@ -87,6 +87,6 @@ class KeyboardUtilsTest {
 
         KeyboardUtils.hideKeyboard(activityController.get() as Activity)
 
-        verify<InputMethodManager>(shadowActivity.mInputMethodManagerMock, times(1)).hideSoftInputFromWindow(isNull(), eq(0))
+        verify<InputMethodManager>(shadowActivity.inputMethodManagerMock, times(1)).hideSoftInputFromWindow(isNull(), eq(0))
     }
 }

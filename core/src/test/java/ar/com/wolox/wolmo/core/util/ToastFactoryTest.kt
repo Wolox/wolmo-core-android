@@ -20,37 +20,37 @@ import org.robolectric.shadows.ShadowToast
 @Config(manifest = Config.NONE, sdk = [Build.VERSION_CODES.LOLLIPOP])
 class ToastFactoryTest {
 
-    private var mContextSpy: Context? = null
-    private var mToastFactory: ToastFactory? = null
+    private var contextSpy: Context? = null
+    private var toastFactory: ToastFactory? = null
 
     @Before
     fun beforeTest() {
-        mContextSpy = spy<Context>(ApplicationProvider.getApplicationContext<Context>())
-        mContextSpy?.let { mToastFactory = ToastFactory(it) }
+        contextSpy = spy<Context>(ApplicationProvider.getApplicationContext<Context>())
+        contextSpy?.let { toastFactory = ToastFactory(it) }
 
         val resourcesMock = mock<Resources>(Resources::class.java)
         `when`(resourcesMock.getString(anyInt())).thenReturn("MockString")
-        `when`(mContextSpy?.resources).thenReturn(resourcesMock)
+        `when`(contextSpy?.resources).thenReturn(resourcesMock)
     }
 
     @Test
     fun showShouldShowAShortToast() {
-        mToastFactory?.show("ShowToast")
+        toastFactory?.show("ShowToast")
         assertThat(ShadowToast.getLatestToast().duration).isEqualTo(Toast.LENGTH_SHORT)
         assertThat(ShadowToast.getTextOfLatestToast()).isEqualTo("ShowToast")
 
-        mToastFactory?.show(R.string.unknown_error)
+        toastFactory?.show(R.string.unknown_error)
         assertThat(ShadowToast.getLatestToast().duration).isEqualTo(Toast.LENGTH_SHORT)
         assertThat(ShadowToast.getTextOfLatestToast()).isEqualTo("MockString")
     }
 
     @Test
     fun showLongShouldShowALongToast() {
-        mToastFactory?.showLong("ShowToast")
+        toastFactory?.showLong("ShowToast")
         assertThat(ShadowToast.getLatestToast().duration).isEqualTo(Toast.LENGTH_LONG)
         assertThat(ShadowToast.getTextOfLatestToast()).isEqualTo("ShowToast")
 
-        mToastFactory?.showLong(R.string.unknown_error)
+        toastFactory?.showLong(R.string.unknown_error)
         assertThat(ShadowToast.getLatestToast().duration).isEqualTo(Toast.LENGTH_LONG)
         assertThat(ShadowToast.getTextOfLatestToast()).isEqualTo("MockString")
     }

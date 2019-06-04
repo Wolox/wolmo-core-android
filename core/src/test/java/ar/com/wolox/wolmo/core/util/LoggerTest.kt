@@ -18,122 +18,122 @@ import java.io.PrintStream
 @Config(manifest = Config.NONE)
 class LoggerTest {
 
-    private var mLogger: Logger? = null
-    private var mPrintStreamMock: PrintStream? = null
-    private var mExceptionMock: Throwable? = null
+    private var logger: Logger? = null
+    private var printStreamMock: PrintStream? = null
+    private var exceptionMock: Throwable? = null
 
 
     @Before
     fun beforeTest() {
-        mLogger = Logger()
-        mPrintStreamMock = mock<PrintStream>(PrintStream::class.java)
-        ShadowLog.stream = mPrintStreamMock
+        logger = Logger()
+        printStreamMock = mock<PrintStream>(PrintStream::class.java)
+        ShadowLog.stream = printStreamMock
 
-        mExceptionMock = mock<Throwable>(Throwable::class.java)
+        exceptionMock = mock<Throwable>(Throwable::class.java)
         doAnswer { invocation ->
             val stream = invocation.getArgument<PrintStream>(0)
             stream.println("Stacktrace")
             false
-        }.`when`(mExceptionMock)?.printStackTrace(any<PrintStream>(PrintStream::class.java))
+        }.`when`(exceptionMock)?.printStackTrace(any<PrintStream>(PrintStream::class.java))
     }
 
     @Test
     fun logVerboseShouldCallAndroidLog() {
-        mLogger?.setTag("TagVerbose")
-        mLogger?.v("Log")
-        mLogger?.v("Tag2", "Log2")
-        mExceptionMock?.let {
-            mLogger?.v("ErrMsg", it)
-            mLogger?.v("TagErr", "Error", it)
+        logger?.setTag("TagVerbose")
+        logger?.v("Log")
+        logger?.v("Tag2", "Log2")
+        exceptionMock?.let {
+            logger?.v("ErrMsg", it)
+            logger?.v("TagErr", "Error", it)
         }
 
-        val inOrder = Mockito.inOrder(mPrintStreamMock)
+        val inOrder = Mockito.inOrder(printStreamMock)
 
-        inOrder.verify(mPrintStreamMock)?.println(eq("V/TagVerbose: Log"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("V/Tag2: Log2"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("V/TagVerbose: ErrMsg"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("Stacktrace"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("V/TagErr: Error"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("Stacktrace"))
+        inOrder.verify(printStreamMock)?.println(eq("V/TagVerbose: Log"))
+        inOrder.verify(printStreamMock)?.println(eq("V/Tag2: Log2"))
+        inOrder.verify(printStreamMock)?.println(eq("V/TagVerbose: ErrMsg"))
+        inOrder.verify(printStreamMock)?.println(eq("Stacktrace"))
+        inOrder.verify(printStreamMock)?.println(eq("V/TagErr: Error"))
+        inOrder.verify(printStreamMock)?.println(eq("Stacktrace"))
     }
 
     @Test
     fun logDebugShouldCallAndroidLog() {
-        mLogger?.setTag("TagDebug")
-        mLogger?.d("Log")
-        mLogger?.d("Tag2", "Log2")
-        mExceptionMock?.let {
-            mLogger?.d("ErrMsg", it)
-            mLogger?.d("TagErr", "Error", it)
+        logger?.setTag("TagDebug")
+        logger?.d("Log")
+        logger?.d("Tag2", "Log2")
+        exceptionMock?.let {
+            logger?.d("ErrMsg", it)
+            logger?.d("TagErr", "Error", it)
         }
 
-        val inOrder = Mockito.inOrder(mPrintStreamMock)
+        val inOrder = Mockito.inOrder(printStreamMock)
 
-        inOrder.verify(mPrintStreamMock)?.println(eq("D/TagDebug: Log"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("D/Tag2: Log2"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("D/TagDebug: ErrMsg"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("Stacktrace"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("D/TagErr: Error"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("Stacktrace"))
+        inOrder.verify(printStreamMock)?.println(eq("D/TagDebug: Log"))
+        inOrder.verify(printStreamMock)?.println(eq("D/Tag2: Log2"))
+        inOrder.verify(printStreamMock)?.println(eq("D/TagDebug: ErrMsg"))
+        inOrder.verify(printStreamMock)?.println(eq("Stacktrace"))
+        inOrder.verify(printStreamMock)?.println(eq("D/TagErr: Error"))
+        inOrder.verify(printStreamMock)?.println(eq("Stacktrace"))
     }
 
     @Test
     fun logInfoShouldCallAndroidLog() {
-        mLogger?.setTag("TagInfo")
-        mLogger?.i("Log")
-        mLogger?.i("Tag2", "Log2")
-        mExceptionMock?.let {
-            mLogger?.i("ErrMsg", it)
-            mLogger?.i("TagErr", "Error", it)
+        logger?.setTag("TagInfo")
+        logger?.i("Log")
+        logger?.i("Tag2", "Log2")
+        exceptionMock?.let {
+            logger?.i("ErrMsg", it)
+            logger?.i("TagErr", "Error", it)
         }
 
-        val inOrder = Mockito.inOrder(mPrintStreamMock)
+        val inOrder = Mockito.inOrder(printStreamMock)
 
-        inOrder.verify(mPrintStreamMock)?.println(eq("I/TagInfo: Log"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("I/Tag2: Log2"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("I/TagInfo: ErrMsg"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("Stacktrace"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("I/TagErr: Error"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("Stacktrace"))
+        inOrder.verify(printStreamMock)?.println(eq("I/TagInfo: Log"))
+        inOrder.verify(printStreamMock)?.println(eq("I/Tag2: Log2"))
+        inOrder.verify(printStreamMock)?.println(eq("I/TagInfo: ErrMsg"))
+        inOrder.verify(printStreamMock)?.println(eq("Stacktrace"))
+        inOrder.verify(printStreamMock)?.println(eq("I/TagErr: Error"))
+        inOrder.verify(printStreamMock)?.println(eq("Stacktrace"))
     }
 
     @Test
     fun logWarningShouldCallAndroidLog() {
-        mLogger?.setTag("TagWarning")
-        mLogger?.w("Log")
-        mLogger?.w("Tag2", "Log2")
-        mExceptionMock?.let {
-            mLogger?.w("ErrMsg", it)
-            mLogger?.w("TagErr", "Error", it)
+        logger?.setTag("TagWarning")
+        logger?.w("Log")
+        logger?.w("Tag2", "Log2")
+        exceptionMock?.let {
+            logger?.w("ErrMsg", it)
+            logger?.w("TagErr", "Error", it)
         }
 
-        val inOrder = Mockito.inOrder(mPrintStreamMock)
+        val inOrder = Mockito.inOrder(printStreamMock)
 
-        inOrder.verify(mPrintStreamMock)?.println(eq("W/TagWarning: Log"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("W/Tag2: Log2"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("W/TagWarning: ErrMsg"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("Stacktrace"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("W/TagErr: Error"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("Stacktrace"))
+        inOrder.verify(printStreamMock)?.println(eq("W/TagWarning: Log"))
+        inOrder.verify(printStreamMock)?.println(eq("W/Tag2: Log2"))
+        inOrder.verify(printStreamMock)?.println(eq("W/TagWarning: ErrMsg"))
+        inOrder.verify(printStreamMock)?.println(eq("Stacktrace"))
+        inOrder.verify(printStreamMock)?.println(eq("W/TagErr: Error"))
+        inOrder.verify(printStreamMock)?.println(eq("Stacktrace"))
     }
 
     @Test
     fun logErrorShouldCallAndroidLog() {
-        mLogger?.setTag("TagError")
-        mLogger?.e("Log")
-        mLogger?.e("Tag2", "Log2")
-        mExceptionMock?.let {
-            mLogger?.e("ErrMsg", it)
-            mLogger?.e("TagErr", "Error", it)
+        logger?.setTag("TagError")
+        logger?.e("Log")
+        logger?.e("Tag2", "Log2")
+        exceptionMock?.let {
+            logger?.e("ErrMsg", it)
+            logger?.e("TagErr", "Error", it)
         }
 
-        val inOrder = Mockito.inOrder(mPrintStreamMock)
+        val inOrder = Mockito.inOrder(printStreamMock)
 
-        inOrder.verify(mPrintStreamMock)?.println(eq("E/TagError: Log"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("E/Tag2: Log2"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("E/TagError: ErrMsg"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("Stacktrace"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("E/TagErr: Error"))
-        inOrder.verify(mPrintStreamMock)?.println(eq("Stacktrace"))
+        inOrder.verify(printStreamMock)?.println(eq("E/TagError: Log"))
+        inOrder.verify(printStreamMock)?.println(eq("E/Tag2: Log2"))
+        inOrder.verify(printStreamMock)?.println(eq("E/TagError: ErrMsg"))
+        inOrder.verify(printStreamMock)?.println(eq("Stacktrace"))
+        inOrder.verify(printStreamMock)?.println(eq("E/TagErr: Error"))
+        inOrder.verify(printStreamMock)?.println(eq("Stacktrace"))
     }
 }

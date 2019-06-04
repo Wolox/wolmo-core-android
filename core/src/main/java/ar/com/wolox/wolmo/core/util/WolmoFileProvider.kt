@@ -15,7 +15,7 @@ import javax.inject.Inject
  * Utils class for managing {@link File}s.
  */
 @ApplicationScope
-class WolmoFileProvider @Inject constructor(private val mContext: Context) {
+class WolmoFileProvider @Inject constructor(private val context: Context) {
 
     /**
      * Creates a file in the external public directory to store data.
@@ -53,7 +53,7 @@ class WolmoFileProvider @Inject constructor(private val mContext: Context) {
      * @param file A [File] pointing to the filename for which you want a [Uri]
      * @return A content URI for the file.
      */
-    fun getUriForFile(file: File): Uri = FileProvider.getUriForFile(mContext, mContext.packageName + ".provider", file)
+    fun getUriForFile(file: File): Uri = FileProvider.getUriForFile(context, context.packageName + ".provider", file)
 
     /**
      * Get the physical path to a stored File by providing a URI of a content provider.
@@ -65,7 +65,7 @@ class WolmoFileProvider @Inject constructor(private val mContext: Context) {
     fun getRealPathFromUri(fileUri: Uri): String? {
         var cursor: Cursor? = null
         try {
-            cursor = mContext.contentResolver.query(fileUri, null, null, null, null)
+            cursor = context.contentResolver.query(fileUri, null, null, null, null)
 
             if (cursor == null) return null
 

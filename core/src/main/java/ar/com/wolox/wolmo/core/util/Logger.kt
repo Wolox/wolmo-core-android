@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class Logger @Inject constructor() {
 
-    private var mTag: String? = null
+    private var tag: String? = null
 
     /**
      * Sets the tag for this logger.
@@ -14,7 +14,7 @@ class Logger @Inject constructor() {
      * the class or activity where the log call occurs.
      */
     fun setTag(tag: String) {
-        mTag = tag
+        this.tag = tag
     }
 
     /**
@@ -22,7 +22,7 @@ class Logger @Inject constructor() {
      * The tag used is the one defined by [.setTag].
      * @param msg The message you would like logged.
      */
-    fun v(msg: String): Int = v(mTag, msg)
+    fun v(msg: String): Int = v(tag, msg)
 
     /**
      * Send a [Log.VERBOSE] log message and log the exception.
@@ -30,14 +30,14 @@ class Logger @Inject constructor() {
      * @param msg The message you would like logged.
      * @param tr An exception to log
      */
-    fun v(msg: String, tr: Throwable): Int = v(mTag, msg, tr)
+    fun v(msg: String, tr: Throwable): Int = v(tag, msg, tr)
 
     /**
      * Send a [Log.DEBUG] log message.
      * The tag used is the one defined by [.setTag].
      * @param msg The message you would like logged.
      */
-    fun d(msg: String): Int = d(mTag, msg)
+    fun d(msg: String): Int = d(tag, msg)
 
     /**
      * Send a [Log.DEBUG] log message and log the exception.
@@ -45,14 +45,14 @@ class Logger @Inject constructor() {
      * @param msg The message you would like logged.
      * @param tr An exception to log
      */
-    fun d(msg: String, tr: Throwable): Int = d(mTag, msg, tr)
+    fun d(msg: String, tr: Throwable): Int = d(tag, msg, tr)
 
     /**
      * Send an [Log.INFO] log message.
      * The tag used is the one defined by [.setTag].
      * @param msg The message you would like logged.
      */
-    fun i(msg: String): Int = i(mTag, msg)
+    fun i(msg: String): Int = i(tag, msg)
 
     /**
      * Send a [Log.INFO] log message and log the exception.
@@ -60,14 +60,14 @@ class Logger @Inject constructor() {
      * @param msg The message you would like logged.
      * @param tr An exception to log
      */
-    fun i(msg: String, tr: Throwable): Int = i(mTag, msg, tr)
+    fun i(msg: String, tr: Throwable): Int = i(tag, msg, tr)
 
     /**
      * Send a [Log.WARN] log message.
      * The tag used is the one defined by [.setTag].
      * @param msg The message you would like logged.
      */
-    fun w(msg: String): Int = w(mTag, msg)
+    fun w(msg: String): Int = w(tag, msg)
 
     /**
      * Send a [Log.WARN] log message and log the exception.
@@ -75,14 +75,14 @@ class Logger @Inject constructor() {
      * @param msg The message you would like logged.
      * @param tr An exception to log
      */
-    fun w(msg: String, tr: Throwable): Int = w(mTag, msg, tr)
+    fun w(msg: String, tr: Throwable): Int = w(tag, msg, tr)
 
     /**
      * Send an [Log.ERROR] log message.
      * The tag used is the one defined by [.setTag].
      * @param msg The message you would like logged.
      */
-    fun e(msg: String): Int = e(mTag, msg)
+    fun e(msg: String): Int = e(tag, msg)
 
     /**
      * Send a [Log.ERROR] log message and log the exception.
@@ -90,7 +90,7 @@ class Logger @Inject constructor() {
      * @param msg The message you would like logged.
      * @param tr An exception to log
      */
-    fun e(msg: String, tr: Throwable): Int = e(mTag, msg, tr)
+    fun e(msg: String, tr: Throwable): Int = e(tag, msg, tr)
 
     /**
      * Send a [Log.VERBOSE] log message.

@@ -165,7 +165,7 @@ class NavigationUtils {
         class Builder(private val activity: Activity) {
             private var clazz: Class<*>? = null
             private val sharedElements: ArrayList<Pair<View, String>> = ArrayList()
-            private val mIntentExtras: ArrayList<IntentExtra> = ArrayList()
+            private val intentExtras: ArrayList<IntentExtra> = ArrayList()
 
             fun setClass(clazz: Class<*>): Builder {
                 this.clazz = clazz
@@ -185,7 +185,7 @@ class NavigationUtils {
             }
 
             private fun addIntentObject(intentExtra: IntentExtra): Builder {
-                this.mIntentExtras.add(intentExtra)
+                this.intentExtras.add(intentExtra)
                 return this
             }
 
@@ -198,11 +198,11 @@ class NavigationUtils {
                 clazz?.let {
                     if (sharedElements.isEmpty()) {
                         jumpTo(activity, it,
-                                *mIntentExtras.toTypedArray())
+                                *intentExtras.toTypedArray())
                     } else {
                         jumpToWithAnimation(activity, it, buildActivityOptions(activity,
                                 *sharedElements.toTypedArray()),
-                                *mIntentExtras.toTypedArray())
+                                *intentExtras.toTypedArray())
                     }
                 }
             }

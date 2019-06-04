@@ -17,18 +17,18 @@ import org.mockito.Mockito.verify
 
 class SharedPreferencesManagerTest {
 
-    private var mEditorMock: SharedPreferences.Editor? = null
-    private var mSharedPreferencesMock: SharedPreferences? = null
-    private var mSharedPreferencesManager: SharedPreferencesManager? = null
+    private var editorMock: SharedPreferences.Editor? = null
+    private var sharedPreferencesMock: SharedPreferences? = null
+    private var sharedPreferencesManager: SharedPreferencesManager? = null
 
     @Before
     fun beforeTest() {
-        mEditorMock = mock<SharedPreferences.Editor>(SharedPreferences.Editor::class.java)
-        configEditor(mEditorMock)
+        editorMock = mock<SharedPreferences.Editor>(SharedPreferences.Editor::class.java)
+        configEditor(editorMock)
 
-        mSharedPreferencesMock = mock<SharedPreferences>(SharedPreferences::class.java)
-        `when`(mSharedPreferencesMock?.edit()).thenReturn(mEditorMock)
-        mSharedPreferencesMock?.let { mSharedPreferencesManager = SharedPreferencesManager(it) }
+        sharedPreferencesMock = mock<SharedPreferences>(SharedPreferences::class.java)
+        `when`(sharedPreferencesMock?.edit()).thenReturn(editorMock)
+        sharedPreferencesMock?.let { sharedPreferencesManager = SharedPreferencesManager(it) }
     }
 
     private fun configEditor(editorMock: SharedPreferences.Editor?) {
@@ -42,49 +42,49 @@ class SharedPreferencesManagerTest {
 
     @Test
     fun storeShouldCallEditor() {
-        mSharedPreferencesManager?.store("Long", 1111L)
-        mSharedPreferencesManager?.store("Float", 4321f)
-        mSharedPreferencesManager?.store("String", "Store")
-        mSharedPreferencesManager?.store("Boolean", true)
-        mSharedPreferencesManager?.store("Integer", Integer.valueOf(1234))
+        sharedPreferencesManager?.store("Long", 1111L)
+        sharedPreferencesManager?.store("Float", 4321f)
+        sharedPreferencesManager?.store("String", "Store")
+        sharedPreferencesManager?.store("Boolean", true)
+        sharedPreferencesManager?.store("Integer", Integer.valueOf(1234))
 
-        verify(mEditorMock, times(5))?.apply()
-        verify(mEditorMock, times(1))?.putLong(eq("Long"), eq(1111L))
-        verify(mEditorMock, times(1))?.putFloat(eq("Float"), eq(4321f))
-        verify(mEditorMock, times(1))?.putString(eq("String"), eq("Store"))
-        verify(mEditorMock, times(1))?.putBoolean(eq("Boolean"), eq(true))
-        verify(mEditorMock, times(1))?.putInt(eq("Integer"), eq(1234))
+        verify(editorMock, times(5))?.apply()
+        verify(editorMock, times(1))?.putLong(eq("Long"), eq(1111L))
+        verify(editorMock, times(1))?.putFloat(eq("Float"), eq(4321f))
+        verify(editorMock, times(1))?.putString(eq("String"), eq("Store"))
+        verify(editorMock, times(1))?.putBoolean(eq("Boolean"), eq(true))
+        verify(editorMock, times(1))?.putInt(eq("Integer"), eq(1234))
     }
 
     @Test
     fun getShouldCallSharedPreferences() {
-        `when`(mSharedPreferencesMock?.getBoolean(anyString(), anyBoolean())).thenReturn(true)
-        `when`(mSharedPreferencesMock?.getFloat(anyString(), anyFloat())).thenReturn(123f)
-        `when`(mSharedPreferencesMock?.getInt(anyString(), anyInt())).thenReturn(1234)
-        `when`(mSharedPreferencesMock?.getLong(anyString(), anyLong())).thenReturn(123456L)
-        `when`(mSharedPreferencesMock?.getString(anyString(), anyString())).thenReturn("Value")
+        `when`(sharedPreferencesMock?.getBoolean(anyString(), anyBoolean())).thenReturn(true)
+        `when`(sharedPreferencesMock?.getFloat(anyString(), anyFloat())).thenReturn(123f)
+        `when`(sharedPreferencesMock?.getInt(anyString(), anyInt())).thenReturn(1234)
+        `when`(sharedPreferencesMock?.getLong(anyString(), anyLong())).thenReturn(123456L)
+        `when`(sharedPreferencesMock?.getString(anyString(), anyString())).thenReturn("Value")
 
-        assertThat(mSharedPreferencesManager?.get("Boolean", false)).isEqualTo(true)
-        assertThat(mSharedPreferencesManager?.get("Float", 0f)).isEqualTo(123f)
-        assertThat(mSharedPreferencesManager?.get("Int", 0)).isEqualTo(1234)
-        assertThat(mSharedPreferencesManager?.get("Long", 0L)).isEqualTo(123456L)
-        assertThat(mSharedPreferencesManager?.get("String", "")).isEqualTo("Value")
+        assertThat(sharedPreferencesManager?.get("Boolean", false)).isEqualTo(true)
+        assertThat(sharedPreferencesManager?.get("Float", 0f)).isEqualTo(123f)
+        assertThat(sharedPreferencesManager?.get("Int", 0)).isEqualTo(1234)
+        assertThat(sharedPreferencesManager?.get("Long", 0L)).isEqualTo(123456L)
+        assertThat(sharedPreferencesManager?.get("String", "")).isEqualTo("Value")
     }
 
     @Test
     fun clearKeyShouldCallEditor() {
-        mSharedPreferencesManager?.clearKey("KeyToClean")
+        sharedPreferencesManager?.clearKey("KeyToClean")
 
-        verify(mEditorMock, times(1))?.remove(eq("KeyToClean"))
-        verify(mEditorMock, times(1))?.apply()
+        verify(editorMock, times(1))?.remove(eq("KeyToClean"))
+        verify(editorMock, times(1))?.apply()
     }
 
     @Test
     fun keyExistsShouldCallSharedPreferences() {
-        `when`(mSharedPreferencesMock?.contains(eq("ExistingKey"))).thenReturn(true)
+        `when`(sharedPreferencesMock?.contains(eq("ExistingKey"))).thenReturn(true)
 
-        assertThat(mSharedPreferencesManager?.keyExists("ExistingKey")).isTrue()
-        assertThat(mSharedPreferencesManager?.keyExists("NotExistingKey")).isFalse()
-        verify(mSharedPreferencesMock, times(2))?.contains(anyString())
+        assertThat(sharedPreferencesManager?.keyExists("ExistingKey")).isTrue()
+        assertThat(sharedPreferencesManager?.keyExists("NotExistingKey")).isFalse()
+        verify(sharedPreferencesMock, times(2))?.contains(anyString())
     }
 }
