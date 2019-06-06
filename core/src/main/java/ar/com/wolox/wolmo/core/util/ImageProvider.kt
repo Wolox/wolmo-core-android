@@ -42,11 +42,7 @@ class ImageProvider @Inject constructor(val context: Context, val toastFactory: 
          * @param quality target quality
          * @return if below 0, returns 0, if above 100, return 100, else returns `quality` param
          */
-        private fun sanitizeQuality(quality: Int): Int = when {
-            quality < 0 -> 0
-            quality > 100 -> 100
-            else -> quality
-        }
+        private fun sanitizeQuality(quality: Int) =  Math.max(0, Math.min(quality, 100))
 
         /**
          * Re-sizes the image, represented as a [Bitmap], to fit the boundaries and keeping its
@@ -95,15 +91,12 @@ class ImageProvider @Inject constructor(val context: Context, val toastFactory: 
                 format: Bitmap.CompressFormat,
                 @IntRange(from = 0, to = 100) quality: Int,
                 maxWidth: Int,
-                maxHeight: Int): ByteArray {
-
-            return getImageAsByteArray(
-                    BitmapFactory.decodeFile(file.path),
-                    format,
-                    quality,
-                    maxWidth,
-                    maxHeight)
-        }
+                maxHeight: Int) = getImageAsByteArray(
+                       BitmapFactory.decodeFile(file.path),
+                       format,
+                       quality,
+                       maxWidth,
+                       maxHeight)
 
         /**
          * Get [byte[]] representation from a [Bitmap], with boundaries.
@@ -134,10 +127,6 @@ class ImageProvider @Inject constructor(val context: Context, val toastFactory: 
 
     /**
      * Triggers an intent to go to the device's image gallery and returns an URI with the file.
-     *
-     *
-     *
-     *
      * Override the onActivityResult method in your fragment and specify behaviour
      * for the provided request code. The selected image URI will be
      * returned in the data variable of the activity result.
@@ -147,15 +136,14 @@ class ImageProvider @Inject constructor(val context: Context, val toastFactory: 
      * @param errorResId  [StringRes] to be displayed in case of error
      */
     fun getImageFromGallery(fragment: Fragment, requestCode: Int, @StringRes errorResId: Int) {
-        val i = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        i.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+        val imageGalleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        imageGalleryIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
 
         // Ensure that there's a gallery app to handle the intent
-        if (i.resolveActivity(context.packageManager) != null) {
-            fragment.startActivityForResult(i, requestCode)
+        if (imageGalleryIntent.resolveActivity(context.packageManager) != null) {
+            fragment.startActivityForResult(imageGalleryIntent, requestCode)
         } else {
             toastFactory.show(errorResId)
-
         }
     }
 
@@ -173,10 +161,6 @@ class ImageProvider @Inject constructor(val context: Context, val toastFactory: 
     /**
      * Triggers an intent to go to the device's camera app, stores the image as 'filename'.'format',
      * and returns its [Uri].
-     *
-     *
-     *
-     *
      * Override the onActivityResult method in your fragment and specify behaviour
      * for the provided request code. This method returns a File object that
      * contains the picture taken. You can get the returned image as an [Uri] using
@@ -192,10 +176,10 @@ class ImageProvider @Inject constructor(val context: Context, val toastFactory: 
     fun getImageFromCamera(fragment: Fragment, requestCode: Int, filename: String,
                            @ImageFormat format: String, @StringRes errorResId: Int): File? {
 
-        val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val imageCaptureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
         // Ensure that there's a camera app to handle the intent
-        if (i.resolveActivity(context.packageManager) == null) {
+        if (imageCaptureIntent.resolveActivity(context.packageManager) == null) {
             toastFactory.show(errorResId)
             return null
         }
@@ -208,13 +192,11 @@ class ImageProvider @Inject constructor(val context: Context, val toastFactory: 
             return null
         }
 
-
         val photoFileUri = wolmoFileProvider.getUriForFile(photoFile)
 
-        i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        i.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri)
-        fragment.startActivityForResult(i, requestCode)
-
+        imageCaptureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        imageCaptureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri)
+        fragment.startActivityForResult(imageCaptureIntent, requestCode)
 
         return photoFile
     }
@@ -235,13 +217,10 @@ class ImageProvider @Inject constructor(val context: Context, val toastFactory: 
             format: Bitmap.CompressFormat,
             @IntRange(from = 0, to = 100) quality: Int,
             maxWidth: Int,
-            maxHeight: Int): ByteArray {
-
-        return getImageAsByteArray(
-                BitmapFactory.decodeFile(wolmoFileProvider.getRealPathFromUri(imageFileUri)),
-                format,
-                quality,
-                maxWidth,
-                maxHeight)
-    }
+            maxHeight: Int) = getImageAsByteArray(
+                   BitmapFactory.decodeFile(wolmoFileProvider.getRealPathFromUri(imageFileUri)),
+                   format,
+                   quality,
+                   maxWidth,
+                   maxHeight)
 }

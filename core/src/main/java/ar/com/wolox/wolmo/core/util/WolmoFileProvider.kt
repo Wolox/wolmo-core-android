@@ -34,13 +34,10 @@ class WolmoFileProvider @Inject constructor(private val context: Context) {
      */
     @Throws(IOException::class)
     fun createTempFile(suffix: String, extension: String, dirType: String): File {
-        var extensionValue = extension
         val storageDir = Environment.getExternalStoragePublicDirectory(dirType)
 
         // The suffix will be appended as it is, we need to add the dot manually
-        if (!extensionValue.startsWith(".")) {
-            extensionValue = ".$extensionValue"
-        }
+        val extensionValue = if (!extension.startsWith(".")) ".$extension" else extension
 
         return File.createTempFile(suffix, extensionValue, storageDir)
     }

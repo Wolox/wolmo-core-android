@@ -23,8 +23,8 @@ import org.robolectric.annotation.Config
 @Config(manifest = Config.NONE, sdk = [Build.VERSION_CODES.LOLLIPOP])
 class NavigationUtilsTest {
 
-    private var contextSpy: Context? = null
-    private var activitySpy: Activity? = null
+    private lateinit var contextSpy: Context
+    private lateinit var activitySpy: Activity
 
     @Before
     fun beforeTest() {
@@ -34,7 +34,7 @@ class NavigationUtilsTest {
 
     @Test
     fun openBrowserWithUrlShouldStartActivity() {
-        contextSpy?.let { NavigationUtils.openBrowser(it, "http://google.com") }
+        NavigationUtils.openBrowser(contextSpy, "http://google.com")
 
         val intentCaptor = ArgumentCaptor.forClass(Intent::class.java)
         verify(contextSpy, times(1))?.startActivity(intentCaptor.capture())
@@ -46,40 +46,39 @@ class NavigationUtilsTest {
 
     @Test
     fun jumpToShouldStartActivity() {
-        contextSpy?.let { NavigationUtils.jumpTo(it, WolmoActivity::class.java) }
+        NavigationUtils.jumpTo(contextSpy, WolmoActivity::class.java)
 
         val intentCaptor = ArgumentCaptor.forClass(Intent::class.java)
         verify(contextSpy, times(1))?.startActivity(intentCaptor.capture())
 
         val intent = intentCaptor.value
-        assertThat(intent.component?.packageName).isEqualTo(contextSpy?.packageName)
+        assertThat(intent.component?.packageName).isEqualTo(contextSpy.packageName)
         assertThat(intent.component?.className).isEqualTo(WolmoActivity::class.java.canonicalName)
     }
 
     @Test
     fun jumpToWithExtrasShouldStartActivity() {
         val extra = NavigationUtils.Companion.IntentExtra("Tag", "Value")
-
-        contextSpy?.let { NavigationUtils.jumpTo(it, WolmoActivity::class.java, extra) }
+        NavigationUtils.jumpTo(contextSpy, WolmoActivity::class.java, extra)
 
         val intentCaptor = ArgumentCaptor.forClass(Intent::class.java)
         verify(contextSpy, times(1))?.startActivity(intentCaptor.capture())
 
         val intent = intentCaptor.value
-        assertThat(intent.component?.packageName).isEqualTo(contextSpy?.packageName)
+        assertThat(intent.component?.packageName).isEqualTo(contextSpy.packageName)
         assertThat(intent.component?.className).isEqualTo(WolmoActivity::class.java.canonicalName)
         assertThat(intent.getStringExtra("Tag")).isEqualTo("Value")
     }
 
     @Test
     fun jumpToClearingTaskShouldAddFlags() {
-        contextSpy?.let { NavigationUtils.jumpToClearingTask(it, WolmoActivity::class.java) }
+        NavigationUtils.jumpToClearingTask(contextSpy, WolmoActivity::class.java)
 
         val intentCaptor = ArgumentCaptor.forClass(Intent::class.java)
         verify(contextSpy, times(1))?.startActivity(intentCaptor.capture())
 
         val intent = intentCaptor.value
-        assertThat(intent.component?.packageName).isEqualTo(contextSpy?.packageName)
+        assertThat(intent.component?.packageName).isEqualTo(contextSpy.packageName)
         assertThat(intent.component?.className).isEqualTo(WolmoActivity::class.java.canonicalName)
         assertThat(intent.flags).matches { flags -> flags and Intent.FLAG_ACTIVITY_NEW_TASK == Intent.FLAG_ACTIVITY_NEW_TASK }
         assertThat(intent.flags).matches { flags -> flags and Intent.FLAG_ACTIVITY_CLEAR_TASK == Intent.FLAG_ACTIVITY_CLEAR_TASK }
@@ -88,14 +87,13 @@ class NavigationUtilsTest {
     @Test
     fun jumpToClearingTaskShouldAddFlagsAndExtras() {
         val extra = NavigationUtils.Companion.IntentExtra("Tag", "Value")
-
-        contextSpy?.let { NavigationUtils.jumpToClearingTask(it, WolmoActivity::class.java, extra) }
+        NavigationUtils.jumpToClearingTask(contextSpy, WolmoActivity::class.java, extra)
 
         val intentCaptor = ArgumentCaptor.forClass(Intent::class.java)
         verify(contextSpy, times(1))?.startActivity(intentCaptor.capture())
 
         val intent = intentCaptor.value
-        assertThat(intent.component?.packageName).isEqualTo(contextSpy?.packageName)
+        assertThat(intent.component?.packageName).isEqualTo(contextSpy.packageName)
         assertThat(intent.component?.className).isEqualTo(WolmoActivity::class.java.canonicalName)
         assertThat(intent.flags).matches { flags -> flags and Intent.FLAG_ACTIVITY_NEW_TASK == Intent.FLAG_ACTIVITY_NEW_TASK }
         assertThat(intent.flags).matches { flags -> flags and Intent.FLAG_ACTIVITY_CLEAR_TASK == Intent.FLAG_ACTIVITY_CLEAR_TASK }
@@ -108,14 +106,14 @@ class NavigationUtilsTest {
         val bundleMock = mock(Bundle::class.java)
         `when`(optionsCompatMock.toBundle()).thenReturn(bundleMock)
 
-        activitySpy?.let { NavigationUtils.jumpToWithAnimation(it, WolmoActivity::class.java, optionsCompatMock) }
+        NavigationUtils.jumpToWithAnimation(activitySpy, WolmoActivity::class.java, optionsCompatMock)
 
         val intentCaptor = ArgumentCaptor.forClass(Intent::class.java)
         val bundleCaptor = ArgumentCaptor.forClass(Bundle::class.java)
         verify(activitySpy, times(1))?.startActivity(intentCaptor.capture(), bundleCaptor.capture())
 
         val intent = intentCaptor.value
-        assertThat(intent.component?.packageName).isEqualTo(activitySpy?.packageName)
+        assertThat(intent.component?.packageName).isEqualTo(activitySpy.packageName)
         assertThat(intent.component?.className).isEqualTo(WolmoActivity::class.java.canonicalName)
 
         assertThat(bundleCaptor.value).isSameAs(bundleMock)
@@ -123,21 +121,19 @@ class NavigationUtilsTest {
 
     @Test
     fun builderShouldPassAllTheConfigWhenJumpingWithoutAnimation() {
-        activitySpy?.let {
-            val builder = NavigationUtils.Companion.Builder(it)
+        val builder = NavigationUtils.Companion.Builder(activitySpy)
 
-            builder.setClass(WolmoActivity::class.java)
-                    .addExtra("ExtraTag", "ExtraObject")
-                    .addIntentObjects(NavigationUtils.Companion.IntentExtra("IntentExtra", "IntentObject"),
-                            NavigationUtils.Companion.IntentExtra("IntentExtra2", "IntentObject2"))
-                    .jump()
-        }
+        builder.setClass(WolmoActivity::class.java)
+                .addExtra("ExtraTag", "ExtraObject")
+                .addIntentObjects(NavigationUtils.Companion.IntentExtra("IntentExtra", "IntentObject"),
+                        NavigationUtils.Companion.IntentExtra("IntentExtra2", "IntentObject2"))
+                .jump()
 
         val intentCaptor = ArgumentCaptor.forClass(Intent::class.java)
         verify(activitySpy, times(1))?.startActivity(intentCaptor.capture())
 
         val intent = intentCaptor.value
-        assertThat(intent.component?.packageName).isEqualTo(activitySpy?.packageName)
+        assertThat(intent.component?.packageName).isEqualTo(activitySpy.packageName)
         assertThat(intent.component?.className).isEqualTo(WolmoActivity::class.java.canonicalName)
         assertThat(intent.getStringExtra("ExtraTag")).isEqualTo("ExtraObject")
         assertThat(intent.getStringExtra("IntentExtra")).isEqualTo("IntentObject")
@@ -147,15 +143,13 @@ class NavigationUtilsTest {
     @Test
     fun builderShouldPassAllTheConfigWhenJumpingWithAnimation() {
         val viewMock = mock(View::class.java)
-        activitySpy?.let {
-            val builder = NavigationUtils.Companion.Builder(it)
-            builder.setClass(WolmoActivity::class.java)
-                    .addExtra("ExtraTag", "ExtraObject")
-                    .addSharedElement(viewMock, "SharedView")
-                    .addIntentObjects(NavigationUtils.Companion.IntentExtra("IntentExtra", "IntentObject"),
-                            NavigationUtils.Companion.IntentExtra("IntentExtra2", "IntentObject2"))
-                    .jump()
-        }
+        val builder = NavigationUtils.Companion.Builder(activitySpy)
+        builder.setClass(WolmoActivity::class.java)
+                .addExtra("ExtraTag", "ExtraObject")
+                .addSharedElement(viewMock, "SharedView")
+                .addIntentObjects(NavigationUtils.Companion.IntentExtra("IntentExtra", "IntentObject"),
+                        NavigationUtils.Companion.IntentExtra("IntentExtra2", "IntentObject2"))
+                .jump()
 
         val intentCaptor = ArgumentCaptor.forClass(Intent::class.java)
         // The appCompat library checks if it needs to send the shared views, but in this case
@@ -163,7 +157,7 @@ class NavigationUtilsTest {
         verify(activitySpy, times(1))?.startActivity(intentCaptor.capture(), isNull())
 
         val intent = intentCaptor.value
-        assertThat(intent.component?.packageName).isEqualTo(activitySpy?.packageName)
+        assertThat(intent.component?.packageName).isEqualTo(activitySpy.packageName)
         assertThat(intent.component?.className).isEqualTo(WolmoActivity::class.java.canonicalName)
         assertThat(intent.getStringExtra("ExtraTag")).isEqualTo("ExtraObject")
         assertThat(intent.getStringExtra("IntentExtra")).isEqualTo("IntentObject")

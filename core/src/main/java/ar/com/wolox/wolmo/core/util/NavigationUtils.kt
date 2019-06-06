@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.text.TextUtils
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
@@ -17,7 +16,6 @@ class NavigationUtils {
     companion object {
         private const val BLANK_PAGE = "about:blank"
 
-
         /**
          * Opens the browser with a given URL.
          *
@@ -25,11 +23,8 @@ class NavigationUtils {
          * @param url     The URL that the browser should open. If the URL is null or empty,
          * the browser will be opened with a blank page.
          */
-        fun openBrowser(context: Context, url: String?) {
-            var urlValue = url
-            if (TextUtils.isEmpty(urlValue)) urlValue = BLANK_PAGE
-
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(urlValue))
+        fun openBrowser(context: Context, url: String) {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url.ifEmpty { BLANK_PAGE }))
             if (context !is Activity) {
                 browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }

@@ -22,22 +22,22 @@ import java.io.IOException
 @Config(manifest = Config.NONE, sdk = [Build.VERSION_CODES.LOLLIPOP], shadows = [WolmoFileProviderTest.Companion.ShadowFileProvider::class])
 class WolmoFileProviderTest {
 
-    private var contextSpy: Context? = null
-    private var wolmoFileProvider: WolmoFileProvider? = null
+    private lateinit var contextSpy: Context
+    private lateinit var wolmoFileProvider: WolmoFileProvider
 
     companion object {
         @Implements(FileProvider::class)
         object ShadowFileProvider {
-             var sContext: Context? = null
-             var sAuthority: String? = null
-             var sFile: File? = null
+             var context: Context? = null
+             var authority: String? = null
+             var file: File? = null
 
             @JvmStatic
             @Implementation
             fun getUriForFile(context: Context, authority: String, file: File): Uri {
-                sContext = context
-                sAuthority = authority
-                sFile = file
+                this.context = context
+                this.authority = authority
+                this.file = file
                 return Uri.EMPTY
             }
         }
@@ -46,14 +46,14 @@ class WolmoFileProviderTest {
     @Before
     fun beforeTest() {
         contextSpy = spy(ApplicationProvider.getApplicationContext<Context>())
-        contextSpy?.let { wolmoFileProvider = WolmoFileProvider(it) }
+        wolmoFileProvider = WolmoFileProvider(contextSpy)
     }
 
     @Test
     @Throws(IOException::class)
     fun createTempFileShouldCreateNewFiles() {
-        wolmoFileProvider?.createTempFile("TestFile", "txt", Environment.DIRECTORY_DCIM)
-        wolmoFileProvider?.createTempFile("WithDot", ".txt", Environment.DIRECTORY_DCIM)
+        wolmoFileProvider.createTempFile("TestFile", "txt", Environment.DIRECTORY_DCIM)
+        wolmoFileProvider.createTempFile("WithDot", ".txt", Environment.DIRECTORY_DCIM)
 
         val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
         assertThat(storageDir.listFiles()).anyMatch { file -> file.name.matches("TestFile.*\\.txt".toRegex()) }
@@ -67,14 +67,14 @@ class WolmoFileProviderTest {
 
         // Check that we are calling FileProvider
 
-        assertThat(wolmoFileProvider?.getUriForFile(file)).isEqualTo(Uri.EMPTY)
-        assertThat(ShadowFileProvider.sContext).isSameAs(contextSpy)
-        assertThat(ShadowFileProvider.sAuthority).isEqualTo("ar.com.wolox.wolmo.core.test.provider")
-        assertThat(ShadowFileProvider.sFile).isSameAs(file)
+        assertThat(wolmoFileProvider.getUriForFile(file)).isEqualTo(Uri.EMPTY)
+        assertThat(ShadowFileProvider.context).isSameAs(contextSpy)
+        assertThat(ShadowFileProvider.authority).isEqualTo("ar.com.wolox.wolmo.core.test.provider")
+        assertThat(ShadowFileProvider.file).isSameAs(file)
     }
 
     @Test
     fun getRealPathFromUriShouldReturnExistingPath() {
-        assertThat(wolmoFileProvider?.getRealPathFromUri(Uri.EMPTY)).isNull()
+        assertThat(wolmoFileProvider.getRealPathFromUri(Uri.EMPTY)).isNull()
     }
 }

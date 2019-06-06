@@ -18,10 +18,9 @@ import java.io.PrintStream
 @Config(manifest = Config.NONE)
 class LoggerTest {
 
-    private var logger: Logger? = null
-    private var printStreamMock: PrintStream? = null
-    private var exceptionMock: Throwable? = null
-
+    private lateinit var logger: Logger
+    private lateinit var printStreamMock: PrintStream
+    private lateinit var exceptionMock: Throwable
 
     @Before
     fun beforeTest() {
@@ -39,13 +38,11 @@ class LoggerTest {
 
     @Test
     fun logVerboseShouldCallAndroidLog() {
-        logger?.setTag("TagVerbose")
-        logger?.v("Log")
-        logger?.v("Tag2", "Log2")
-        exceptionMock?.let {
-            logger?.v("ErrMsg", it)
-            logger?.v("TagErr", "Error", it)
-        }
+        logger.setTag("TagVerbose")
+        logger.v("Log")
+        logger.v("Tag2", "Log2")
+        logger.v("ErrMsg", exceptionMock)
+        logger.v("TagErr", "Error", exceptionMock)
 
         val inOrder = Mockito.inOrder(printStreamMock)
 
@@ -59,13 +56,11 @@ class LoggerTest {
 
     @Test
     fun logDebugShouldCallAndroidLog() {
-        logger?.setTag("TagDebug")
-        logger?.d("Log")
-        logger?.d("Tag2", "Log2")
-        exceptionMock?.let {
-            logger?.d("ErrMsg", it)
-            logger?.d("TagErr", "Error", it)
-        }
+        logger.setTag("TagDebug")
+        logger.d("Log")
+        logger.d("Tag2", "Log2")
+        logger.d("ErrMsg", exceptionMock)
+        logger.d("TagErr", "Error", exceptionMock)
 
         val inOrder = Mockito.inOrder(printStreamMock)
 
@@ -79,13 +74,11 @@ class LoggerTest {
 
     @Test
     fun logInfoShouldCallAndroidLog() {
-        logger?.setTag("TagInfo")
-        logger?.i("Log")
-        logger?.i("Tag2", "Log2")
-        exceptionMock?.let {
-            logger?.i("ErrMsg", it)
-            logger?.i("TagErr", "Error", it)
-        }
+        logger.setTag("TagInfo")
+        logger.i("Log")
+        logger.i("Tag2", "Log2")
+        logger.i("ErrMsg", exceptionMock)
+        logger.i("TagErr", "Error", exceptionMock)
 
         val inOrder = Mockito.inOrder(printStreamMock)
 
@@ -99,13 +92,11 @@ class LoggerTest {
 
     @Test
     fun logWarningShouldCallAndroidLog() {
-        logger?.setTag("TagWarning")
-        logger?.w("Log")
-        logger?.w("Tag2", "Log2")
-        exceptionMock?.let {
-            logger?.w("ErrMsg", it)
-            logger?.w("TagErr", "Error", it)
-        }
+        logger.setTag("TagWarning")
+        logger.w("Log")
+        logger.w("Tag2", "Log2")
+        logger.w("ErrMsg", exceptionMock)
+        logger.w("TagErr", "Error", exceptionMock)
 
         val inOrder = Mockito.inOrder(printStreamMock)
 
@@ -119,13 +110,11 @@ class LoggerTest {
 
     @Test
     fun logErrorShouldCallAndroidLog() {
-        logger?.setTag("TagError")
-        logger?.e("Log")
-        logger?.e("Tag2", "Log2")
-        exceptionMock?.let {
-            logger?.e("ErrMsg", it)
-            logger?.e("TagErr", "Error", it)
-        }
+        logger.setTag("TagError")
+        logger.e("Log")
+        logger.e("Tag2", "Log2")
+        logger.e("ErrMsg", exceptionMock)
+        logger.e("TagErr", "Error", exceptionMock)
 
         val inOrder = Mockito.inOrder(printStreamMock)
 

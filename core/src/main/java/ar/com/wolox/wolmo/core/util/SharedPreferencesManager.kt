@@ -13,15 +13,15 @@ class SharedPreferencesManager @Inject constructor(private val sharedPreferences
     /*
      * A bunch of shared preferences utils methods to get and set different types of values
      */
-    fun store(key: String, value: String) = sharedPreferences.edit().putString(key, value).apply()
+    operator fun set(key: String, value: String) = sharedPreferences.edit().putString(key, value).apply()
 
-    fun store(key: String, value: Int?) = sharedPreferences.edit().putInt(key, value!!).apply()
+    operator fun set(key: String, value: Int) = sharedPreferences.edit().putInt(key, value).apply()
 
-    fun store(key: String, value: Float?) = sharedPreferences.edit().putFloat(key, value!!).apply()
+    operator fun set(key: String, value: Float) = sharedPreferences.edit().putFloat(key, value).apply()
 
-    fun store(key: String, value: Boolean?) = sharedPreferences.edit().putBoolean(key, value!!).apply()
+    operator fun set(key: String, value: Boolean) = sharedPreferences.edit().putBoolean(key, value).apply()
 
-    fun store(key: String, value: Long?) = sharedPreferences.edit().putLong(key, value!!).apply()
+    operator fun set(key: String, value: Long) = sharedPreferences.edit().putLong(key, value).apply()
 
     operator fun get(key: String, defValue: String) = sharedPreferences.getString(key, defValue).orEmpty()
 
