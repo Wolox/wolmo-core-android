@@ -19,42 +19,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.di.modules;
+package ar.com.wolox.wolmo.core.di.modules
 
-import android.util.SparseArray;
+import android.util.SparseArray
 
-import ar.com.wolox.wolmo.core.fragment.WolmoFragmentHandler;
-import ar.com.wolox.wolmo.core.permission.PermissionListener;
-import ar.com.wolox.wolmo.core.presenter.BasePresenter;
-import ar.com.wolox.wolmo.core.util.Logger;
-import ar.com.wolox.wolmo.core.util.ToastFactory;
+import ar.com.wolox.wolmo.core.fragment.WolmoFragmentHandler
+import ar.com.wolox.wolmo.core.permission.PermissionListener
+import ar.com.wolox.wolmo.core.presenter.BasePresenter
+import ar.com.wolox.wolmo.core.util.Logger
+import ar.com.wolox.wolmo.core.util.ToastFactory
 
-import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
+import dagger.Component
+import dagger.Module
+import dagger.Provides
 
 /**
  * Provides default implementations for Wolmo's dependencies and utils.
- * You can add this module to your {@link Component} if you don't need to customize any dependency.
+ * You can add this module to your [Component] if you don't need to customize any dependency.
  */
 @Module
-public class DefaultModule {
+object DefaultModule {
 
     @Provides
-    static SparseArray<PermissionListener> providesPermissionManagerArray() {
-        return new SparseArray<>();
-    }
+    internal fun providesPermissionManagerArray() = SparseArray<PermissionListener>()
 
     @Provides
-    static BasePresenter providesDefaultBasePresenter() {
-        return new BasePresenter();
-    }
+    internal fun providesDefaultBasePresenter() = BasePresenter<Any>()
 
-    /**
-     * Provides a default {@link WolmoFragmentHandler} with no presenter for fragments that don't need it.
-     */
+    /** Provides a default [WolmoFragmentHandler] with no presenter for fragments that don't need it. */
     @Provides
-    static WolmoFragmentHandler providesDefaultWolmoFragmentHandler(ToastFactory toastFactory, Logger logger) {
-        return new WolmoFragmentHandler(toastFactory, logger);
+    internal fun providesDefaultWolmoFragmentHandler(toastFactory: ToastFactory, logger: Logger): WolmoFragmentHandler<*> {
+        return WolmoFragmentHandler<BasePresenter<*>>(toastFactory, logger)
     }
 }

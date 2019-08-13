@@ -38,16 +38,16 @@ public class DefaultModuleTest {
 
     @Test
     public void providePermissionManagerShouldReturnNewArray() {
-        SparseArray<PermissionListener> array1 = DefaultModule.providesPermissionManagerArray();
-        SparseArray<PermissionListener> array2 = DefaultModule.providesPermissionManagerArray();
+        SparseArray<PermissionListener> array1 = DefaultModule.INSTANCE.providesPermissionManagerArray();
+        SparseArray<PermissionListener> array2 = DefaultModule.INSTANCE.providesPermissionManagerArray();
 
         assertThat(array1).isNotNull().isNotSameAs(array2);
     }
 
     @Test
     public void provideDefaultBasePresenterShouldReturnNewInstance() {
-        BasePresenter basePresenter = DefaultModule.providesDefaultBasePresenter();
-        BasePresenter basePresenter2 = DefaultModule.providesDefaultBasePresenter();
+        BasePresenter basePresenter = DefaultModule.INSTANCE.providesDefaultBasePresenter();
+        BasePresenter basePresenter2 = DefaultModule.INSTANCE.providesDefaultBasePresenter();
 
         assertThat(basePresenter).isNotNull().isNotSameAs(basePresenter2);
     }
@@ -57,8 +57,8 @@ public class DefaultModuleTest {
         ToastFactory toastFactoryMock = Mockito.mock(ToastFactory.class);
         Logger loggerMock = Mockito.mock(Logger.class);
 
-        WolmoFragmentHandler wolmoFragmentHandler = DefaultModule.providesDefaultWolmoFragmentHandler(toastFactoryMock, loggerMock);
-        WolmoFragmentHandler wolmoFragmentHandler2 = DefaultModule.providesDefaultWolmoFragmentHandler(toastFactoryMock, loggerMock);
+        WolmoFragmentHandler wolmoFragmentHandler = DefaultModule.INSTANCE.providesDefaultWolmoFragmentHandler(toastFactoryMock, loggerMock);
+        WolmoFragmentHandler wolmoFragmentHandler2 = DefaultModule.INSTANCE.providesDefaultWolmoFragmentHandler(toastFactoryMock, loggerMock);
 
         assertThat(wolmoFragmentHandler).isNotNull().isNotSameAs(wolmoFragmentHandler2);
         assertThat(wolmoFragmentHandler).extracting("mToastFactory").containsExactly(toastFactoryMock);

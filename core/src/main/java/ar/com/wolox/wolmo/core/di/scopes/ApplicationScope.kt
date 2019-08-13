@@ -19,13 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.di.scopes;
+package ar.com.wolox.wolmo.core.di.scopes
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-import javax.inject.Scope;
+import javax.inject.Scope
 
 @Scope
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ActivityScope {}
+@Retention(AnnotationRetention.RUNTIME)
+annotation class ApplicationScope
