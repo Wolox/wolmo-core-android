@@ -38,7 +38,7 @@ import dagger.Provides
  * You can add this module to your [Component] if you don't need to customize any dependency.
  */
 @Module
-object DefaultModule {
+class DefaultModule {
 
     @Provides
     internal fun providesPermissionManagerArray() = SparseArray<PermissionListener>()
