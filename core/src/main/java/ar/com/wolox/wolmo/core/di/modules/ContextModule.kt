@@ -40,11 +40,11 @@ class ContextModule {
 
     @Provides
     @ApplicationScope
-    internal fun provideContext(application: Application): Context = application.applicationContext
+    fun provideContext(application: Application): Context = application.applicationContext
 
     @Provides
     @ApplicationScope
-    internal fun provideSharedPreferences(sharedPrefName: String, context: Context): SharedPreferences {
+    fun provideSharedPreferences(sharedPrefName: String, context: Context): SharedPreferences {
         return context.getSharedPreferences(sharedPrefName, Activity.MODE_PRIVATE)
     }
 }
