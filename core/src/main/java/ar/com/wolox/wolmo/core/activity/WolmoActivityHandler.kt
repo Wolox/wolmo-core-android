@@ -19,49 +19,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.activity;
+package ar.com.wolox.wolmo.core.activity
 
-import android.os.Bundle;
+import android.os.Bundle
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import javax.inject.Inject
 
-import javax.inject.Inject;
+import ar.com.wolox.wolmo.core.R
+import ar.com.wolox.wolmo.core.util.ToastFactory
 
-import ar.com.wolox.wolmo.core.R;
-import ar.com.wolox.wolmo.core.util.ToastFactory;
-
-public class WolmoActivityHandler {
-
-    private ToastFactory mToastFactory;
-    private WolmoActivity mWolmoActivity;
-
-    @Inject
-    WolmoActivityHandler(ToastFactory toastFactory) {
-        mToastFactory = toastFactory;
-    }
+class WolmoActivityHandler @Inject constructor(
+        private val mToastFactory: ToastFactory
+) {
+    private lateinit var mWolmoActivity: WolmoActivity
 
     /**
      * Handles the custom lifecycle of Wolmo's Activity. It provides a set of callbacks to structure
      * the different aspects of the Activities initialization.
      *
-     * @param savedInstanceState a {@link Bundle} provided by Android's lifecycle.
-     * @param activity the {@link WolmoActivity} to be managed by this handler.
+     * @param savedInstanceState a [Bundle] provided by Android's lifecycle.
+     * @param activity the [WolmoActivity] to be managed by this handler.
      */
-    void onCreate(@NonNull WolmoActivity activity, @Nullable Bundle savedInstanceState) {
-        mWolmoActivity = activity;
-        mWolmoActivity.setContentView(mWolmoActivity.layout());
-        if (mWolmoActivity.handleArguments(mWolmoActivity.getIntent().getExtras())) {
-            mWolmoActivity.setUi();
-            mWolmoActivity.init();
-            mWolmoActivity.populate();
-            mWolmoActivity.setListeners();
-        } else {
-            mToastFactory.show(R.string.unknown_error);
-            mWolmoActivity.finish();
+    protected fun onCreate(activity: WolmoActivity, savedInstanceState: Bundle?) {
+        mWolmoActivity = activity
+        mWolmoActivity.apply {
+            setContentView(mWolmoActivity.layout())
+            if (handleArguments(mWolmoActivity.intent.extras)) {
+                setUi()
+                init()
+                populate()
+                setListeners()
+            } else {
+                mToastFactory.show(R.string.unknown_error)
+                finish()
+            }
         }
     }
 
-    void onDestroy() {
-    }
+    protected fun onDestroy() {}
 }
