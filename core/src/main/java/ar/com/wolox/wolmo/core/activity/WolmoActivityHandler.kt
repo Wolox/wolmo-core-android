@@ -22,29 +22,27 @@
 package ar.com.wolox.wolmo.core.activity
 
 import android.os.Bundle
-
-import javax.inject.Inject
-
 import ar.com.wolox.wolmo.core.R
 import ar.com.wolox.wolmo.core.util.ToastFactory
+import javax.inject.Inject
 
 class WolmoActivityHandler @Inject constructor(
         private val mToastFactory: ToastFactory
 ) {
-    private lateinit var mWolmoActivity: WolmoActivity
+    private lateinit var wolmoActivity: WolmoActivity
 
     /**
      * Handles the custom lifecycle of Wolmo's Activity. It provides a set of callbacks to structure
      * the different aspects of the Activities initialization.
      *
-     * @param savedInstanceState a [Bundle] provided by Android's lifecycle.
-     * @param activity the [WolmoActivity] to be managed by this handler.
+     * savedInstanceState a [Bundle] provided by Android's lifecycle.
+     * activity the [WolmoActivity] to be managed by this handler.
      */
     protected fun onCreate(activity: WolmoActivity, savedInstanceState: Bundle?) {
-        mWolmoActivity = activity
-        mWolmoActivity.apply {
-            setContentView(mWolmoActivity.layout())
-            if (handleArguments(mWolmoActivity.intent.extras)) {
+        wolmoActivity = activity
+        wolmoActivity.apply {
+            setContentView(wolmoActivity.layout())
+            if (handleArguments(wolmoActivity.intent.extras)) {
                 setUi()
                 init()
                 populate()
