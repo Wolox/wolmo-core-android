@@ -21,18 +21,16 @@
  */
 package ar.com.wolox.wolmo.core.di.modules;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
-
 import android.util.SparseArray;
-
 import ar.com.wolox.wolmo.core.fragment.WolmoFragmentHandler;
 import ar.com.wolox.wolmo.core.permission.PermissionListener;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.Logger;
 import ar.com.wolox.wolmo.core.util.ToastFactory;
-
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class DefaultModuleTest {
 

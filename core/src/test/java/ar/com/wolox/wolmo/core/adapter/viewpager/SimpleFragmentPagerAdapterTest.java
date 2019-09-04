@@ -21,19 +21,14 @@
  */
 package ar.com.wolox.wolmo.core.adapter.viewpager;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.core.util.Pair;
-
+import kotlin.Pair;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 public class SimpleFragmentPagerAdapterTest {
 
@@ -67,8 +62,7 @@ public class SimpleFragmentPagerAdapterTest {
         Fragment fragment1 = mock(Fragment.class);
         Fragment fragment2 = mock(Fragment.class);
 
-        mSimpleFragmentPagerAdapter.addFragments(new Pair<>(fragment1, "Title1"),
-            new Pair<>(fragment2, "Title2"));
+        mSimpleFragmentPagerAdapter.addFragments(new Pair<>(fragment1, "Title1"), new Pair<>(fragment2, "Title2"));
 
         assertThat(mSimpleFragmentPagerAdapter.getCount()).isEqualTo(2);
         assertThat(mSimpleFragmentPagerAdapter.getItem(0)).isSameAs(fragment1);
