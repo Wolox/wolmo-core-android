@@ -19,30 +19,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core;
+package ar.com.wolox.wolmo.core.util
 
-import android.app.Application;
-import androidx.annotation.CallSuper;
-
-import dagger.android.support.DaggerApplication;
+import android.content.Context
+import android.widget.Toast
+import androidx.annotation.StringRes
+import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope
+import javax.inject.Inject
 
 /**
- * An extension of Android's native {@link Application} class that is intended to be used as
- * a Singleton
+ * An utility class to work with Android's [Toast] messages
  */
-public abstract class WolmoApplication extends DaggerApplication {
+@ApplicationScope
+class ToastFactory @Inject constructor(private val context: Context) {
 
-    @Override
-    @CallSuper
-    public void onCreate() {
-        super.onCreate();
-        onInit();
-    }
+    /** Displays a message from a [resourceId] inside a [Toast], briefly. */
+    fun show(@StringRes resourceId: Int) = Toast.makeText(context, resourceId, Toast.LENGTH_SHORT).show()
 
-    /**
-     * Provides an entry point that gets executed after the {@link Application} has been created.
-     * Useful to initialize libraries and other dependencies.
-     */
-    public abstract void onInit();
+    /** Displays a given [message] inside a [Toast], briefly. */
+    fun show(message: String) = Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
+    /** Displays a message from a [resourceId] inside a [Toast], during a longer interval. */
+    fun showLong(@StringRes resourceId: Int) = Toast.makeText(context, resourceId, Toast.LENGTH_LONG).show()
+
+    /** Displays a given [message] inside a [Toast], during a longer interval.*/
+    fun showLong(message: String) = Toast.makeText(context, message, Toast.LENGTH_LONG).show()
 }
