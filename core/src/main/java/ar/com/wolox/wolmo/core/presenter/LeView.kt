@@ -19,26 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.presenter;
+package ar.com.wolox.wolmo.core.presenter
 
 /**
  * Interface to extend from the views that have a loading view along with an error one.
  */
-public interface LeView {
+interface LeView {
 
     /**
      * Display a loading view while loading data in background.
-     * <b>The loading view must have the id = R.id.loadingView</b>
+     * **The loading view must have the id = R.id.loadingView**
      */
-    void showLoading();
+    fun showLoading()
 
 
     /**
      * Show the error view.
-     * <b>The error view must be a TextView with the id = R.id.errorView</b>
-     *
-     * @param e The Throwable that has caused this error
+     * **The error view must be a TextView with the id = R.id.errorView*
+     * [e] is the Throwable that has caused this error
      */
-    void showError(Throwable e);
+    fun showError(e: Throwable)
 
 }
