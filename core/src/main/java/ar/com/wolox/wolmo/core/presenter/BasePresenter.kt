@@ -36,7 +36,7 @@ open class BasePresenter<V> @Inject constructor() {
      * **NOTE: ** You should check if the view is attached calling the
      * method [before calling any method of the view.][BasePresenter.isViewAttached]
      */
-    private fun getView(): V? = view
+    fun getView(): V? = view
 
     /**
      * Returns **true** if the [view] is attached, **false** otherwise.
