@@ -31,7 +31,7 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import ar.com.wolox.wolmo.core.java8.Consumer;
+import androidx.core.util.Consumer;
 
 public class BasePresenterTest {
 
