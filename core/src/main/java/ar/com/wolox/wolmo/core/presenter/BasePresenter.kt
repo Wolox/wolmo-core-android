@@ -27,20 +27,20 @@ import javax.inject.Inject
 /**
  * Base presenter that provides the view to the specific presenters.
  */
+@Suppress("DeprecatedCallableAddReplaceWith")
 open class BasePresenter<V> @Inject constructor() {
-
-    private var view: V? = null
 
     /**
      * Returns the [view] attached this presenter.
      * **NOTE: ** You should check if the view is attached calling the
-     * method [before calling any method of the view.][BasePresenter.isViewAttached]
+     * method (before calling any method of the view).[BasePresenter.isViewAttached]
      */
-    fun getView(): V? = view
+    var view: V? = null
+        private set(value) {
+            field = value
+        }
 
-    /**
-     * Returns **true** if the [view] is attached, **false** otherwise.
-     */
+    /** Returns **true** if the [view] is attached, **false** otherwise. */
     fun isViewAttached(): Boolean = view != null
 
     /**
@@ -62,9 +62,7 @@ open class BasePresenter<V> @Inject constructor() {
         onViewDetached()
     }
 
-    /**
-     * Listener called when a view is attached and it's safe to interact with it.
-     */
+    /**  Listener called when a view is attached and it's safe to interact with it. */
     fun onViewAttached() {}
 
     /**
@@ -78,6 +76,7 @@ open class BasePresenter<V> @Inject constructor() {
      * If the [view] is not attached, the expression will not run.
      * The consumer receives the view instance as argument.
      */
+    @Deprecated(message = "Since Kotlin allows safe calls (?.), this method is unnecessary. Use view?")
     fun runIfViewAttached(method: Consumer<V>) {
         if (isViewAttached()) {
             method.accept(view)
@@ -89,6 +88,7 @@ open class BasePresenter<V> @Inject constructor() {
      * If the [view] is not attached, the expression will not run.
      * The runnable will not run in another thread.
      */
+    @Deprecated(message = "Since Kotlin allows safe calls **(?.)**, this method is unnecessary. Use view?")
     fun runIfViewAttached(method: Runnable) {
         if (isViewAttached()) {
             method.run()

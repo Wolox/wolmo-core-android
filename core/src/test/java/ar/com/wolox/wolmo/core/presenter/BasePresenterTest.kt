@@ -35,17 +35,16 @@ import androidx.core.util.Consumer
 
 class BasePresenterTest {
 
-    private var basePresenter: BasePresenter<Any>? = null
+    private lateinit var basePresenter: BasePresenter<Any>
 
     @Before
     fun beforeTest() {
         basePresenter = spy(BasePresenter<Any>()::class.java)
     }
 
-
     @Test
     fun viewAttachedUpdates() {
-        basePresenter?.apply {
+        basePresenter.run {
             assertThat(isViewAttached()).isEqualTo(false)
 
             attachView(Any())
@@ -60,7 +59,7 @@ class BasePresenterTest {
     fun presenterNotifiesChildClasses() {
         // Attach and detach the view
 
-        basePresenter?.apply {
+        basePresenter.run {
             attachView(Any())
             verify(this, times(1)).onViewAttached()
             verify(this, times(0)).onViewDetached()
@@ -74,7 +73,7 @@ class BasePresenterTest {
     fun presenterRunIfViewAttachedRunnable() {
         val runnableMock = mock(Runnable::class.java)
 
-        basePresenter?.apply {
+        basePresenter.run {
             runIfViewAttached(runnableMock)
             verify(runnableMock, times(0)).run()
 
@@ -89,7 +88,7 @@ class BasePresenterTest {
     fun presenterRunIfViewAttachedConsumer() {
         val consumerMock = mock(Consumer::class.java) as Consumer<Any>
 
-        basePresenter?.apply {
+        basePresenter.run {
 
             runIfViewAttached(consumerMock)
             verify(consumerMock, times(0)).accept(any(Any::class.java))
