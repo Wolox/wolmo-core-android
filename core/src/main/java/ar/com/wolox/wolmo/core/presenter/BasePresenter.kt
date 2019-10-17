@@ -36,9 +36,7 @@ open class BasePresenter<V> @Inject constructor() {
      * method (before calling any method of the view).[BasePresenter.isViewAttached]
      */
     var view: V? = null
-        private set(value) {
-            field = value
-        }
+        private set
 
     /** Returns **true** if the [view] is attached, **false** otherwise. */
     fun isViewAttached(): Boolean = view != null
