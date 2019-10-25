@@ -25,21 +25,19 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Handler
-import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
-import androidx.core.content.ContextCompat
 import android.util.SparseArray
-
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope
-
-import java.util.ArrayList
-
 import javax.inject.Inject
 
 /** Helper class to handle Android's runtime permissions */
 @ApplicationScope
-class PermissionManager @Inject
-constructor(private val context: Context, private val requestListeners: SparseArray<PermissionListener>) {
+class PermissionManager @Inject constructor(
+        private val context: Context,
+        private val requestListeners: SparseArray<PermissionListener>
+) {
 
     private var requestCount = 1
 
@@ -50,16 +48,16 @@ constructor(private val context: Context, private val requestListeners: SparseAr
      * the permissions to be requested. Returns **true** if every requested permission
      * was already granted, **false** otherwise.
      */
-    fun requestPermission(fragment: Fragment, listener: PermissionListener?, vararg permissions: String): Boolean {
-        val ungrantedPermissions = filterUngranted(*permissions)
-        if (ungrantedPermissions.isNotEmpty()) {
-            fragment.requestPermissions(ungrantedPermissions, requestCount)
-            requestListeners.put(requestCount++, listener)
-            return false
-        }
-        listener?.onPermissionsGranted()
-        return true
-    }
+    fun requestPermission(fragment: Fragment, listener: PermissionListener?, vararg permissions: String): Boolean =
+            with(filterUngranted(*permissions)) {
+                if (isNotEmpty()) {
+                    fragment.requestPermissions(this, requestCount)
+                    requestListeners.put(requestCount++, listener)
+                } else {
+                    listener?.onPermissionsGranted()
+                }
+                return isEmpty()
+            }
 
     /**
      * Request one or more Android's runtime permissions using an [activity] to perform the
@@ -68,16 +66,16 @@ constructor(private val context: Context, private val requestListeners: SparseAr
      * the permissions to be requested. Returns **true** if every requested permission
      * was already granted, **false** otherwise.
      */
-    fun requestPermission(activity: Activity, listener: PermissionListener?, vararg permissions: String): Boolean {
-        val ungrantedPermissions = filterUngranted(*permissions)
-        if (ungrantedPermissions.isNotEmpty()) {
-            ActivityCompat.requestPermissions(activity, ungrantedPermissions, requestCount)
-            requestListeners.put(requestCount++, listener)
-            return false
-        }
-        listener?.onPermissionsGranted()
-        return true
-    }
+    fun requestPermission(activity: Activity, listener: PermissionListener?, vararg permissions: String): Boolean =
+            with(filterUngranted(*permissions)) {
+                if (isNotEmpty()) {
+                    ActivityCompat.requestPermissions(activity, this, requestCount)
+                    requestListeners.put(requestCount++, listener)
+                } else {
+                    listener?.onPermissionsGranted()
+                }
+                return isEmpty()
+            }
 
     /**
      * Callback that must be called from Activities and Fragments that will make use of
@@ -103,19 +101,15 @@ constructor(private val context: Context, private val requestListeners: SparseAr
     }
 
     /** Filters a list of [permissions] and returns only the ones which have not been granted. */
-    private fun filterUngranted(vararg permissions: String): Array<String> {
-        val ungranted = ArrayList<String>()
-        permissions.filter { permission -> ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED }.forEach { ungranted.add(it) }
-        return ungranted.toTypedArray()
-    }
+    private fun filterUngranted(vararg permissions: String) = permissions.filter { permission ->
+        ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED
+    }.toTypedArray()
 
     /**
      * Checks if every required permission was granted based on the [results] obtained in
      * [PermissionManager.onRequestPermissionsResult]. Returns **true** if every permission
      * was granted, **false** otherwise.
      */
-    private fun allGranted(results: IntArray): Boolean {
-        if (results.isEmpty()) return false
-        return results.all { it == PackageManager.PERMISSION_GRANTED }
-    }
+    private fun allGranted(results: IntArray) = results.isNotEmpty() && results.all { it == PackageManager.PERMISSION_GRANTED }
+
 }
