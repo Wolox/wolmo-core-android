@@ -48,15 +48,16 @@ class PermissionManager @Inject constructor(
      * the permissions to be requested. Returns **true** if every requested permission
      * was already granted, **false** otherwise.
      */
-    fun requestPermission(fragment: Fragment, listener: PermissionListener?, vararg permissions: String): Boolean =
+    fun requestPermission(fragment: Fragment, listener: PermissionListener?, vararg permissions: String) =
             with(filterUngranted(*permissions)) {
                 if (isNotEmpty()) {
                     fragment.requestPermissions(this, requestCount)
                     requestListeners.put(requestCount++, listener)
+                    false
                 } else {
                     listener?.onPermissionsGranted()
+                    true
                 }
-                return isEmpty()
             }
 
     /**
@@ -66,15 +67,16 @@ class PermissionManager @Inject constructor(
      * the permissions to be requested. Returns **true** if every requested permission
      * was already granted, **false** otherwise.
      */
-    fun requestPermission(activity: Activity, listener: PermissionListener?, vararg permissions: String): Boolean =
+    fun requestPermission(activity: Activity, listener: PermissionListener?, vararg permissions: String) =
             with(filterUngranted(*permissions)) {
                 if (isNotEmpty()) {
                     ActivityCompat.requestPermissions(activity, this, requestCount)
                     requestListeners.put(requestCount++, listener)
+                    false
                 } else {
                     listener?.onPermissionsGranted()
+                    true
                 }
-                return isEmpty()
             }
 
     /**
