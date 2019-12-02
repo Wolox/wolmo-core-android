@@ -40,6 +40,8 @@ import org.robolectric.shadows.ShadowLog;
 
 import java.io.PrintStream;
 
+import ar.com.wolox.wolmo.core.util.Logger;
+
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
 public class LoggerTest {

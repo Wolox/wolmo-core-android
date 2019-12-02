@@ -38,6 +38,8 @@ import android.content.SharedPreferences;
 import org.junit.Before;
 import org.junit.Test;
 
+import ar.com.wolox.wolmo.core.util.SharedPreferencesManager;
+
 public class SharedPreferencesManagerTest {
 
     private SharedPreferences.Editor mEditorMock;

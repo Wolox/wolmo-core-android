@@ -21,36 +21,30 @@
  */
 package ar.com.wolox.wolmo.core.activity
 
-import android.os.Bundle
 import ar.com.wolox.wolmo.core.R
 import ar.com.wolox.wolmo.core.util.ToastFactory
 import javax.inject.Inject
 
-class WolmoActivityHandler @Inject constructor(
-        private val toastFactory: ToastFactory
-) {
-    private lateinit var wolmoActivity: WolmoActivity
+class WolmoActivityHandler @Inject constructor(private val toastFactory: ToastFactory) {
 
     /**
      * Handles the custom lifecycle of Wolmo's Activity. It provides a set of callbacks to structure
-     * the different aspects of the Activities initialization. It expects the [activity] to be managed by te
-     * this and the [savedInstanceState] provided by Android's lifecycle.
+     * the different aspects of the Activities initialization. It expects the [activity] to be managed.
      */
-    protected fun onCreate(activity: WolmoActivity, savedInstanceState: Bundle?) {
-        wolmoActivity = activity
-        wolmoActivity.apply {
-            setContentView(wolmoActivity.layout())
-            if (handleArguments(wolmoActivity.intent.extras)) {
+    fun onCreate(activity: WolmoActivity) {
+        with(activity) {
+            setContentView(layout())
+            if (handleArguments(intent.extras)) {
                 setUi()
                 init()
                 populate()
                 setListeners()
             } else {
-                mToastFactory.show(R.string.unknown_error)
+                toastFactory.show(R.string.unknown_error)
                 finish()
             }
         }
     }
 
-    protected fun onDestroy() {}
+    fun onDestroy() {}
 }

@@ -58,6 +58,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 
+import ar.com.wolox.wolmo.core.util.ImageProvider;
+import ar.com.wolox.wolmo.core.util.ToastFactory;
+import ar.com.wolox.wolmo.core.util.WolmoFileProvider;
+
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, shadows = {ImageProviderTest.WolmoShadowIntent.class, ImageProviderTest.WolmoShadowBitmap.class})
 public class ImageProviderTest {

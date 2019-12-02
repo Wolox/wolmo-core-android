@@ -59,7 +59,7 @@ public abstract class WolmoActivity extends DaggerAppCompatActivity {
     @CallSuper
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivityHandler.onCreate(this, savedInstanceState);
+        mActivityHandler.onCreate(this);
     }
 
     /**

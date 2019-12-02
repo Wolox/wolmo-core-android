@@ -53,6 +53,8 @@ import org.robolectric.util.ReflectionHelpers;
 
 import java.lang.reflect.Field;
 
+import ar.com.wolox.wolmo.core.util.KeyboardUtils;
+
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest=Config.NONE)
 public class KeyboardUtilsTest {

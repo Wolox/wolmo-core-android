@@ -61,7 +61,7 @@ public class WolmoActivityHandlerTest {
 
     @Test
     public void onCreateShouldCallWolmoMethods() {
-        mWolmoActivityHandlerSpy.onCreate(mWolmoActivitySpy, null);
+        mWolmoActivityHandlerSpy.onCreate(mWolmoActivitySpy);
 
         // Verify that the methods in wolmoFragment are called in order
         InOrder inOrder = Mockito.inOrder(mWolmoActivitySpy);
@@ -76,7 +76,7 @@ public class WolmoActivityHandlerTest {
     @Test
     public void onCreateWithFailHandlingArgsShouldFinishActivity() {
         when(mWolmoActivitySpy.handleArguments(isNull())).thenReturn(false);
-        mWolmoActivityHandlerSpy.onCreate(mWolmoActivitySpy, null);
+        mWolmoActivityHandlerSpy.onCreate(mWolmoActivitySpy);
 
         verify(mToastFactoryMock, times(1)).show(eq(R.string.unknown_error));
         verify(mWolmoActivitySpy, times(1)).finish();

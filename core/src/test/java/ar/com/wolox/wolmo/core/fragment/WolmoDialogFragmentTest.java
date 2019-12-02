@@ -28,11 +28,12 @@ import android.view.ViewGroup;
 import org.junit.Before;
 import org.junit.Test;
 
+import ar.com.wolox.wolmo.core.fragment.WolmoDialogFragment;
+import ar.com.wolox.wolmo.core.fragment.WolmoFragmentHandler;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -40,7 +41,7 @@ import static org.mockito.Mockito.verify;
 
 public class WolmoDialogFragmentTest {
 
-    private WolmoFragmentHandler<BasePresenter> mWolmoFragmentHandlerMock;
+    private WolmoFragmentHandler<Object, BasePresenter<Object>> mWolmoFragmentHandlerMock;
     private PermissionManager mPermissionManagerMock;
     private WolmoDialogFragment mWolmoDialogFragmentSpy;
 
@@ -51,14 +52,14 @@ public class WolmoDialogFragmentTest {
         mPermissionManagerMock = mock(PermissionManager.class);
 
         mWolmoDialogFragmentSpy = spy(WolmoDialogFragment.class);
-        mWolmoDialogFragmentSpy.mFragmentHandler = mWolmoFragmentHandlerMock;
-        mWolmoDialogFragmentSpy.mPermissionManager = mPermissionManagerMock;
+        mWolmoDialogFragmentSpy.fragmentHandler = mWolmoFragmentHandlerMock;
+        mWolmoDialogFragmentSpy.permissionManager = mPermissionManagerMock;
     }
 
     @Test
     public void onCreateShouldDelegateCall() {
         mWolmoDialogFragmentSpy.onCreate(null);
-        verify(mWolmoFragmentHandlerMock, times(1)).onCreate(eq(mWolmoDialogFragmentSpy), isNull());
+        verify(mWolmoFragmentHandlerMock, times(1)).onCreate(eq(mWolmoDialogFragmentSpy));
     }
 
     @Test
@@ -67,7 +68,7 @@ public class WolmoDialogFragmentTest {
         ViewGroup viewGroupMock = mock(ViewGroup.class);
 
         mWolmoDialogFragmentSpy.onCreateView(inflaterMock, viewGroupMock, null);
-        verify(mWolmoFragmentHandlerMock, times(1)).onCreateView(eq(inflaterMock), eq(viewGroupMock), isNull());
+        verify(mWolmoFragmentHandlerMock, times(1)).onCreateView(eq(inflaterMock), eq(viewGroupMock));
     }
 
     @Test
@@ -75,7 +76,7 @@ public class WolmoDialogFragmentTest {
         View viewMock = mock(View.class);
 
         mWolmoDialogFragmentSpy.onViewCreated(viewMock, null);
-        verify(mWolmoFragmentHandlerMock, times(1)).onViewCreated(eq(viewMock), isNull());
+        verify(mWolmoFragmentHandlerMock, times(1)).onViewCreated(eq(viewMock));
     }
 
     @Test
@@ -109,12 +110,6 @@ public class WolmoDialogFragmentTest {
 
         mWolmoDialogFragmentSpy.onRequestPermissionsResult(123, permissions, grantResults);
         verify(mPermissionManagerMock, times(1)).onRequestPermissionsResult(eq(123), eq(permissions), eq(grantResults));
-    }
-
-    @Test
-    public void getPresenterShouldDelegateCall() {
-        mWolmoDialogFragmentSpy.getPresenter();
-        verify(mWolmoFragmentHandlerMock, times(1)).getPresenter();
     }
 
     @Test

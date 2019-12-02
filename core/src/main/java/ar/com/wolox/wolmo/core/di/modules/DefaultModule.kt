@@ -51,7 +51,7 @@ object DefaultModule {
     /** Provides a default [WolmoFragmentHandler] with no presenter for fragments that don't need it. */
     @Provides
     @JvmStatic
-    fun providesDefaultWolmoFragmentHandler(toastFactory: ToastFactory, logger: Logger): WolmoFragmentHandler<*> {
-        return WolmoFragmentHandler<BasePresenter<*>>(toastFactory, logger)
+    fun providesDefaultWolmoFragmentHandler(toastFactory: ToastFactory, logger: Logger): WolmoFragmentHandler<*, *> {
+        return WolmoFragmentHandler<Any, BasePresenter<Any>>(toastFactory, logger)
     }
 }

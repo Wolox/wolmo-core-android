@@ -38,6 +38,8 @@ import org.robolectric.annotation.Config;
 
 import java.io.File;
 
+import ar.com.wolox.wolmo.core.fragment.GetImageFragment;
+import ar.com.wolox.wolmo.core.fragment.WolmoFragmentHandler;
 import ar.com.wolox.wolmo.core.permission.PermissionListener;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
@@ -71,7 +73,7 @@ public class GetImageFragmentTest {
     static final int CAMERA_ERROR_RES_ID = 1234;
     static final String CAMERA_FILENAME = "Filename";
 
-    private WolmoFragmentHandler<BasePresenter> mWolmoFragmentHandlerMock;
+    private WolmoFragmentHandler<Object, BasePresenter<Object>> mWolmoFragmentHandlerMock;
     private PermissionManager mPermissionManagerMock;
     private ImageProvider mImageProviderMock;
     private WolmoFileProvider mWolmoFileProviderMock;
@@ -86,10 +88,10 @@ public class GetImageFragmentTest {
         mWolmoFileProviderMock = mock(WolmoFileProvider.class);
 
         mGetImageFragmentSpy = spy(new TestImageFragment());
-        mGetImageFragmentSpy.mFragmentHandler = mWolmoFragmentHandlerMock;
-        mGetImageFragmentSpy.mPermissionManager = mPermissionManagerMock;
-        mGetImageFragmentSpy.mImageProvider = mImageProviderMock;
-        mGetImageFragmentSpy.mWolmoFileProvider = mWolmoFileProviderMock;
+        mGetImageFragmentSpy.fragmentHandler = mWolmoFragmentHandlerMock;
+        mGetImageFragmentSpy.permissionManager = mPermissionManagerMock;
+        mGetImageFragmentSpy.imageProvider = mImageProviderMock;
+        mGetImageFragmentSpy.wolmoFileProvider = mWolmoFileProviderMock;
     }
 
 
