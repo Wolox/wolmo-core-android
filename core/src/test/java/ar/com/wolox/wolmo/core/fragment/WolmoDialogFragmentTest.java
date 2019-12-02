@@ -28,8 +28,6 @@ import android.view.ViewGroup;
 import org.junit.Before;
 import org.junit.Test;
 
-import ar.com.wolox.wolmo.core.fragment.WolmoDialogFragment;
-import ar.com.wolox.wolmo.core.fragment.WolmoFragmentHandler;
 import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 
@@ -76,7 +74,7 @@ public class WolmoDialogFragmentTest {
         View viewMock = mock(View.class);
 
         mWolmoDialogFragmentSpy.onViewCreated(viewMock, null);
-        verify(mWolmoFragmentHandlerMock, times(1)).onViewCreated();
+        verify(mWolmoFragmentHandlerMock, times(1)).onViewCreated(viewMock);
     }
 
     @Test

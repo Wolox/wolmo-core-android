@@ -59,7 +59,7 @@ abstract class WolmoFragment<V : Any, P : BasePresenter<V>> : DaggerFragment(), 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fragmentHandler.onViewCreated()
+        fragmentHandler.onViewCreated(view)
     }
 
     @CallSuper
@@ -102,9 +102,14 @@ abstract class WolmoFragment<V : Any, P : BasePresenter<V>> : DaggerFragment(), 
      *
      * Default implementation returns true.
      */
-    override fun handleArguments(arguments: Bundle?): Boolean {
-        return true
-    }
+    override fun handleArguments(arguments: Bundle?) = true
+
+    /**
+     * Associates variables to views inflated from the XML resource
+     * provided in [IWolmoFragment.layout]
+     * Override if needed.
+     */
+    override fun setUi(view: View?) {}
 
     /**
      * Sets the listeners for the views of the fragment.

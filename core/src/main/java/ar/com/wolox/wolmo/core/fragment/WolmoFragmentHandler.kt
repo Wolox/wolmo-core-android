@@ -84,10 +84,11 @@ class WolmoFragmentHandler<V : Any, P : BasePresenter<V>> @Inject @JvmOverloads 
      * Method called from [WolmoFragment.onViewCreated]. It attaches the
      * fragment to the [BasePresenter] calling [BasePresenter.onViewAttached].
      */
-    fun onViewCreated() {
+    fun onViewCreated(view: View) {
         created = true
         presenter?.attachView(wolmoView)
         with(wolmoFragment) {
+            setUi(view)
             init()
             populate()
             setListeners()

@@ -22,6 +22,7 @@
 package ar.com.wolox.wolmo.core.fragment
 
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.LayoutRes
 
 /**
@@ -52,6 +53,12 @@ interface IWolmoFragment {
 
     /** Populates the view elements of the fragment. */
     fun populate()
+
+    /**
+     * Associates variables to views inflated from the XML resource
+     * provided in [IWolmoFragment.layout]
+     */
+    fun setUi(view: View?)
 
     /**
      * Sets the listeners for the views of the fragment

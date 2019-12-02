@@ -33,9 +33,6 @@ import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 
 import ar.com.wolox.wolmo.core.R;
-import ar.com.wolox.wolmo.core.fragment.IWolmoFragment;
-import ar.com.wolox.wolmo.core.fragment.WolmoFragment;
-import ar.com.wolox.wolmo.core.fragment.WolmoFragmentHandler;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.Logger;
 import ar.com.wolox.wolmo.core.util.ToastFactory;
@@ -102,7 +99,7 @@ public class WolmoFragmentHandlerTest {
         when(mWolmoFragmentMock.handleArguments(isNull())).thenReturn(true);
         mWolmoFragmentHandler.onCreate(testFragment);
 
-        mWolmoFragmentHandler.onViewCreated();
+        mWolmoFragmentHandler.onViewCreated(mock(View.class));
         verify(testPresenterSpy, times(1)).attachView(eq(testFragment));
     }
 
@@ -112,7 +109,7 @@ public class WolmoFragmentHandlerTest {
         when(mWolmoFragmentMock.handleArguments(nullable(Bundle.class))).thenReturn(true);
 
         mWolmoFragmentHandler.onCreate(mWolmoFragmentMock);
-        mWolmoFragmentHandler.onViewCreated();
+        mWolmoFragmentHandler.onViewCreated(mockView);
 
         // Verify that the methods in wolmoFragment are called in order
         InOrder inOrder = inOrder(mWolmoFragmentMock);
@@ -131,7 +128,7 @@ public class WolmoFragmentHandlerTest {
         when(mWolmoFragmentMock.handleArguments(nullable(Bundle.class))).thenReturn(true);
 
         mWolmoFragmentHandler.onCreate(mWolmoFragmentMock);
-        mWolmoFragmentHandler.onViewCreated();
+        mWolmoFragmentHandler.onViewCreated(mock(View.class));
         mWolmoFragmentHandler.onResume();
         verify(mWolmoFragmentMock, times(1)).onVisible();
         verify(mWolmoFragmentMock, times(0)).onHide();

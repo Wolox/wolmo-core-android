@@ -42,12 +42,9 @@ import javax.inject.Inject
 
 /**
  * Base implementation for [IWolmoFragment] for dialog fragments. This is in charge of
- * inflating the view returned by [.layout].
- * The presenter is created on [.onCreate] if [.handleArguments] returns
- * true. This class defines default implementations for most of the methods on [ ].
- *
- * @param <T> Presenter for this fragment. It should extend [BasePresenter]
-</T> */
+ * inflating the view returned by [layout].
+ * The presenter is created on [onCreate] if [handleArguments] returns true.
+ */
 abstract class WolmoDialogFragment<V : Any, P : BasePresenter<V>> : DaggerAppCompatDialogFragment(),
         IWolmoFragment {
 
@@ -77,10 +74,8 @@ abstract class WolmoDialogFragment<V : Any, P : BasePresenter<V>> : DaggerAppCom
      * Returns a [Drawable] for use as background in the window.
      * If you want to disable the background drawable return null.
      * By default this method returns the color #01FFFFFF
-     *
-     * @return Background drawable
      */
-    protected val backgroundDrawable: Drawable
+    open val backgroundDrawable: Drawable
         get() = ColorDrawable(Color.argb(1, 255, 255, 255))
 
     /**
@@ -88,12 +83,11 @@ abstract class WolmoDialogFragment<V : Any, P : BasePresenter<V>> : DaggerAppCom
      * [Dialog] returned by [.getDialog] that calls [.onBackPressed]
      * if the key pressed is the back key.
      *
-     *
      * Beware that, when clicking a key, the [android.content.DialogInterface.OnKeyListener]
      * is called before delegating the event to other structures. For example, the back is handled
      * here before sending it to an [Activity].
      */
-    private fun setOnBackPressedListener() {
+    open fun setOnBackPressedListener() {
         dialog?.setOnKeyListener { _: DialogInterface?, keyCode: Int, _: KeyEvent? ->
             keyCode == KeyEvent.KEYCODE_BACK && onBackPressed()
         }
@@ -114,7 +108,7 @@ abstract class WolmoDialogFragment<V : Any, P : BasePresenter<V>> : DaggerAppCom
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fragmentHandler.onViewCreated()
+        fragmentHandler.onViewCreated(view)
     }
 
     @CallSuper
@@ -149,9 +143,7 @@ abstract class WolmoDialogFragment<V : Any, P : BasePresenter<V>> : DaggerAppCom
      * @return true if arguments were read successfully, false otherwise.
      * Default implementation returns true.
      */
-    override fun handleArguments(arguments: Bundle?): Boolean {
-        return true
-    }
+    override fun handleArguments(arguments: Bundle?) = true
 
     /**
      * Associates variables to views inflated from the XML resource
@@ -200,6 +192,10 @@ abstract class WolmoDialogFragment<V : Any, P : BasePresenter<V>> : DaggerAppCom
         return false
     }
 
+    /**
+     * Tries to return a non null instance of the presenter [P] for this fragment.
+     * If the presenter is null this will throw a NullPointerException.
+     */
     fun requirePresenter() = fragmentHandler.requirePresenter()
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
