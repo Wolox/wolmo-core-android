@@ -109,32 +109,32 @@ public abstract class GetImageFragment<V, T extends BasePresenter<V>> extends Wo
 
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-            case INTENT_CODE_IMAGE_GALLERY:
-                if (data != null && data.getData() != null) {
-                    String pathUri = mWolmoFileProvider.getRealPathFromUri(data.getData());
-                    mImageCallback.success(new File(pathUri));
-                } else {
-                    notifyError(Error.ERROR_DATA);
-                }
-                break;
+	            case INTENT_CODE_IMAGE_GALLERY:
+	                if (data != null && data.getData() != null) {
+	                    String pathUri = mWolmoFileProvider.getRealPathFromUri(data.getData());
+	                    mImageCallback.success(new File(pathUri));
+	                } else {
+	                    notifyError(Error.ERROR_DATA);
+	                }
+	                break;
 
-            case INTENT_CODE_IMAGE_CAMERA:
-                mImageProvider.addPictureToDeviceGallery(Uri.fromFile(mPictureTakenFile));
-                mImageCallback.success(mPictureTakenFile);
-                break;
+	            case INTENT_CODE_IMAGE_CAMERA:
+	                mImageProvider.addPictureToDeviceGallery(Uri.fromFile(mPictureTakenFile));
+	                mImageCallback.success(mPictureTakenFile);
+	                break;
 
-            default:
-                notifyError(Error.ERROR_UNKNOWN);
+	            default:
+	                notifyError(Error.ERROR_UNKNOWN);
             }
         } else if (resultCode == Activity.RESULT_CANCELED) {
             switch (requestCode) {
-            case INTENT_CODE_IMAGE_GALLERY:
-            case INTENT_CODE_IMAGE_CAMERA:
-                notifyError(Error.USER_CANCELED);
-                break;
+	            case INTENT_CODE_IMAGE_GALLERY:
+	            case INTENT_CODE_IMAGE_CAMERA:
+	                notifyError(Error.USER_CANCELED);
+	                break;
 
-            default:
-                notifyError(Error.ERROR_UNKNOWN);
+	            default:
+	                notifyError(Error.ERROR_UNKNOWN);
             }
         }
 
