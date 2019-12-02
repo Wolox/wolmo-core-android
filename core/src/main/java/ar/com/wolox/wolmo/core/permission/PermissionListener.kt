@@ -19,24 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.permission;
+package ar.com.wolox.wolmo.core.permission
 
-import androidx.annotation.NonNull;
+/** Callback used by [PermissionManager] when requesting permissions to the user */
+abstract class PermissionListener {
 
-/**
- * Callback used by {@link PermissionManager} when requesting permissions to the user
- */
-public abstract class PermissionListener {
+    /** Called when the required permissions are granted by the user */
+    open fun onPermissionsGranted() {}
 
-    /**
-     * Called when the required permissions are granted by the user
-     */
-    public void onPermissionsGranted() {}
-
-    /**
-     * Called when all or some of the requested permissions are rejected by the user
-     *
-     * @param deniedPermissions Array of {@link String} that contains the denied permissions
-     */
-    public void onPermissionsDenied(@NonNull String[] deniedPermissions) {}
+    /** Called when all or some of the [deniedPermissions] rejected by the user */
+    open fun onPermissionsDenied(deniedPermissions: Array<String>) {}
 }
