@@ -19,24 +19,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.presenter;
+package ar.com.wolox.wolmo.core.presenter
 
 /**
  * Interface to extend from the views that have a loading view along with an error one as well as
  * content that loads asynchronously.
  */
-public interface LceView<T> extends LeView {
+interface LceView<T> : LeView {
 
     /**
      * Show the content view.
-     * <p>
-     * <b>The content view must have the id = R.id.contentView</b>
+     * **The content view must have the id = R.id.contentView**
      */
-    void showContent();
+    fun showContent()
 
     /**
-     * The data that should be displayed with {@link #showContent()}
+     * The [data] that should be displayed with [showContent]
      */
-    void setData(T data);
+    fun setData(data: T)
 
 }
