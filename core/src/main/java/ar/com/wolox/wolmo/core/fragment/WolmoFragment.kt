@@ -33,12 +33,9 @@ import javax.inject.Inject
 
 /**
  * Base implementation for [IWolmoFragment]. This is in charge of inflating the view returned
- * by [.layout]. The presenter is created on [.onCreate]
- * if [.handleArguments] returns true.
+ * by [layout]. The presenter is created on [onCreate] if [handleArguments] returns true.
  * This class defines default implementations for most of the methods on [IWolmoFragment].
- *
- * @param <T> Presenter for this fragment. It should extend [BasePresenter]
-</T> */
+ */
 abstract class WolmoFragment<V : Any, P : BasePresenter<V>> : DaggerFragment(), IWolmoFragment {
 
     @Inject
@@ -62,7 +59,7 @@ abstract class WolmoFragment<V : Any, P : BasePresenter<V>> : DaggerFragment(), 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fragmentHandler.onViewCreated(view)
+        fragmentHandler.onViewCreated()
     }
 
     @CallSuper
@@ -89,33 +86,25 @@ abstract class WolmoFragment<V : Any, P : BasePresenter<V>> : DaggerFragment(), 
         super.onDestroyView()
     }
 
-    /**
-     * Delegates permission handling to Wolmo's [PermissionManager].
-     */
+    /** Delegates permission handling to Wolmo's [PermissionManager]. */
     @CallSuper
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
+    ) {
         permissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     /**
-     * Reads arguments sent as a Bundle extras.
+     * Reads [arguments] sent as a Bundle extras and returns true if arguments
+     * were read successfully, false otherwise.
      *
-     * @param arguments The bundle obtainable by the getExtras method of the intent.
-     *
-     * @return true if arguments were read successfully, false otherwise.
      * Default implementation returns true.
      */
     override fun handleArguments(arguments: Bundle?): Boolean {
         return true
     }
-
-    /**
-     * Associates variables to views inflated from the XML resource
-     * provided in [IWolmoFragment.layout]
-     * Override if needed.
-     */
-    override fun setUi(view: View?) {}
 
     /**
      * Sets the listeners for the views of the fragment.
@@ -130,23 +119,25 @@ abstract class WolmoFragment<V : Any, P : BasePresenter<V>> : DaggerFragment(), 
     override fun populate() {}
 
     /**
-     * Callback called when the fragment becomes visible to the user.
+     * Invoked when the fragment becomes visible to the user.
      * Override if needed.
      */
     override fun onVisible() {}
 
     /**
-     * Callback called when the fragment becomes hidden to the user.
+     * Invoked when the fragment becomes hidden to the user.
      * Override if needed.
      */
     override fun onHide() {}
 
-    /**
-     * @see IWolmoFragment.onBackPressed
-     */
+    /** @see IWolmoFragment.onBackPressed */
     override fun onBackPressed(): Boolean {
         return false
     }
 
+    /**
+     * Tries to return a non null instance of the presenter [P] for this fragment.
+     * If the presenter is null this will throw a NullPointerException.
+     */
     fun requirePresenter() = fragmentHandler.requirePresenter()
 }

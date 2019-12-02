@@ -22,7 +22,6 @@
 package ar.com.wolox.wolmo.core.fragment
 
 import android.os.Bundle
-import android.view.View
 import androidx.annotation.LayoutRes
 
 /**
@@ -47,9 +46,6 @@ interface IWolmoFragment {
      * Default implementation returns true.
      */
     fun handleArguments(arguments: Bundle?): Boolean
-
-    /** Loads the [view] elements for the fragment. */
-    fun setUi(view: View?)
 
     /** Initializes any variables that the fragment needs. */
     fun init()

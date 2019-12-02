@@ -35,14 +35,12 @@ import javax.inject.Inject
  * This class is used to separate Wolox Fragments logic so that different subclasses of
  * Fragment can implement MVP without re-writing this.
  */
-
-interface WolmoView
-
 class WolmoFragmentHandler<V : Any, P : BasePresenter<V>> @Inject @JvmOverloads constructor(
         private val toastFactory: ToastFactory,
         private val logger: Logger,
         val presenter: P? = null
 ) {
+
     private lateinit var fragment: Fragment
     private lateinit var wolmoFragment: IWolmoFragment
     private lateinit var wolmoView: V
@@ -50,11 +48,7 @@ class WolmoFragmentHandler<V : Any, P : BasePresenter<V>> @Inject @JvmOverloads 
     private var menuVisible = false
     private var visible = false
 
-    /**
-     * Sets the fragment for this fragment handler.
-     *
-     * @param wolmoFragment Wolox fragment to attach.
-     */
+    /** Sets the [IWolmoFragment] for this fragment handler. */
     private fun setFragment(wolmoFragment: IWolmoFragment) {
         require(wolmoFragment is Fragment) { "WolmoFragment should be a Fragment instance" }
         fragment = wolmoFragment
@@ -64,8 +58,8 @@ class WolmoFragmentHandler<V : Any, P : BasePresenter<V>> @Inject @JvmOverloads 
     }
 
     /**
-     * Method called from [WolmoFragment.onCreate], it calls to [ ][WolmoFragment.handleArguments] to check if the fragment has the correct arguments.
-     *
+     * Invoked on [wolmoFragment]'s [WolmoFragment.onCreate] and checks
+     * if the fragment has the correct arguments.
      */
     fun onCreate(wolmoFragment: IWolmoFragment) {
         logger.tag = WolmoFragmentHandler::class.java.simpleName
@@ -79,36 +73,63 @@ class WolmoFragmentHandler<V : Any, P : BasePresenter<V>> @Inject @JvmOverloads 
     }
 
     /**
-     * Method called from [WolmoFragment.onCreateView], it
-     * creates the view defined in [WolmoFragment.layout].
-     * Then it calls the following methods and returns the [View] created:
-     *
-     *
-     *  * [WolmoFragment.setUi]
-     *  * [WolmoFragment.init]
-     *  * [WolmoFragment.populate]
-     *  * [WolmoFragment.setListeners]
-     *
-     *
+     * Method called from [WolmoFragment.onCreateView], it creates the view defined in [WolmoFragment.layout].
+     * Then it use the [inflater] to inflate the view into the [container] and returns the [View] created.
      */
     fun onCreateView(inflater: LayoutInflater, container: ViewGroup?): View {
         return inflater.inflate(wolmoFragment.layout(), container, false)
     }
 
     /**
-     * Method called from [WolmoFragment.onViewCreated], it attaches the
+     * Method called from [WolmoFragment.onViewCreated]. It attaches the
      * fragment to the [BasePresenter] calling [BasePresenter.onViewAttached].
      */
-    fun onViewCreated(_view: View) {
+    fun onViewCreated() {
         created = true
         presenter?.attachView(wolmoView)
         with(wolmoFragment) {
-            setUi(_view)
             init()
             populate()
             setListeners()
         }
     }
+
+    /**
+     * Invoked from [WolmoFragment.onResume]. It checks visibility of the fragment
+     * and calls [WolmoFragment.onVisible] or [WolmoFragment.onHide] accordingly.
+     */
+    fun onResume() {
+        onVisibilityChanged()
+    }
+
+    /**
+     * Invoked from [WolmoFragment.onPause]. It checks visibility of the fragment
+     * and calls [WolmoFragment.onVisible] or [WolmoFragment.onHide] accordingly.
+     */
+    fun onPause() {
+        onVisibilityChanged()
+    }
+
+    /**
+     * Invoked from [WolmoFragment.setMenuVisibility]. It checks visibility of the
+     * fragment's menu and calls [WolmoFragment.onVisible] or [WolmoFragment.onHide] accordingly.
+     */
+    fun setMenuVisibility(visible: Boolean) {
+        menuVisible = visible
+        onVisibilityChanged()
+    }
+
+    /**
+     * Called from [WolmoFragment.onDestroyView]. It notifies the [BasePresenter] that
+     * the view is destroyed, calling [BasePresenter.onViewDetached]
+     */
+    fun onDestroyView() = requirePresenter().detachView()
+
+    /**
+     * Tries to return a non null instance of the presenter [P] for this fragment.
+     * If the presenter is null this will throw a NullPointerException.
+     */
+    fun requirePresenter() = presenter!!
 
     private fun onVisibilityChanged() {
         if (!created) return
@@ -120,39 +141,4 @@ class WolmoFragmentHandler<V : Any, P : BasePresenter<V>> @Inject @JvmOverloads 
             visible = false
         }
     }
-
-    /**
-     * Called from [WolmoFragment.onResume], checks visibility of the fragment
-     * and calls [WolmoFragment.onVisible] or [WolmoFragment.onHide] accordingly.
-     */
-    fun onResume() {
-        onVisibilityChanged()
-    }
-
-    /**
-     * Called from [WolmoFragment.onPause], checks visibility of the fragment
-     * and calls [WolmoFragment.onVisible] or [WolmoFragment.onHide] accordingly.
-     */
-    fun onPause() {
-        onVisibilityChanged()
-    }
-
-    /**
-     * Called from [WolmoFragment.setMenuVisibility], checks visibility of the
-     * fragment's menu and calls [WolmoFragment.onVisible] or
-     * [WolmoFragment.onHide] accordingly.
-     * For mor info {@see Fragment#setMenuVisibility(boolean)}.
-     */
-    fun setMenuVisibility(visible: Boolean) {
-        menuVisible = visible
-        onVisibilityChanged()
-    }
-
-    /**
-     * Called from [WolmoFragment.onDestroyView], it notifies the [BasePresenter] that
-     * the view is destroyed, calling [BasePresenter.onViewDetached]
-     */
-    fun onDestroyView() = requirePresenter().detachView()
-
-    fun requirePresenter() = presenter!!
 }

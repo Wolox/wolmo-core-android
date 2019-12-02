@@ -114,7 +114,7 @@ abstract class WolmoDialogFragment<V : Any, P : BasePresenter<V>> : DaggerAppCom
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fragmentHandler.onViewCreated(view)
+        fragmentHandler.onViewCreated()
     }
 
     @CallSuper

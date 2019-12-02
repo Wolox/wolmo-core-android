@@ -76,7 +76,7 @@ public class WolmoFragmentTest {
         View viewMock = mock(View.class);
 
         mWolmoFragmentSpy.onViewCreated(viewMock, null);
-        verify(mWolmoFragmentHandlerMock, times(1)).onViewCreated(eq(viewMock));
+        verify(mWolmoFragmentHandlerMock, times(1)).onViewCreated();
     }
 
     @Test
