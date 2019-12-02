@@ -88,8 +88,8 @@ public class GetImageFragmentTest {
         mGetImageFragmentSpy = spy(new TestImageFragment());
         mGetImageFragmentSpy.fragmentHandler = mWolmoFragmentHandlerMock;
         mGetImageFragmentSpy.permissionManager = mPermissionManagerMock;
-        mGetImageFragmentSpy.imageProvider = mImageProviderMock;
-        mGetImageFragmentSpy.wolmoFileProvider = mWolmoFileProviderMock;
+        mGetImageFragmentSpy.mImageProvider = mImageProviderMock;
+        mGetImageFragmentSpy.mWolmoFileProvider = mWolmoFileProviderMock;
     }
 
 
@@ -106,8 +106,8 @@ public class GetImageFragmentTest {
 
         verify(mPermissionManagerMock, times(1)).requestPermission(eq(mGetImageFragmentSpy), any(PermissionListener.class), eq(Manifest.permission.READ_EXTERNAL_STORAGE));
         verify(mImageProviderMock, times(1)).getImageFromGallery(eq(mGetImageFragmentSpy), eq(INTENT_CODE_IMAGE_GALLERY), eq(GALLERY_ERROR_RES_ID));
-        verify(callbackMock, times(0)).onError(any(GetImageFragment.Error.class));
-        verify(callbackMock, times(0)).onSuccess(any(File.class));
+        verify(callbackMock, times(0)).error(any(GetImageFragment.Error.class));
+        verify(callbackMock, times(0)).success(any(File.class));
     }
 
 
@@ -124,8 +124,8 @@ public class GetImageFragmentTest {
 
         verify(mPermissionManagerMock, times(1)).requestPermission(eq(mGetImageFragmentSpy), any(PermissionListener.class), eq(Manifest.permission.READ_EXTERNAL_STORAGE));
         verify(mImageProviderMock, times(0)).getImageFromGallery(any(Fragment.class), anyInt(), anyInt());
-        verify(callbackMock, times(1)).onError(eq(GetImageFragment.Error.PERMISSION_DENIED));
-        verify(callbackMock, times(0)).onSuccess(any(File.class));
+        verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.PERMISSION_DENIED));
+        verify(callbackMock, times(0)).success(any(File.class));
     }
 
 
@@ -138,8 +138,8 @@ public class GetImageFragmentTest {
 
         verify(mPermissionManagerMock, times(1)).requestPermission(eq(mGetImageFragmentSpy), any(PermissionListener.class), eq(CAMERA_PERMISSIONS[0]), eq(CAMERA_PERMISSIONS[1]));
         verify(mImageProviderMock, times(1)).getImageFromCamera(eq(mGetImageFragmentSpy), eq(INTENT_CODE_IMAGE_CAMERA), eq(CAMERA_FILENAME), eq(ImageProvider.PNG), eq(CAMERA_ERROR_RES_ID));
-        verify(callbackMock, times(0)).onError(any(GetImageFragment.Error.class));
-        verify(callbackMock, times(0)).onSuccess(any(File.class));
+        verify(callbackMock, times(0)).error(any(GetImageFragment.Error.class));
+        verify(callbackMock, times(0)).success(any(File.class));
     }
 
 
@@ -156,8 +156,8 @@ public class GetImageFragmentTest {
 
         verify(mPermissionManagerMock, times(1)).requestPermission(eq(mGetImageFragmentSpy), any(PermissionListener.class), eq(CAMERA_PERMISSIONS[0]), eq(CAMERA_PERMISSIONS[1]));
         verify(mImageProviderMock, times(0)).getImageFromGallery(any(Fragment.class), anyInt(), anyInt());
-        verify(callbackMock, times(1)).onError(eq(GetImageFragment.Error.PERMISSION_DENIED));
-        verify(callbackMock, times(0)).onSuccess(any(File.class));
+        verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.PERMISSION_DENIED));
+        verify(callbackMock, times(0)).success(any(File.class));
     }
 
     @Test
@@ -173,7 +173,7 @@ public class GetImageFragmentTest {
         // Call Test
         mGetImageFragmentSpy.onActivityResult(INTENT_CODE_IMAGE_GALLERY, Activity.RESULT_OK, intentMock);
 
-        verify(callbackMock, times(1)).onSuccess(eq(new File("/")));
+        verify(callbackMock, times(1)).success(eq(new File("/")));
     }
 
     @Test
@@ -189,7 +189,7 @@ public class GetImageFragmentTest {
         // Call Test
         mGetImageFragmentSpy.onActivityResult(INTENT_CODE_IMAGE_GALLERY, Activity.RESULT_OK, intentMock);
 
-        verify(callbackMock, times(1)).onError(eq(GetImageFragment.Error.ERROR_DATA));
+        verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.ERROR_DATA));
     }
 
     @Test
@@ -206,7 +206,7 @@ public class GetImageFragmentTest {
         mGetImageFragmentSpy.onActivityResult(INTENT_CODE_IMAGE_CAMERA, Activity.RESULT_OK, intentMock);
 
         verify(mImageProviderMock, times(1)).addPictureToDeviceGallery(eq(Uri.fromFile(new File("/"))));
-        verify(callbackMock, times(1)).onSuccess(eq(new File("/")));
+        verify(callbackMock, times(1)).success(eq(new File("/")));
     }
 
     @Test
@@ -220,7 +220,7 @@ public class GetImageFragmentTest {
         // Call Test
         mGetImageFragmentSpy.onActivityResult(1234, Activity.RESULT_OK, intentMock);
 
-        verify(callbackMock, times(1)).onError(eq(GetImageFragment.Error.ERROR_UNKNOWN));
+        verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.ERROR_UNKNOWN));
     }
 
     @Test
@@ -234,7 +234,7 @@ public class GetImageFragmentTest {
         // Call Test
         mGetImageFragmentSpy.onActivityResult(INTENT_CODE_IMAGE_GALLERY, Activity.RESULT_CANCELED, intentMock);
 
-        verify(callbackMock, times(1)).onError(eq(GetImageFragment.Error.USER_CANCELED));
+        verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.USER_CANCELED));
     }
 
     @Test
@@ -248,7 +248,7 @@ public class GetImageFragmentTest {
         // Call Test
         mGetImageFragmentSpy.onActivityResult(1234, Activity.RESULT_CANCELED, intentMock);
 
-        verify(callbackMock, times(1)).onError(eq(GetImageFragment.Error.ERROR_UNKNOWN));
+        verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.ERROR_UNKNOWN));
     }
 
     private void getImageFromGallerySuccess() {
