@@ -34,7 +34,6 @@ import java.io.File;
 import javax.inject.Inject;
 
 import ar.com.wolox.wolmo.core.permission.PermissionListener;
-import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.ImageProvider;
 import ar.com.wolox.wolmo.core.util.WolmoFileProvider;
@@ -60,7 +59,6 @@ public abstract class GetImageFragment<V, T extends BasePresenter<V>> extends Wo
     private File mPictureTakenFile;
     private OnImageReturnCallback mImageCallback;
 
-    @Inject PermissionManager mPermissionManager;
     @Inject ImageProvider mImageProvider;
     @Inject WolmoFileProvider mWolmoFileProvider;
 
@@ -182,7 +180,7 @@ public abstract class GetImageFragment<V, T extends BasePresenter<V>> extends Wo
      */
     protected void selectImageFromGallery(
             @NonNull final OnImageReturnCallback onImageReturnCallback) {
-        mPermissionManager.requestPermission(this, new PermissionListener() {
+        permissionManager.requestPermission(this, new PermissionListener() {
             @Override
             public void onPermissionsGranted() {
                 mImageCallback = onImageReturnCallback;
@@ -204,7 +202,7 @@ public abstract class GetImageFragment<V, T extends BasePresenter<V>> extends Wo
      * @param onImageReturnCallback callback for request result
      */
     protected void takePicture(@NonNull final OnImageReturnCallback onImageReturnCallback) {
-        mPermissionManager.requestPermission(this, new PermissionListener() {
+        permissionManager.requestPermission(this, new PermissionListener() {
             @Override
             public void onPermissionsGranted() {
                 mImageCallback = onImageReturnCallback;
