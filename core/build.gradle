@@ -44,7 +44,8 @@ buildscript {
     ext.robolectric_version = '4.2'
     ext.androidx_test_core_version = '1.1.0'
     ext.mockito_inline_version = '2.13.0'
-    ext.assertj_version = '3.9.0';
+    ext.assertj_version = '3.9.0'
+    ext.android_ktx_version = '1.1.0'
 }
 
 dependencies {
@@ -66,6 +67,10 @@ dependencies {
     api "com.google.dagger:dagger-android-support:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
+
+    // Android KTX
+    implementation "androidx.core:core-ktx:$android_ktx_version"
+    implementation "androidx.fragment:fragment-ktx:$android_ktx_version"
 
     // Test
     testImplementation "junit:junit:$junit_version"

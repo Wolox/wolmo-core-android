@@ -21,17 +21,6 @@
  */
 package ar.com.wolox.wolmo.core.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -39,14 +28,15 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
@@ -58,33 +48,35 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 
-import ar.com.wolox.wolmo.core.util.ImageProvider;
-import ar.com.wolox.wolmo.core.util.ToastFactory;
-import ar.com.wolox.wolmo.core.util.WolmoFileProvider;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, shadows = {ImageProviderTest.WolmoShadowIntent.class, ImageProviderTest.WolmoShadowBitmap.class})
 public class ImageProviderTest {
 
-    static ComponentName sComponentNameMock;
-    static Intent sIntentInstance;
-    static HashMap<String, String> sCompressionProperties = new HashMap<>();
+    private static ComponentName sComponentNameMock;
+    private static Intent sIntentInstance;
+    private static HashMap<String, String> sCompressionProperties = new HashMap<>();
 
     private Context mContextSpy;
-    private ToastFactory mToastFactoryMock;
     private WolmoFileProvider mWolmoFileProviderMock;
 
     private ImageProvider mImageProviderSpy;
 
     @Before
-    @SuppressWarnings("unchecked")
     public void beforeTest() {
-        mContextSpy = spy(RuntimeEnvironment.application);
-        mToastFactoryMock = mock(ToastFactory.class);
+        mContextSpy = spy(ApplicationProvider.getApplicationContext());
         mWolmoFileProviderMock = mock(WolmoFileProvider.class);
 
-        mImageProviderSpy =
-                new ImageProvider(mContextSpy, mToastFactoryMock, mWolmoFileProviderMock);
+        mImageProviderSpy = new ImageProvider(mContextSpy, mWolmoFileProviderMock);
     }
 
     @Test
@@ -92,11 +84,11 @@ public class ImageProviderTest {
         Fragment fragmentMock = mock(Fragment.class);
         sComponentNameMock = mock(ComponentName.class);
 
-        mImageProviderSpy.getImageFromGallery(fragmentMock, 1, 123);
+        final Boolean response = mImageProviderSpy.getImageFromGallery(fragmentMock, 1);
 
+        assertThat(response).isEqualTo(true);
         assertThat(sIntentInstance.getBooleanExtra(Intent.EXTRA_LOCAL_ONLY, false)).isEqualTo(true);
         verify(fragmentMock, times(1)).startActivityForResult(any(Intent.class), eq(1));
-        verify(mToastFactoryMock, times(0)).show(eq(123));
     }
 
     @Test
@@ -104,11 +96,11 @@ public class ImageProviderTest {
         Fragment fragmentMock = mock(Fragment.class);
         sComponentNameMock = null;
 
-        mImageProviderSpy.getImageFromGallery(fragmentMock, 1, 123);
+        final Boolean response = mImageProviderSpy.getImageFromGallery(fragmentMock, 1);
 
+        assertThat(response).isEqualTo(false);
         assertThat(sIntentInstance.getBooleanExtra(Intent.EXTRA_LOCAL_ONLY, false)).isEqualTo(true);
         verify(fragmentMock, times(0)).startActivityForResult(any(Intent.class), eq(1));
-        verify(mToastFactoryMock, times(1)).show(eq(123));
     }
 
     @Test
@@ -127,19 +119,9 @@ public class ImageProviderTest {
         Fragment fragmentMock = mock(Fragment.class);
         sComponentNameMock = null; // No Camera app
 
-        mImageProviderSpy.getImageFromCamera(fragmentMock, 123, "Filename", "JPG", 12345);
+        final Boolean response = mImageProviderSpy.getImageFromCamera(fragmentMock, 123, "/path/Filename.jpg");
 
-        verify(mToastFactoryMock, times(1)).show(eq(12345));
-    }
-
-    @Test
-    public void getImageFromCameraWithExceptionShowsToast() throws IOException {
-        Fragment fragmentMock = mock(Fragment.class);
-        sComponentNameMock = mock(ComponentName.class);
-        when(mWolmoFileProviderMock.createTempFile(anyString(), anyString(), anyString())).thenThrow(new IOException());
-
-        assertThat(mImageProviderSpy.getImageFromCamera(fragmentMock, 123, "Filename", "JPG", 123456)).isNull();
-        verify(mToastFactoryMock, times(1)).show(eq(123456));
+        assertThat(response).isEqualTo(false);
     }
 
     @Test
@@ -153,12 +135,12 @@ public class ImageProviderTest {
         when(mWolmoFileProviderMock.createTempFile(anyString(), anyString(), anyString())).thenReturn(fileMock);
         when(mWolmoFileProviderMock.getUriForFile(any(File.class))).thenReturn(uriMock);
 
-        assertThat(mImageProviderSpy.getImageFromCamera(fragmentMock, 123, "Filename", "JPG", 123456)).isSameAs(fileMock);
+        final Boolean response = mImageProviderSpy.getImageFromCamera(fragmentMock, 123, "/file/path.jpg");
+
+        assertThat(response).isEqualTo(true);
         assertThat(sIntentInstance.getAction()).isEqualTo(MediaStore.ACTION_IMAGE_CAPTURE);
         assertThat(sIntentInstance.getFlags()).matches(flags -> (flags & Intent.FLAG_GRANT_READ_URI_PERMISSION) == 1);
         assertThat((Uri) sIntentInstance.getParcelableExtra(MediaStore.EXTRA_OUTPUT)).isSameAs(uriMock);
-
-        verify(mToastFactoryMock, times(0)).show(anyInt());
     }
 
     @Test

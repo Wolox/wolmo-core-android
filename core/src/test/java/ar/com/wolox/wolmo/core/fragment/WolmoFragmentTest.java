@@ -55,12 +55,6 @@ public class WolmoFragmentTest {
     }
 
     @Test
-    public void onCreateShouldDelegateCall() {
-        mWolmoFragmentSpy.onCreate(null);
-        verify(mWolmoFragmentHandlerMock, times(1)).onCreate(eq(mWolmoFragmentSpy));
-    }
-
-    @Test
     public void onCreateViewShouldDelegateCall() {
         LayoutInflater inflaterMock = mock(LayoutInflater.class);
         ViewGroup viewGroupMock = mock(ViewGroup.class);
