@@ -52,6 +52,6 @@ object DefaultModule {
     @Provides
     @JvmStatic
     fun providesDefaultWolmoFragmentHandler(toastFactory: ToastFactory, logger: Logger): WolmoFragmentHandler<*, *> {
-        return WolmoFragmentHandler<Any, BasePresenter<Any>>(toastFactory, logger)
+        return WolmoFragmentHandler(toastFactory, logger, BasePresenter())
     }
 }

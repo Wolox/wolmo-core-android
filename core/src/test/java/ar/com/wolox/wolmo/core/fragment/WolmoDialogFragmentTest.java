@@ -106,8 +106,8 @@ public class WolmoDialogFragmentTest {
 
     @Test
     public void requirePresenterShouldDelegateCall() {
-        mWolmoDialogFragmentSpy.requirePresenter();
-        verify(mWolmoFragmentHandlerMock, times(1)).requirePresenter();
+        mWolmoDialogFragmentSpy.getPresenter();
+        verify(mWolmoFragmentHandlerMock, times(1)).getPresenter();
     }
 
     public static class TestDialog extends WolmoDialogFragment {

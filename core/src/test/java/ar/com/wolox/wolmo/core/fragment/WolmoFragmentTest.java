@@ -107,6 +107,6 @@ public class WolmoFragmentTest {
     @Test
     public void requirePresenterShouldDelegateCall() {
         mWolmoFragmentSpy.getPresenter();
-        verify(mWolmoFragmentHandlerMock, times(1)).requirePresenter();
+        verify(mWolmoFragmentHandlerMock, times(1)).getPresenter();
     }
 }

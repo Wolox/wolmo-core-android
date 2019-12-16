@@ -55,6 +55,7 @@ public class WolmoFragmentHandlerTest {
 
     private WolmoFragmentHandler<TestView, TestPresenter> mWolmoFragmentHandler;
     private WolmoFragment mWolmoFragmentMock;
+    private TestPresenter mTestPresenter;
     private ToastFactory mToastFactoryMock;
     private Logger mLoggerMock;
 
@@ -63,7 +64,11 @@ public class WolmoFragmentHandlerTest {
         mLoggerMock = mock(Logger.class);
         mToastFactoryMock = mock(ToastFactory.class);
         mWolmoFragmentMock = mock(WolmoFragment.class);
-        mWolmoFragmentHandler = new WolmoFragmentHandler<>(mToastFactoryMock, mLoggerMock);
+        mTestPresenter = mock(TestPresenter.class);
+        mWolmoFragmentHandler = new WolmoFragmentHandler<>(
+                mToastFactoryMock,
+                mLoggerMock,
+                mTestPresenter);
     }
 
     @Test
@@ -141,42 +146,17 @@ public class WolmoFragmentHandlerTest {
 
     @Test
     public void detachesPresenterOnDestroyView() {
-        TestPresenter presenter = mock(TestPresenter.class);
-        mWolmoFragmentHandler = new WolmoFragmentHandler<>(mToastFactoryMock, mLoggerMock, presenter);
-
         mWolmoFragmentHandler.onDestroyView();
-        verify(presenter, times(1)).detachView();
-    }
-
-    @Test
-    public void getPresenterWithoutPresenterShouldReturnNull() {
-        assertThat(mWolmoFragmentHandler.getPresenter()).isNull();
+        verify(mTestPresenter, times(1)).detachView();
     }
 
     @Test
     public void getPresenterShouldReturnThePresenterInstance() {
-        TestPresenter presenter = mock(TestPresenter.class);
-        mWolmoFragmentHandler = new WolmoFragmentHandler<>(mToastFactoryMock, mLoggerMock, presenter);
-
-        assertThat(presenter).isSameAs(mWolmoFragmentHandler.getPresenter());
+        assertThat(mTestPresenter).isSameAs(mWolmoFragmentHandler.getPresenter());
     }
 
-    @Test
-    public void requirePresenterShouldReturnThePresenterInstance() {
-        TestPresenter presenter = mock(TestPresenter.class);
-        mWolmoFragmentHandler = new WolmoFragmentHandler<>(mToastFactoryMock, mLoggerMock, presenter);
-
-        assertThat(presenter).isSameAs(mWolmoFragmentHandler.requirePresenter());
-        assertThat(mWolmoFragmentHandler.getPresenter()).isSameAs(mWolmoFragmentHandler.requirePresenter());
+    interface TestView {
     }
-
-    @Test
-    public void requirePresenterShouldThrowExceptionIfPresenterIsNull() {
-        exception.expect(NullPointerException.class);
-        mWolmoFragmentHandler.requirePresenter();
-    }
-
-    interface TestView {}
 
     static class TestFragment extends WolmoFragment<TestView, TestPresenter> implements TestView {
         @Override
@@ -185,9 +165,11 @@ public class WolmoFragmentHandlerTest {
         }
 
         @Override
-        public void init() {}
+        public void init() {
+        }
     }
 
-    static class TestPresenter extends BasePresenter<TestView> {}
+    static class TestPresenter extends BasePresenter<TestView> {
+    }
 
 }

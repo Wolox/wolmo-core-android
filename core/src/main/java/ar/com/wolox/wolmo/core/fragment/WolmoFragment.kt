@@ -49,7 +49,7 @@ abstract class WolmoFragment<V : Any, P : BasePresenter<V>> : DaggerFragment(), 
      * If the presenter is null this will throw a NullPointerException.
      */
     val presenter: P
-        get() = fragmentHandler.requirePresenter()
+        get() = fragmentHandler.presenter
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
