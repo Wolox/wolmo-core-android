@@ -44,6 +44,13 @@ abstract class WolmoFragment<V : Any, P : BasePresenter<V>> : DaggerFragment(), 
     @Inject
     lateinit var permissionManager: PermissionManager
 
+    /**
+     * Tries to return a non null instance of the presenter [P] for this fragment.
+     * If the presenter is null this will throw a NullPointerException.
+     */
+    val presenter: P
+        get() = fragmentHandler.requirePresenter()
+
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,9 +96,9 @@ abstract class WolmoFragment<V : Any, P : BasePresenter<V>> : DaggerFragment(), 
     /** Delegates permission handling to Wolmo's [PermissionManager]. */
     @CallSuper
     override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<String>,
-            grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
     ) {
         permissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
@@ -139,10 +146,4 @@ abstract class WolmoFragment<V : Any, P : BasePresenter<V>> : DaggerFragment(), 
     override fun onBackPressed(): Boolean {
         return false
     }
-
-    /**
-     * Tries to return a non null instance of the presenter [P] for this fragment.
-     * If the presenter is null this will throw a NullPointerException.
-     */
-    fun requirePresenter() = fragmentHandler.requirePresenter()
 }
