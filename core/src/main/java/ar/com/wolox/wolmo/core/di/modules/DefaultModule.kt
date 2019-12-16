@@ -38,19 +38,16 @@ import dagger.Provides
  * You can add this module to your [Component] if you don't need to customize any dependency.
  */
 @Module
-object DefaultModule {
+class DefaultModule {
 
     @Provides
-    @JvmStatic
     fun providesPermissionManagerArray() = SparseArray<PermissionListener>()
 
     @Provides
-    @JvmStatic
     fun providesDefaultBasePresenter() = BasePresenter<Any>()
 
     /** Provides a default [WolmoFragmentHandler] with no presenter for fragments that don't need it. */
     @Provides
-    @JvmStatic
     fun providesDefaultWolmoFragmentHandler(toastFactory: ToastFactory, logger: Logger, basePresenter: BasePresenter<Any>): WolmoFragmentHandler<Any, BasePresenter<Any>> {
         return WolmoFragmentHandler(toastFactory, logger, basePresenter)
     }
