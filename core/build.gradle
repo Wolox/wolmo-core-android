@@ -69,8 +69,8 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
 
     // Android KTX
-    implementation "androidx.core:core-ktx:$android_ktx_version"
-    implementation "androidx.fragment:fragment-ktx:$android_ktx_version"
+    api "androidx.core:core-ktx:$android_ktx_version"
+    api "androidx.fragment:fragment-ktx:$android_ktx_version"
 
     // Test
     testImplementation "junit:junit:$junit_version"
