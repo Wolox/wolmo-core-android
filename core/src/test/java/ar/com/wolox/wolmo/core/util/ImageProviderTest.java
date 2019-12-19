@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
@@ -59,7 +60,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest = Config.NONE, shadows = {ImageProviderTest.WolmoShadowIntent.class, ImageProviderTest.WolmoShadowBitmap.class})
+@Config(manifest = Config.NONE,
+		shadows = {ImageProviderTest.WolmoShadowIntent.class, ImageProviderTest.WolmoShadowBitmap.class},
+		sdk = Build.VERSION_CODES.O_MR1)
 public class ImageProviderTest {
 
     private static ComponentName sComponentNameMock;

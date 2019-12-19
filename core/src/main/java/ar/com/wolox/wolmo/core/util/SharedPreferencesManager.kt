@@ -33,7 +33,7 @@ import javax.inject.Inject
 @ApplicationScope
 class SharedPreferencesManager @Inject constructor(private val sharedPreferences: SharedPreferences) {
 
-    fun store(key: String, value: String) = sharedPreferences.edit().putString(key, value).apply()
+    fun store(key: String, value: String?) = sharedPreferences.edit().putString(key, value).apply()
 
     fun store(key: String, value: Int) = sharedPreferences.edit().putInt(key, value).apply()
 
@@ -43,7 +43,7 @@ class SharedPreferencesManager @Inject constructor(private val sharedPreferences
 
     fun store(key: String, value: Long) = sharedPreferences.edit().putLong(key, value).apply()
 
-    operator fun get(key: String, defValue: String): String? = sharedPreferences.getString(key, defValue)
+    operator fun get(key: String, defValue: String?): String? = sharedPreferences.getString(key, defValue)
 
     operator fun get(key: String, defValue: Int): Int = sharedPreferences.getInt(key, defValue)
 

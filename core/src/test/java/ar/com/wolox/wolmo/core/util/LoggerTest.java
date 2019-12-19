@@ -20,14 +20,7 @@
  * THE SOFTWARE.
  */
 package ar.com.wolox.wolmo.core.util;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-
-import androidx.annotation.NonNull;
+import android.os.Build;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,10 +33,13 @@ import org.robolectric.shadows.ShadowLog;
 
 import java.io.PrintStream;
 
-import ar.com.wolox.wolmo.core.util.Logger;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest = Config.NONE)
+@Config(manifest = Config.NONE, sdk = Build.VERSION_CODES.O_MR1)
 public class LoggerTest {
 
     private Logger mLogger;

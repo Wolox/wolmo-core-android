@@ -54,6 +54,9 @@ abstract class WolmoDialogFragment<V : Any, P : BasePresenter<V>> : DaggerAppCom
     @Inject
     lateinit var fragmentHandler: WolmoFragmentHandler<V, P>
 
+    val presenter: P
+        get() = fragmentHandler.presenter
+
     override fun onCreateDialog(savedInstanceState: Bundle?) = super.onCreateDialog(savedInstanceState).apply {
         window?.run {
             requestFeature(Window.FEATURE_NO_TITLE)
@@ -191,12 +194,6 @@ abstract class WolmoDialogFragment<V : Any, P : BasePresenter<V>> : DaggerAppCom
     override fun onBackPressed(): Boolean {
         return false
     }
-
-    /**
-     * Tries to return a non null instance of the presenter [P] for this fragment.
-     * If the presenter is null this will throw a NullPointerException.
-     */
-    fun requirePresenter() = fragmentHandler.requirePresenter()
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                             grantResults: IntArray) {
