@@ -22,13 +22,16 @@
 package ar.com.wolox.wolmo.core.di.modules;
 
 import android.util.SparseArray;
+
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import ar.com.wolox.wolmo.core.di.modules.DefaultModule;
 import ar.com.wolox.wolmo.core.fragment.WolmoFragmentHandler;
 import ar.com.wolox.wolmo.core.permission.PermissionListener;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.Logger;
 import ar.com.wolox.wolmo.core.util.ToastFactory;
-import org.junit.Test;
-import org.mockito.Mockito;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
@@ -59,7 +62,7 @@ public class DefaultModuleTest {
         WolmoFragmentHandler wolmoFragmentHandler2 = DefaultModule.providesDefaultWolmoFragmentHandler(toastFactoryMock, loggerMock);
 
         assertThat(wolmoFragmentHandler).isNotNull().isNotSameAs(wolmoFragmentHandler2);
-        assertThat(wolmoFragmentHandler).extracting("mToastFactory").containsExactly(toastFactoryMock);
-        assertThat(wolmoFragmentHandler).extracting("mLogger").containsExactly(loggerMock);
+        assertThat(wolmoFragmentHandler).extracting("toastFactory").containsExactly(toastFactoryMock);
+        assertThat(wolmoFragmentHandler).extracting("logger").containsExactly(loggerMock);
     }
 }

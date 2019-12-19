@@ -32,7 +32,6 @@ import ar.com.wolox.wolmo.core.permission.PermissionManager;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -40,7 +39,7 @@ import static org.mockito.Mockito.verify;
 
 public class WolmoFragmentTest {
 
-    private WolmoFragmentHandler<BasePresenter> mWolmoFragmentHandlerMock;
+    private WolmoFragmentHandler<Object, BasePresenter<Object>> mWolmoFragmentHandlerMock;
     private PermissionManager mPermissionManagerMock;
     private WolmoFragment mWolmoFragmentSpy;
 
@@ -51,14 +50,14 @@ public class WolmoFragmentTest {
         mPermissionManagerMock = mock(PermissionManager.class);
 
         mWolmoFragmentSpy = spy(WolmoFragment.class);
-        mWolmoFragmentSpy.mFragmentHandler = mWolmoFragmentHandlerMock;
-        mWolmoFragmentSpy.mPermissionManager = mPermissionManagerMock;
+        mWolmoFragmentSpy.fragmentHandler = mWolmoFragmentHandlerMock;
+        mWolmoFragmentSpy.permissionManager = mPermissionManagerMock;
     }
 
     @Test
     public void onCreateShouldDelegateCall() {
         mWolmoFragmentSpy.onCreate(null);
-        verify(mWolmoFragmentHandlerMock, times(1)).onCreate(eq(mWolmoFragmentSpy), isNull());
+        verify(mWolmoFragmentHandlerMock, times(1)).onCreate(eq(mWolmoFragmentSpy));
     }
 
     @Test
@@ -67,7 +66,7 @@ public class WolmoFragmentTest {
         ViewGroup viewGroupMock = mock(ViewGroup.class);
 
         mWolmoFragmentSpy.onCreateView(inflaterMock, viewGroupMock, null);
-        verify(mWolmoFragmentHandlerMock, times(1)).onCreateView(eq(inflaterMock), eq(viewGroupMock), isNull());
+        verify(mWolmoFragmentHandlerMock, times(1)).onCreateView(eq(inflaterMock), eq(viewGroupMock));
     }
 
     @Test
@@ -75,7 +74,7 @@ public class WolmoFragmentTest {
         View viewMock = mock(View.class);
 
         mWolmoFragmentSpy.onViewCreated(viewMock, null);
-        verify(mWolmoFragmentHandlerMock, times(1)).onViewCreated(eq(viewMock), isNull());
+        verify(mWolmoFragmentHandlerMock, times(1)).onViewCreated(viewMock);
     }
 
     @Test
@@ -109,12 +108,6 @@ public class WolmoFragmentTest {
 
         mWolmoFragmentSpy.onRequestPermissionsResult(123, permissions, grantResults);
         verify(mPermissionManagerMock, times(1)).onRequestPermissionsResult(eq(123), eq(permissions), eq(grantResults));
-    }
-
-    @Test
-    public void getPresenterShouldDelegateCall() {
-        mWolmoFragmentSpy.getPresenter();
-        verify(mWolmoFragmentHandlerMock, times(1)).getPresenter();
     }
 
     @Test

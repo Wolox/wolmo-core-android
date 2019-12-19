@@ -36,6 +36,9 @@ import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
 import java.io.File;
 import java.io.IOException;
+
+import ar.com.wolox.wolmo.core.util.WolmoFileProvider;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
 

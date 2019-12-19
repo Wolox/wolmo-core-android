@@ -23,12 +23,18 @@ package ar.com.wolox.wolmo.core.adapter.viewpager;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import kotlin.Pair;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import kotlin.Pair;
+
 import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class SimpleFragmentPagerAdapterTest {
 

@@ -40,6 +40,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import ar.com.wolox.wolmo.core.activity.WolmoActivity;
+import ar.com.wolox.wolmo.core.util.NavigationUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.isNull;
