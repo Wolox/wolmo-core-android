@@ -4,8 +4,8 @@ apply plugin: 'jacoco-android'
 apply plugin: 'com.github.kt3k.coveralls'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.2'
     testOptions.unitTests.includeAndroidResources = true
 
     compileOptions {
@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
         consumerProguardFiles 'proguard-joda-time.pro', 'proguard-dagger.pro'
     }
 
@@ -37,7 +37,7 @@ coveralls {
 }
 
 buildscript {
-    ext.androidx_appcompat_version = '1.0.2'
+    ext.androidx_appcompat_version = '1.1.0'
     ext.dagger_version = '2.22.1'
     ext.powermock_version = '1.7.0'
     ext.junit_version = '4.12'
