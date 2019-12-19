@@ -21,24 +21,11 @@
  */
 package ar.com.wolox.wolmo.core.activity;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import android.os.Build;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import ar.com.wolox.wolmo.core.fragment.WolmoFragment;
-import ar.com.wolox.wolmo.core.permission.PermissionManager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,22 +37,32 @@ import org.robolectric.annotation.Config;
 import java.util.Arrays;
 import java.util.List;
 
+import ar.com.wolox.wolmo.core.fragment.WolmoFragment;
+import ar.com.wolox.wolmo.core.permission.PermissionManager;
+
+import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, sdk= Build.VERSION_CODES.LOLLIPOP)
 public class WolmoActivityTest {
 
     private WolmoActivity mWolmoActivity;
-    private WolmoActivityHandler mWolmoActivityHandlerMock;
     private PermissionManager mPermissionManagerMock;
 
     @Before
     public void beforeTest() {
         mPermissionManagerMock = mock(PermissionManager.class);
-        mWolmoActivityHandlerMock = mock(WolmoActivityHandler.class);
 
         mWolmoActivity = Robolectric.buildActivity(TestActivity.class).get();
-        mWolmoActivity.mActivityHandler = mWolmoActivityHandlerMock;
-        mWolmoActivity.mPermissionManager = mPermissionManagerMock;
+        mWolmoActivity.permissionManager = mPermissionManagerMock;
     }
 
     @Test

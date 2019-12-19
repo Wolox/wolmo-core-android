@@ -61,13 +61,13 @@ open class BasePresenter<V> @Inject constructor() {
     }
 
     /**  Listener called when a view is attached and it's safe to interact with it. */
-    fun onViewAttached() {}
+    open fun onViewAttached() {}
 
     /**
      * Method called when the view is destroyed and it's no longer safe for the presenter to
      * interact with it.
      */
-    fun onViewDetached() {}
+    open fun onViewDetached() {}
 
     /**
      * Runs the [method] if the [view] is attached to the presenter.

@@ -19,32 +19,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.activity
+package ar.com.wolox.wolmo.core.di.modules;
 
-import ar.com.wolox.wolmo.core.R
-import ar.com.wolox.wolmo.core.util.ToastFactory
-import javax.inject.Inject
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
-class WolmoActivityHandler @Inject constructor(private val toastFactory: ToastFactory) {
+import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope;
 
-    /**
-     * Handles the custom lifecycle of Wolmo's Activity. It provides a set of callbacks to structure
-     * the different aspects of the Activities initialization. It expects the [activity] to be managed.
-     */
-    fun onCreate(activity: WolmoActivity) {
-        with(activity) {
-            setContentView(layout())
-            if (handleArguments(intent.extras)) {
-                setUi()
-                init()
-                populate()
-                setListeners()
-            } else {
-                toastFactory.show(R.string.unknown_error)
-                finish()
-            }
-        }
-    }
+import dagger.Module;
+import dagger.Provides;
 
-    fun onDestroy() {}
+/**
+ * Provides objects that depends of the Application {@link Context}.
+ * The objects provided by this module uses {@link ApplicationScope}.
+ */
+@Module
+public class ContextModule {
+
+	@Provides
+	@ApplicationScope
+	Context provideContext(Application application) {
+		return application.getApplicationContext();
+	}
+
+	@Provides
+	@ApplicationScope
+	SharedPreferences provideSharedPreferences(String sharedPrefName, Context context) {
+		return context.getSharedPreferences(sharedPrefName, Activity.MODE_PRIVATE);
+	}
 }

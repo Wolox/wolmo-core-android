@@ -35,10 +35,10 @@ import javax.inject.Inject
  * This class is used to separate Wolox Fragments logic so that different subclasses of
  * Fragment can implement MVP without re-writing this.
  */
-class WolmoFragmentHandler<V : Any, P : BasePresenter<V>> @Inject @JvmOverloads constructor(
+class WolmoFragmentHandler<V : Any, P : BasePresenter<V>> @Inject constructor(
         private val toastFactory: ToastFactory,
         private val logger: Logger,
-        val presenter: P? = null
+        val presenter: P
 ) {
 
     private lateinit var fragment: Fragment
@@ -86,7 +86,7 @@ class WolmoFragmentHandler<V : Any, P : BasePresenter<V>> @Inject @JvmOverloads 
      */
     fun onViewCreated(view: View) {
         created = true
-        presenter?.attachView(wolmoView)
+        presenter.attachView(wolmoView)
         with(wolmoFragment) {
             setUi(view)
             init()
@@ -124,13 +124,7 @@ class WolmoFragmentHandler<V : Any, P : BasePresenter<V>> @Inject @JvmOverloads 
      * Called from [WolmoFragment.onDestroyView]. It notifies the [BasePresenter] that
      * the view is destroyed, calling [BasePresenter.onViewDetached]
      */
-    fun onDestroyView() = requirePresenter().detachView()
-
-    /**
-     * Tries to return a non null instance of the presenter [P] for this fragment.
-     * If the presenter is null this will throw a NullPointerException.
-     */
-    fun requirePresenter() = presenter!!
+    fun onDestroyView() = presenter.detachView()
 
     private fun onVisibilityChanged() {
         if (!created) return

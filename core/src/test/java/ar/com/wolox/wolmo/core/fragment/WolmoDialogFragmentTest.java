@@ -55,12 +55,6 @@ public class WolmoDialogFragmentTest {
     }
 
     @Test
-    public void onCreateShouldDelegateCall() {
-        mWolmoDialogFragmentSpy.onCreate(null);
-        verify(mWolmoFragmentHandlerMock, times(1)).onCreate(eq(mWolmoDialogFragmentSpy));
-    }
-
-    @Test
     public void onCreateViewShouldDelegateCall() {
         LayoutInflater inflaterMock = mock(LayoutInflater.class);
         ViewGroup viewGroupMock = mock(ViewGroup.class);
@@ -112,8 +106,8 @@ public class WolmoDialogFragmentTest {
 
     @Test
     public void requirePresenterShouldDelegateCall() {
-        mWolmoDialogFragmentSpy.requirePresenter();
-        verify(mWolmoFragmentHandlerMock, times(1)).requirePresenter();
+        mWolmoDialogFragmentSpy.getPresenter();
+        verify(mWolmoFragmentHandlerMock, times(1)).getPresenter();
     }
 
     public static class TestDialog extends WolmoDialogFragment {

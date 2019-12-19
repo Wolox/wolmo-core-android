@@ -25,17 +25,18 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+
+import java.io.File;
+
+import javax.inject.Inject;
 
 import ar.com.wolox.wolmo.core.permission.PermissionListener;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.ImageProvider;
 import ar.com.wolox.wolmo.core.util.WolmoFileProvider;
-
-import java.io.File;
-
-import javax.inject.Inject;
 
 /**
  * Class to help to load images from the gallery or from the camera.
@@ -106,32 +107,32 @@ public abstract class GetImageFragment<V, T extends BasePresenter<V>> extends Wo
 
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case INTENT_CODE_IMAGE_GALLERY:
-                    if (data != null && data.getData() != null) {
-                        String pathUri = mWolmoFileProvider.getRealPathFromUri(data.getData());
-                        mImageCallback.success(new File(pathUri));
-                    } else {
-                        notifyError(Error.ERROR_DATA);
-                    }
-                    break;
+	            case INTENT_CODE_IMAGE_GALLERY:
+	                if (data != null && data.getData() != null) {
+	                    String pathUri = mWolmoFileProvider.getRealPathFromUri(data.getData());
+	                    mImageCallback.success(new File(pathUri));
+	                } else {
+	                    notifyError(Error.ERROR_DATA);
+	                }
+	                break;
 
-                case INTENT_CODE_IMAGE_CAMERA:
-                    mImageProvider.addPictureToDeviceGallery(Uri.fromFile(mPictureTakenFile));
-                    mImageCallback.success(mPictureTakenFile);
-                    break;
+	            case INTENT_CODE_IMAGE_CAMERA:
+	                mImageProvider.addPictureToDeviceGallery(Uri.fromFile(mPictureTakenFile));
+	                mImageCallback.success(mPictureTakenFile);
+	                break;
 
-                default:
-                    notifyError(Error.ERROR_UNKNOWN);
+	            default:
+	                notifyError(Error.ERROR_UNKNOWN);
             }
         } else if (resultCode == Activity.RESULT_CANCELED) {
             switch (requestCode) {
-                case INTENT_CODE_IMAGE_GALLERY:
-                case INTENT_CODE_IMAGE_CAMERA:
-                    notifyError(Error.USER_CANCELED);
-                    break;
+	            case INTENT_CODE_IMAGE_GALLERY:
+	            case INTENT_CODE_IMAGE_CAMERA:
+	                notifyError(Error.USER_CANCELED);
+	                break;
 
-                default:
-                    notifyError(Error.ERROR_UNKNOWN);
+	            default:
+	                notifyError(Error.ERROR_UNKNOWN);
             }
         }
 
