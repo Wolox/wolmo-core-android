@@ -25,18 +25,17 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-
-import java.io.File;
-
-import javax.inject.Inject;
 
 import ar.com.wolox.wolmo.core.permission.PermissionListener;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
 import ar.com.wolox.wolmo.core.util.ImageProvider;
 import ar.com.wolox.wolmo.core.util.WolmoFileProvider;
+
+import java.io.File;
+
+import javax.inject.Inject;
 
 /**
  * Class to help to load images from the gallery or from the camera.
