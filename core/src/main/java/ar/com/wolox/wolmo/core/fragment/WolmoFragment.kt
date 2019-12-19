@@ -36,10 +36,10 @@ import javax.inject.Inject
  * by [layout]. The presenter is created on [onCreate] if [handleArguments] returns true.
  * This class defines default implementations for most of the methods on [IWolmoFragment].
  */
-abstract class WolmoFragment<V : Any, P : BasePresenter<V>> : DaggerFragment(), IWolmoFragment {
+abstract class WolmoFragment<P : BasePresenter<*>> : DaggerFragment(), IWolmoFragment {
 
     @Inject
-    lateinit var fragmentHandler: WolmoFragmentHandler<V, P>
+    lateinit var fragmentHandler: WolmoFragmentHandler<P>
 
     @Inject
     lateinit var permissionManager: PermissionManager

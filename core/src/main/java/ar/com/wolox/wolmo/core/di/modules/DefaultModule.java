@@ -57,7 +57,7 @@ public class DefaultModule {
 	@Provides
 	static WolmoFragmentHandler providesDefaultWolmoFragmentHandler(ToastFactory toastFactory,
 	                                                                Logger logger,
-	                                                                BasePresenter<Object> basePresenter) {
+	                                                                BasePresenter<?> basePresenter) {
 		return new WolmoFragmentHandler<>(toastFactory, logger, basePresenter);
 	}
 }

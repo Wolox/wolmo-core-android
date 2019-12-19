@@ -67,8 +67,8 @@ public class DefaultModuleTest {
                 defaultModule.providesDefaultWolmoFragmentHandler(toastFactoryMock, loggerMock, basePresenter);
 
         assertThat(wolmoFragmentHandler).isNotNull().isNotSameAs(wolmoFragmentHandler2);
-        assertThat(wolmoFragmentHandler).extracting("toastFactory").containsExactly(toastFactoryMock);
-        assertThat(wolmoFragmentHandler).extracting("logger").containsExactly(loggerMock);
+        assertThat(wolmoFragmentHandler).extracting("mToastFactory").containsExactly(toastFactoryMock);
+        assertThat(wolmoFragmentHandler).extracting("mLogger").containsExactly(loggerMock);
         assertThat(wolmoFragmentHandler.getPresenter()).isSameAs(basePresenter);
     }
 }

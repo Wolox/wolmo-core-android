@@ -36,10 +36,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class WolmoDialogFragmentTest {
 
-    private WolmoFragmentHandler<Object, BasePresenter<Object>> mWolmoFragmentHandlerMock;
+    private WolmoFragmentHandler<BasePresenter<?>> mWolmoFragmentHandlerMock;
     private PermissionManager mPermissionManagerMock;
     private WolmoDialogFragment mWolmoDialogFragmentSpy;
 
@@ -106,6 +107,8 @@ public class WolmoDialogFragmentTest {
 
     @Test
     public void requirePresenterShouldDelegateCall() {
+        when(mWolmoFragmentHandlerMock.getPresenter()).thenReturn(new BasePresenter<>());
+
         mWolmoDialogFragmentSpy.getPresenter();
         verify(mWolmoFragmentHandlerMock, times(1)).getPresenter();
     }

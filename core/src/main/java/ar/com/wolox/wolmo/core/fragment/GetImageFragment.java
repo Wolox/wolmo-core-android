@@ -43,7 +43,7 @@ import ar.com.wolox.wolmo.core.util.WolmoFileProvider;
  *
  * @param <T> Presenter for this fragment
  */
-public abstract class GetImageFragment<V, T extends BasePresenter<V>> extends WolmoFragment<V, T> {
+public abstract class GetImageFragment<T extends BasePresenter<?>> extends WolmoFragment<T> {
 
     private static final String[] CAMERA_PERMISSIONS = new String[] {
             Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE

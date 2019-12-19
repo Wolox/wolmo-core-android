@@ -53,7 +53,7 @@ public class WolmoFragmentHandlerTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
-    private WolmoFragmentHandler<TestView, TestPresenter> mWolmoFragmentHandler;
+    private WolmoFragmentHandler<TestPresenter> mWolmoFragmentHandler;
     private WolmoFragment mWolmoFragmentMock;
     private TestPresenter mTestPresenter;
     private ToastFactory mToastFactoryMock;
@@ -90,9 +90,8 @@ public class WolmoFragmentHandlerTest {
         verify(mLoggerMock, times(1)).setTag(eq(WolmoFragmentHandler.class.getSimpleName()));
         verify(activity, times(1)).finish();
         verify(mToastFactoryMock, times(1)).show(R.string.unknown_error);
-        Throwable nullThrowable = null;
         verify(mLoggerMock, times(1)).e(eq(mWolmoFragmentMock.getClass().getSimpleName() +
-                " - The fragment's handleArguments() returned false."), eq(nullThrowable));
+                " - The fragment's handleArguments() returned false."));
     }
 
     @Test
@@ -158,7 +157,7 @@ public class WolmoFragmentHandlerTest {
     interface TestView {
     }
 
-    static class TestFragment extends WolmoFragment<TestView, TestPresenter> implements TestView {
+    static class TestFragment extends WolmoFragment<TestPresenter> implements TestView {
         @Override
         public int layout() {
             return 0;
