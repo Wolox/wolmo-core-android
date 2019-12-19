@@ -23,6 +23,7 @@ package ar.com.wolox.wolmo.core.util
 
 import android.app.Activity
 import android.content.Context
+import android.os.Build
 import android.os.IBinder
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -44,7 +45,7 @@ import org.robolectric.shadow.api.Shadow
 import org.robolectric.shadows.ShadowActivity
 
 @RunWith(RobolectricTestRunner::class)
-@Config(manifest = Config.NONE)
+@Config(manifest = Config.NONE, sdk = [Build.VERSION_CODES.O_MR1])
 class KeyboardManagerTest {
 
     private lateinit var context: Context
