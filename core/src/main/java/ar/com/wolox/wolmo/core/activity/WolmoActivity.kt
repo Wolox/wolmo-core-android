@@ -73,7 +73,9 @@ abstract class WolmoActivity : DaggerAppCompatActivity() {
     protected abstract fun layout(): Int
 
     /**
-     * Reads [arguments] and returns true if arguments were read successfully, false otherwise.
+     * Reads [arguments] sent as a Bundle extras and returning true if this fragment contains
+     * the required values, false or null otherwise. Returning false or null will end the execution.
+     *
      * Default implementation returns true.
      */
     protected open fun handleArguments(arguments: Bundle?): Boolean? = true
@@ -161,4 +163,7 @@ abstract class WolmoActivity : DaggerAppCompatActivity() {
         }
         super.onBackPressed()
     }
+
+    /** Returns [key] argument from intent extras as [T]. */
+    protected inline fun <reified T> requireArgument(key: String) = intent.extras?.get(key) as T
 }

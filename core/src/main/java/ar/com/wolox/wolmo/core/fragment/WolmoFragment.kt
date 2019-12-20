@@ -146,4 +146,7 @@ abstract class WolmoFragment<P : BasePresenter<*>> : DaggerFragment(), IWolmoFra
     override fun onBackPressed(): Boolean {
         return false
     }
+
+    /** Returns [key] argument from intent extras as [T]. */
+    protected inline fun <reified T> requireArgument(key: String) = arguments?.get(key) as T
 }
