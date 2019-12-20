@@ -84,7 +84,8 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
 	void onCreate(@NonNull IWolmoFragment wolmoFragment) {
 		mLogger.setTag(WolmoFragmentHandler.class.getSimpleName());
 		setFragment(wolmoFragment);
-		if (!mWolmoFragment.handleArguments(mFragment.getArguments())) {
+		final @Nullable Boolean handleArgs = mWolmoFragment.handleArguments(mFragment.getArguments());
+		if (handleArgs == null || !handleArgs) {
 			mLogger.e(mFragment.getClass().getSimpleName() +
 					" - The fragment's handleArguments() returned false.");
 			mToastFactory.show(R.string.unknown_error);
