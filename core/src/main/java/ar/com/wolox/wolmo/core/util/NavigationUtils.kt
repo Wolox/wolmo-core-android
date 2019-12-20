@@ -52,7 +52,7 @@ fun Context.openBrowser(url: String?) {
     val finalUrl = when {
         url.isNullOrEmpty() -> BLANK_PAGE
         url.startsWith(BASE_HTTP) || url.startsWith(BASE_HTTPS) -> url
-        else -> "${BASE_HTTP}url"
+        else -> "${BASE_HTTP}$url"
     }
     val browserIntent = setNewTaskIfNecessary(Intent(Intent.ACTION_VIEW, finalUrl.toUri()))
     startActivity(browserIntent)
