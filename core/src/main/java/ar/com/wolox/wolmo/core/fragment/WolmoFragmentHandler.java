@@ -174,8 +174,6 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
 	 * the view is destroyed, calling {@link BasePresenter#onViewDetached()}
 	 */
 	void onDestroyView() {
-		if (getPresenter() != null) {
-			getPresenter().detachView();
-		}
+		getPresenter().detachView();
 	}
 }

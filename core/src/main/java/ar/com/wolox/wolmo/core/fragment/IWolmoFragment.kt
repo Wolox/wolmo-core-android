@@ -42,11 +42,11 @@ interface IWolmoFragment {
 
     /**
      * Reads [arguments] sent as a Bundle extras and returning true if this fragment contains
-     * the required values, false otherwise. Returning false will end the execution.
+     * the required values, false or null otherwise. Returning false or null will end the execution.
      *
      * Default implementation returns true.
      */
-    fun handleArguments(arguments: Bundle?): Boolean
+    fun handleArguments(arguments: Bundle?): Boolean?
 
     /** Initializes any variables that the fragment needs. */
     fun init()
