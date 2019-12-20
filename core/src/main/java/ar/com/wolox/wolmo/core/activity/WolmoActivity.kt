@@ -52,7 +52,7 @@ abstract class WolmoActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layout())
-        if (handleArguments(intent.extras)) {
+        if (handleArguments(intent.extras) == true) {
             init()
             populate()
             setListeners()
@@ -76,7 +76,7 @@ abstract class WolmoActivity : DaggerAppCompatActivity() {
      * Reads [arguments] and returns true if arguments were read successfully, false otherwise.
      * Default implementation returns true.
      */
-    protected open fun handleArguments(arguments: Bundle?) = true
+    protected open fun handleArguments(arguments: Bundle?): Boolean? = true
 
     /**
      * Associates variables to views inflated from the XML resource
