@@ -31,7 +31,7 @@ import kotlin.coroutines.CoroutineContext
  * Coroutines base presenter that provides the view to the specific presenters
  * and a scope to start coroutines that's attached to the view lifecycle.
  */
-open class CoroutinesBasePresenter<V>(
+open class CoroutineBasePresenter<V>(
     context: CoroutineContext = Dispatchers.Main
 ) : BasePresenter<V>(), CoroutineScope by CoroutineScope(context) {
 

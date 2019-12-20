@@ -22,7 +22,6 @@
 package ar.com.wolox.wolmo.core.presenter
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -30,7 +29,6 @@ import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock
 
@@ -38,13 +36,13 @@ class CoroutinesBasePresenterTest {
 
     private interface ExampleView
 
-    private lateinit var basePresenter: CoroutinesBasePresenter<ExampleView>
+    private lateinit var basePresenter: CoroutineBasePresenter<ExampleView>
     private lateinit var mockedView: ExampleView
 
     @Before
     fun beforeTest() {
         mockedView = mock(ExampleView::class.java)
-        basePresenter = CoroutinesBasePresenter<ExampleView>(Dispatchers.Default).apply {
+        basePresenter = CoroutineBasePresenter<ExampleView>(Dispatchers.Default).apply {
             attachView(mockedView)
         }
     }

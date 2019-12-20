@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- Static Spacing -->
+	<dimen name="static_spacing_tiniest">1dp</dimen>
+	<dimen name="static_spacing_tiny">2dp</dimen>
+	<dimen name="static_spacing_small">4dp</dimen>
+	<dimen name="static_spacing_medium">8dp</dimen>
+	<dimen name="static_spacing_medium_extra">16dp</dimen>
+	<dimen name="static_spacing_large">20dp</dimen>
+	<dimen name="static_spacing_large_extra">28dp</dimen>
+	<dimen name="static_spacing_big">36dp</dimen>
+	<dimen name="static_spacing_huge">48dp</dimen>
+	<dimen name="static_spacing_huge_extra">60dp</dimen>
+	<dimen name="static_spacing_largest">72dp</dimen>
+
+	<!-- Spacing -->
+	<dimen name="spacing_none">0dp</dimen>
+	<dimen name="spacing_tiniest">1dp</dimen>
+	<dimen name="spacing_tiny">1dp</dimen>
+	<dimen name="spacing_small">2dp</dimen>
+	<dimen name="spacing_medium">4dp</dimen>
+	<dimen name="spacing_medium_more">8dp</dimen>
+	<dimen name="spacing_medium_middle">10dp</dimen>
+	<dimen name="spacing_medium_extra">12dp</dimen>
+	<dimen name="spacing_large">16dp</dimen>
+	<dimen name="spacing_large_extra">22dp</dimen>
+	<dimen name="spacing_big">28dp</dimen>
+	<dimen name="spacing_big_extra">32dp</dimen>
+	<dimen name="spacing_huge">38dp</dimen>
+	<dimen name="spacing_huge_extra">46dp</dimen>
+	<dimen name="spacing_largest">54dp</dimen>
+	<dimen name="spacing_largest_extra">64dp</dimen>
+
+	<!-- Text sizes -->
+	<dimen name="font_tiny">6sp</dimen>
+	<dimen name="font_small">8sp</dimen>
+	<dimen name="font_small_more">10sp</dimen>
+	<dimen name="font_medium">12sp</dimen>
+	<dimen name="font_medium_middle">13sp</dimen>
+	<dimen name="font_medium_more">14sp</dimen>
+	<dimen name="font_medium_extra">16sp</dimen>
+	<dimen name="font_large">18sp</dimen>
+	<dimen name="font_large_extra">20sp</dimen>
+	<dimen name="font_big">22sp</dimen>
+	<dimen name="font_huge">24sp</dimen>
+	<dimen name="font_pin">36sp</dimen>
+
+	<!-- Upload image view -->
+	<dimen name="fragment_profile_picture_background_margin_sides">98dp</dimen>
+	<dimen name="fragment_profile_picture_photo_margin">12dp</dimen>
+	<dimen name="fragment_profile_picture_border">20dp</dimen>
+	<dimen name="fragment_profile_picture_close_size">32dp</dimen>
+	<dimen name="fragment_upload_image_popup_title_height">56dp</dimen>
+	<dimen name="fragment_upload_image_popup_item_height">48dp</dimen>
+	<dimen name="fragment_upload_image_popup_icon_padding">32dp</dimen>
+	<dimen name="huge_elevation">100dp</dimen>
+	<dimen name="settings_first_button_margin_top">25dp</dimen>
+	<dimen name="settings_resets_all_data_margin_end">50dp</dimen>
+</resources>
