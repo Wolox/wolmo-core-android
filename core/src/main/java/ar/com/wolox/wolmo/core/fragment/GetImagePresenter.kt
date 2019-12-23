@@ -1,54 +1,97 @@
 package ar.com.wolox.wolmo.core.fragment
 
+import android.net.Uri
+import androidx.core.net.toFile
 import ar.com.wolox.wolmo.core.presenter.CoroutineBasePresenter
+import ar.com.wolox.wolmo.core.util.WolmoFileProvider
+import ar.com.wolox.wolmo.core.extensions.unit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
-
-abstract class UploadImagePresenter<T : UploadImageView> : CoroutineBasePresenter<T>() {
+/**
+ * A base presenter to implement when using [GetImageView]. This expects:
+ * - The [imageName] with which images will be saved like "[imageName]_[System.nanoTime].png"
+ * - The [cameraSavingPlace] where the camera pictures will be saved. Cache is default.
+ * - A [galleryDuplicateOnCache] boolean indicating weather the image obtained from the gallery
+ * is duplicated on cache or not. Default is true.
+ */
+abstract class GetImagePresenter<T : GetImageView> protected constructor(
+    protected val imageName: String,
+    protected val cameraSavingPlace: SavingPicturePlace = SavingPicturePlace.CACHE,
+    protected val galleryDuplicateOnCache: Boolean = true
+) : CoroutineBasePresenter<T>() {
 
     @Inject
-    lateinit var filesHelper: FilesHelper
+    lateinit var fileProvider: WolmoFileProvider
 
-    private suspend fun copyImageToCache(file: File) = filesHelper.copyImageToCache(file)?.also {
-        onPictureAvailable(it)
-    }
+    private val newCameraPictureFilename: String?
+        get() = when (cameraSavingPlace) {
+            SavingPicturePlace.CACHE -> fileProvider.getNewCachePictureFilename(imageName)
+            SavingPicturePlace.GALLERY -> fileProvider.getNewImageName(imageName)
+        }
 
-    fun onCameraRequested() = view.openCamera()
+    fun onCameraRequested() = view?.askCameraPermissions {
+        newCameraPictureFilename?.let { view?.openCamera(it) } ?: view?.showUnexpectedError()
+    }.unit
 
-    fun onGalleryRequested() = view.openGallery()
+    fun onGalleryRequested() = view?.askGalleryPermissions {
+        view?.openGallery()
+    }.unit
 
-    fun onCameraSuccess(file: File) {
-        launch(Dispatchers.Main) {
-            copyImageToCache(file)?.let {
-                file.delete()
-                view.closeDialog()
-                view.notifyImageDeltedInGallery(file)
-            } ?: run {
-                view.showCameraError()
-            }
+    fun onGalleryResponse(data: Uri?) {
+        data?.let {
+            val file =
+                if (galleryDuplicateOnCache) {
+                    val filename = fileProvider.getNewCachePictureFilename(imageName)
+                    it.toFile().copyTo(File(filename))
+                } else {
+                    it.toFile()
+                }
+            onGallerySuccess(file)
+        } ?: run {
+            onGalleryError()
         }
     }
 
-    fun onCameraError() = view.showCameraError()
-
-    fun onGallerySuccess(file: File) {
-        launch(Dispatchers.Main) {
-            copyImageToCache(file)?.let {
-                view.closeDialog()
-            } ?: run {
-                view.showGalleryError()
-            }
-        }
+    fun onCameraResponse(data: Uri?) {
+        data?.let { onCameraSuccess(it.toFile()) } ?: onCameraError()
     }
 
-    fun onGalleryError() = view.showGalleryError()
+    /**
+     * Invoked on camera error.
+     *
+     * Default implementation invokes [GetImageView.showCameraError]. Override if needed.
+     */
+    open fun onCameraError() = view?.showCameraError()
 
-    fun onUserCancelled() {}
+    /**
+     * Invoked on gallery error.
+     *
+     * Default implementation invokes [GetImageView.showGalleryError]. Override if needed.
+     */
+    open fun onGalleryError() = view?.showGalleryError()
 
-    fun onPermissionDenied() = view.showPermissionsError()
+    /**
+     * Invoked on user cancellation.
+     *
+     * Default implementation does nothing. Override if needed.
+     */
+    open fun onUserCancelled() {}
 
-    abstract fun onPictureAvailable(pictureUrl: String)
+    /**
+     * Invoked on permissions denied.
+     *
+     * Default implementation does nothing. Override if needed.
+     */
+    open fun onPermissionDenied() {}
+
+    /** Invoked on gallery success with the obtained [file]. */
+    abstract fun onGallerySuccess(file: File)
+
+    /** Invoked on camera success with the obtained [file]. */
+    abstract fun onCameraSuccess(file: File)
+
+    protected enum class SavingPicturePlace { GALLERY, CACHE }
 }

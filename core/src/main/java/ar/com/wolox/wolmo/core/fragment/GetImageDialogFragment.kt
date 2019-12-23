@@ -14,8 +14,14 @@ class GetImageDialogFragment : BottomSheetDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_upload_image, container, false).apply {
-            vUploadImageCamera.setOnClickListener { callback.onCameraRequested() }
-            vUploadImageGallery.setOnClickListener { callback.onGalleryRequested() }
+            vUploadImageCamera.setOnClickListener {
+                dismiss()
+                callback.onCameraRequested()
+            }
+            vUploadImageGallery.setOnClickListener {
+                dismiss()
+                callback.onGalleryRequested()
+            }
         }
     }
 

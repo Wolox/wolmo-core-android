@@ -88,8 +88,8 @@ public class GetImageFragmentTest {
         mGetImageFragmentSpy = spy(new TestImageFragment());
         mGetImageFragmentSpy.fragmentHandler = mWolmoFragmentHandlerMock;
         mGetImageFragmentSpy.permissionManager = mPermissionManagerMock;
-        mGetImageFragmentSpy.mImageProvider = mImageProviderMock;
-        mGetImageFragmentSpy.mWolmoFileProvider = mWolmoFileProviderMock;
+        mGetImageFragmentSpy.imageProvider = mImageProviderMock;
+        mGetImageFragmentSpy.fileProvider = mWolmoFileProviderMock;
     }
 
 
