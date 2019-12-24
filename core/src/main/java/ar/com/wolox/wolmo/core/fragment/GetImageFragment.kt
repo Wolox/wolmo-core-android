@@ -39,7 +39,32 @@ import javax.inject.Inject
 </T> */
 abstract class GetImageFragment<T : GetImagePresenter<*>> : WolmoFragment<T>(), GetImageView {
 
-    private val addPhotoBottomDialogFragment = GetImageDialogFragment.newInstance()
+    /**
+     * Text to show as the title of the dialog.
+     * If it's null, the title will be empty.
+     *
+     * Default implementation is null. Override if needed.
+     */
+    open val dialogTitle: String? = null
+
+    /**
+     * Text to show on the camera button of the dialog.
+     * If it's null, the button text will be "Take a picture".
+     *
+     * Default implementation is null. Override if needed.
+     */
+    open val dialogCameraText: String? = null
+
+    /**
+     * Text to show on the gallery button of the dialog.
+     * If it's null, the button text will be "Upload from gallery".
+     *
+     * Default implementation is null. Override if needed.
+     */
+    open val dialogGalleryText: String? = null
+
+    private val addPhotoBottomDialogFragment: GetImageDialogFragment
+        get() = GetImageDialogFragment.newInstance(dialogTitle, dialogCameraText, dialogGalleryText)
 
     @Inject
     lateinit var imageProvider: ImageProvider

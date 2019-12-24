@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:orientation="vertical"
@@ -12,9 +13,9 @@
 		android:layout_marginStart="@dimen/static_spacing_medium_extra"
 		android:layout_marginEnd="@dimen/static_spacing_medium_extra"
 		android:gravity="center"
-		android:text="@string/upload_image_popup_title"
 		android:textColor="@color/grey"
-		android:textSize="@dimen/font_medium_extra" />
+		android:textSize="@dimen/font_medium_extra"
+		tools:text="Upload an image" />
 
 	<TextView
 		android:id="@+id/vUploadImageCamera"
