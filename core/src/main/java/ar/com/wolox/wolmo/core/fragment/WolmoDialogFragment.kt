@@ -45,14 +45,14 @@ import javax.inject.Inject
  * inflating the view returned by [layout].
  * The presenter is created on [onCreate] if [handleArguments] returns true.
  */
-abstract class WolmoDialogFragment<V : Any, P : BasePresenter<V>> : DaggerAppCompatDialogFragment(),
+abstract class WolmoDialogFragment<P : BasePresenter<*>> : DaggerAppCompatDialogFragment(),
         IWolmoFragment {
 
     @Inject
     lateinit var permissionManager: PermissionManager
 
     @Inject
-    lateinit var fragmentHandler: WolmoFragmentHandler<V, P>
+    lateinit var fragmentHandler: WolmoFragmentHandler<P>
 
     val presenter: P
         get() = fragmentHandler.presenter

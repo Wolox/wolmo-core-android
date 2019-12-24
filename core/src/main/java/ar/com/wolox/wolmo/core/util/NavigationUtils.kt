@@ -49,10 +49,16 @@ private fun Context.setNewTaskIfNecessary(intent: Intent): Intent {
  * the browser will be opened with a blank page.
  */
 fun Context.openBrowser(url: String?) {
-    val finalUrl = if (url.isNullOrEmpty()) BLANK_PAGE else url
+    val finalUrl = when {
+        url.isNullOrEmpty() -> BLANK_PAGE
+        url.startsWith(BASE_HTTP) || url.startsWith(BASE_HTTPS) -> url
+        else -> "${BASE_HTTP}$url"
+    }
     val browserIntent = setNewTaskIfNecessary(Intent(Intent.ACTION_VIEW, finalUrl.toUri()))
     startActivity(browserIntent)
 }
+private const val BASE_HTTP = "http://"
+private const val BASE_HTTPS = "https://"
 
 /**
  * Sends an intent to start an [Activity] for the provided [clazz] from a [context]

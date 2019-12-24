@@ -36,10 +36,10 @@ import javax.inject.Inject
  * by [layout]. The presenter is created on [onCreate] if [handleArguments] returns true.
  * This class defines default implementations for most of the methods on [IWolmoFragment].
  */
-abstract class WolmoFragment<V : Any, P : BasePresenter<V>> : DaggerFragment(), IWolmoFragment {
+abstract class WolmoFragment<P : BasePresenter<*>> : DaggerFragment(), IWolmoFragment {
 
     @Inject
-    lateinit var fragmentHandler: WolmoFragmentHandler<V, P>
+    lateinit var fragmentHandler: WolmoFragmentHandler<P>
 
     @Inject
     lateinit var permissionManager: PermissionManager
@@ -104,12 +104,12 @@ abstract class WolmoFragment<V : Any, P : BasePresenter<V>> : DaggerFragment(), 
     }
 
     /**
-     * Reads [arguments] sent as a Bundle extras and returns true if arguments
-     * were read successfully, false otherwise.
+     * Reads [arguments] sent as a Bundle extras and returning true if this fragment contains
+     * the required values, false or null otherwise. Returning false or null will end the execution.
      *
      * Default implementation returns true.
      */
-    override fun handleArguments(arguments: Bundle?) = true
+    override fun handleArguments(arguments: Bundle?): Boolean? = true
 
     /**
      * Associates variables to views inflated from the XML resource
@@ -146,4 +146,7 @@ abstract class WolmoFragment<V : Any, P : BasePresenter<V>> : DaggerFragment(), 
     override fun onBackPressed(): Boolean {
         return false
     }
+
+    /** Returns [key] argument from intent extras as [T]. */
+    protected inline fun <reified T> requireArgument(key: String) = arguments?.get(key) as T
 }

@@ -36,10 +36,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class WolmoFragmentTest {
 
-    private WolmoFragmentHandler<Object, BasePresenter<Object>> mWolmoFragmentHandlerMock;
+    private WolmoFragmentHandler<BasePresenter<?>> mWolmoFragmentHandlerMock;
     private PermissionManager mPermissionManagerMock;
     private WolmoFragment mWolmoFragmentSpy;
 
@@ -105,7 +106,8 @@ public class WolmoFragmentTest {
     }
 
     @Test
-    public void requirePresenterShouldDelegateCall() {
+    public void getPresenterShouldDelegateCall() {
+        when(mWolmoFragmentHandlerMock.getPresenter()).thenReturn(new BasePresenter<>());
         mWolmoFragmentSpy.getPresenter();
         verify(mWolmoFragmentHandlerMock, times(1)).getPresenter();
     }
