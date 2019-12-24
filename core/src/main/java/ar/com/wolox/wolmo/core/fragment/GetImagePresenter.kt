@@ -16,6 +16,8 @@ import javax.inject.Inject
  * - The [cameraSavingPlace] where the camera pictures will be saved. Cache is default.
  * - A [galleryDuplicateOnCache] boolean indicating weather the image obtained from the gallery
  * is duplicated on cache or not. Default is true.
+ *
+ * This is a coroutinee base presenter just because.
  */
 abstract class GetImagePresenter<T : GetImageView> protected constructor(
     protected val imageName: String,
