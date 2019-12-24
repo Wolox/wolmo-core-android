@@ -34,9 +34,7 @@ import javax.inject.Inject
 
 /**
  * Class to help to load images from the gallery or from the camera.
- *
- * @param <T> Presenter for this fragment
-</T> */
+ */
 abstract class GetImageFragment<T : GetImagePresenter<*>> : WolmoFragment<T>(), GetImageView {
 
     /**
