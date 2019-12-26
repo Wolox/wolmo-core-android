@@ -3,8 +3,4 @@
     <!-- General -->
     <string name="unknown_error">Whoops! Something went wrong</string>
 
-    <!-- Upload image -->
-    <string name="upload_image_take_picture">Take a picture</string>
-    <string name="upload_image_open_gallery">Upload from gallery</string>
-
 </resources>
