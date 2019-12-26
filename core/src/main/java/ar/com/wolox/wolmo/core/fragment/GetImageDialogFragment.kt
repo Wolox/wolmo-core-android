@@ -1,6 +1,7 @@
 package ar.com.wolox.wolmo.core.fragment
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import ar.com.wolox.wolmo.core.extensions.setTextOrGone
 import ar.com.wolox.wolmo.core.util.GetImageHelper
 import ar.com.wolox.wolmo.core.util.WolmoFileProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_upload_image.view.*
 import javax.inject.Inject
 
@@ -30,8 +32,17 @@ class GetImageDialogFragment : BottomSheetDialogFragment() {
     private val newCameraPictureFilename: String?
         get() = when (configuration.cameraSavingPlace) {
             SavingPicturePlace.CACHE -> fileProvider.getNewCachePictureFilename(configuration.imageName)
-            SavingPicturePlace.GALLERY -> fileProvider.getNewImageName(configuration.imageName)
+            SavingPicturePlace.GALLERY -> fileProvider.getNewPictureName(configuration.imageName)
         }
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        getImageHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_upload_image, container, false).apply {

@@ -62,10 +62,12 @@ class WolmoFileProvider @Inject constructor(private val context: Context) {
             val contentValues = ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, FILENAME_FORMAT.format(name, System.nanoTime()))
                 put(MediaStore.MediaColumns.MIME_TYPE, mime)
-                put(MediaStore.MediaColumns.RELATIVE_PATH, folder)
+                put(MediaStore.MediaColumns.RELATIVE_PATH, "$folder/$appName")
             }
 
-            resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)?.toFile()?.absolutePath
+            resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)?.let {
+                getRealPathFromUri(it)
+            }
         } else {
             val file = File(Environment.getExternalStoragePublicDirectory(folder), appName)
             if (!file.exists()) {
@@ -85,9 +87,9 @@ class WolmoFileProvider @Inject constructor(private val context: Context) {
         return cacheFolder + FILE_FORMAT.format(name, System.nanoTime(), MP4_EXTENSION)
     }
 
-    /** Returns a new picture filename inside the Pictures folder. */
-    fun getNewImageName(name: String, imageType: ImageType = ImageType.PNG): String? {
-        return getEnvironmentFilename(Environment.DIRECTORY_PICTURES, name, imageType.extension, imageType.mime)
+    /** Returns a new picture filename inside the DCIM folder. */
+    fun getNewPictureName(name: String, imageType: ImageType = ImageType.PNG): String? {
+        return getEnvironmentFilename(Environment.DIRECTORY_DCIM, name, imageType.extension, imageType.mime)
     }
 
     /** Returns a new video filename inside the Videos folder. */
