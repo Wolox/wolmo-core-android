@@ -28,9 +28,9 @@
 		android:gravity="start|center_vertical"
 		android:paddingStart="@dimen/static_spacing_medium_extra"
 		android:paddingEnd="@dimen/static_spacing_medium_extra"
-		android:text="@string/upload_image_take_picture"
 		android:textColor="@color/black"
-		android:textSize="@dimen/font_medium_extra" />
+		android:textSize="@dimen/font_medium_extra"
+		tools:text="Take picture" />
 
 	<TextView
 		android:id="@+id/vUploadImageGallery"
@@ -43,8 +43,8 @@
 		android:gravity="start|center_vertical"
 		android:paddingStart="@dimen/static_spacing_medium_extra"
 		android:paddingEnd="@dimen/static_spacing_medium_extra"
-		android:text="@string/upload_image_open_gallery"
 		android:textColor="@color/black"
-		android:textSize="@dimen/font_medium_extra" />
+		android:textSize="@dimen/font_medium_extra"
+		tools:text="Upload from gallery" />
 
 </LinearLayout>
