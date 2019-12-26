@@ -1,6 +1,7 @@
 package ar.com.wolox.wolmo.core.fragment
 
 import android.net.Uri
+import java.io.Serializable
 
 enum class SavingPicturePlace { GALLERY, CACHE }
 
@@ -24,4 +25,4 @@ data class GetImageConfiguration(
     val imageName: String,
     val callback: GetImageCallback,
     val cameraSavingPlace: SavingPicturePlace = SavingPicturePlace.CACHE,
-    val galleryDuplicateOnCache: Boolean = true)
+    val galleryDuplicateOnCache: Boolean = true) : Serializable
