@@ -14,7 +14,7 @@ interface GetImageCallback {
 
     fun onUserCancelled() {}
 
-    fun onUnexpectedError()
+    fun onUnexpectedError() {}
 }
 
 data class GetImageConfiguration(
