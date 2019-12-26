@@ -11,6 +11,10 @@ class GetImageHelper @Inject constructor(
     private val imageProvider: ImageProvider
 ) {
 
+    fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        permissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
     fun openGallery(
         fragment: Fragment,
         code: Int,

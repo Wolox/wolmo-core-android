@@ -32,6 +32,7 @@ import android.provider.MediaStore
 import androidx.annotation.IntRange
 import androidx.annotation.StringDef
 import androidx.annotation.StringRes
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope
 import java.io.ByteArrayOutputStream
@@ -110,8 +111,7 @@ class ImageProvider @Inject constructor(private val context: Context, private va
             return false
         }
 
-        val photoFile = File(file)
-        val photoFileUri = wolmoFileProvider.getUriForFile(photoFile)
+        val photoFileUri = File(file).toUri()
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri)
         fragment.startActivityForResult(intent, requestCode)
