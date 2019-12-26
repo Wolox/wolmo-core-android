@@ -28,6 +28,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope
@@ -44,7 +45,7 @@ class WolmoFileProvider @Inject constructor(private val context: Context) {
     private val appName: String by lazy {
         val applicationInfo = context.applicationInfo
         val stringId = applicationInfo.labelRes
-        if (stringId == 0) applicationInfo.nonLocalizedLabel.toString() else context.getString(stringId)
+        if (stringId != 0) context.getString(stringId) else applicationInfo.nonLocalizedLabel?.toString() ?: ""
     }
 
     private var cacheFolder: String = getTmpDirectory(context).absolutePath
