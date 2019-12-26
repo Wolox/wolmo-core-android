@@ -12,7 +12,7 @@ import ar.com.wolox.wolmo.core.extensions.setTextOrGone
 import ar.com.wolox.wolmo.core.util.GetImageHelper
 import ar.com.wolox.wolmo.core.util.WolmoFileProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_upload_image.*
+import kotlinx.android.synthetic.main.fragment_upload_image.view.*
 import javax.inject.Inject
 
 class GetImageDialogFragment : BottomSheetDialogFragment() {
