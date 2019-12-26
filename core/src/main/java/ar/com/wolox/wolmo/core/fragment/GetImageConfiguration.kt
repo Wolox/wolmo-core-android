@@ -8,8 +8,6 @@ interface GetImageCallback {
 
     fun onPermissionDenied() {}
 
-    fun onGalleryError() {}
-
     fun onGalleryResponse(data: Uri?)
 
     fun onCameraResponse(data: Uri?)

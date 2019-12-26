@@ -1,19 +1,15 @@
 package ar.com.wolox.wolmo.core.fragment
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import ar.com.wolox.wolmo.core.R
 import ar.com.wolox.wolmo.core.extensions.setTextOrGone
-import ar.com.wolox.wolmo.core.permission.PermissionListener
-import ar.com.wolox.wolmo.core.permission.PermissionManager
-import ar.com.wolox.wolmo.core.util.ImageProvider
+import ar.com.wolox.wolmo.core.util.GetImageHelper
 import ar.com.wolox.wolmo.core.util.WolmoFileProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_upload_image.*
@@ -22,13 +18,10 @@ import javax.inject.Inject
 class GetImageDialogFragment : BottomSheetDialogFragment() {
 
     @Inject
-    lateinit var imageProvider: ImageProvider
+    lateinit var getImageHelper: GetImageHelper
 
     @Inject
     lateinit var fileProvider: WolmoFileProvider
-
-    @Inject
-    lateinit var permissionManager: PermissionManager
 
     private val configuration: GetImageConfiguration by lazy {
         requireArguments().get(CONFIGURATION_KEY) as GetImageConfiguration
@@ -72,35 +65,23 @@ class GetImageDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun openCamera() {
-        permissionManager.requestPermission(this, object : PermissionListener() {
-            override fun onPermissionsGranted() {
-                newCameraPictureFilename?.let {
-                    imageProvider.getImageFromCamera(this@GetImageDialogFragment, INTENT_CODE_IMAGE_CAMERA, it)
-                } ?: run {
-                    configuration.callback.onUnexpectedError()
-                }
-            }
+    private fun openCamera() =
+        newCameraPictureFilename?.let {
+            getImageHelper.openCamera(
+                fragment = this,
+                code = INTENT_CODE_IMAGE_CAMERA,
+                destinationFilename = it,
+                onPermissionDenied = configuration.callback::onPermissionDenied,
+                onError = configuration.callback::onUnexpectedError)
+        } ?: run {
+            configuration.callback.onUnexpectedError()
+        }
 
-            override fun onPermissionsDenied(deniedPermissions: Array<String>) {
-                configuration.callback.onPermissionDenied()
-            }
-        }, *CAMERA_PERMISSIONS)
-    }
-
-    private fun openGallery() {
-        permissionManager.requestPermission(this, object : PermissionListener() {
-            override fun onPermissionsGranted() {
-                if (!imageProvider.getImageFromGallery(this@GetImageDialogFragment, INTENT_CODE_IMAGE_GALLERY)) {
-                    configuration.callback.onGalleryError()
-                }
-            }
-
-            override fun onPermissionsDenied(deniedPermissions: Array<String>) {
-                configuration.callback.onPermissionDenied()
-            }
-        }, *GALLERY_PERMISSIONS)
-    }
+    private fun openGallery() = getImageHelper.openGallery(
+        fragment = this,
+        code = INTENT_CODE_IMAGE_GALLERY,
+        onPermissionDenied = configuration.callback::onPermissionDenied,
+        onError = configuration.callback::onUnexpectedError)
 
     companion object {
 
@@ -109,14 +90,6 @@ class GetImageDialogFragment : BottomSheetDialogFragment() {
         }
 
         private const val CONFIGURATION_KEY = "CONFIGURATION_KEY"
-
-        private val CAMERA_PERMISSIONS = arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        private val GALLERY_PERMISSIONS = arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        )
         private const val INTENT_CODE_IMAGE_GALLERY = 9000
         private const val INTENT_CODE_IMAGE_CAMERA = 9001
     }
