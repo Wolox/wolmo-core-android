@@ -25,6 +25,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Handler
+import android.util.Log
 import android.util.SparseArray
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -89,6 +90,7 @@ class PermissionManager @Inject constructor(
      * [android.content.pm.PackageManager.PERMISSION_DENIED]. Never null.
      */
     fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        Log.d("DylanLog", "permissions result: $requestListeners")
         requestListeners.get(requestCode)?.let {
             requestListeners.remove(requestCode)
             // Workaround to Android bug: https://goo.gl/OwseuO
