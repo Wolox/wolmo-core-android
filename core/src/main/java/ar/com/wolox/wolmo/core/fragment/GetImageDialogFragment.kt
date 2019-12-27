@@ -13,6 +13,8 @@ import ar.com.wolox.wolmo.core.extensions.setTextOrGone
 import ar.com.wolox.wolmo.core.util.GetImageHelper
 import ar.com.wolox.wolmo.core.util.WolmoFileProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.Module
+import dagger.android.ContributesAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_upload_image.view.*
 import javax.inject.Inject
@@ -54,11 +56,9 @@ class GetImageDialogFragment : BottomSheetDialogFragment() {
                 dismiss()
                 openGallery()
             }
-            arguments?.run {
-                vUploadImageTitle.setTextOrGone(getString(configuration.title))
-                vUploadImageCamera.setTextOrGone(getString(configuration.cameraText))
-                vUploadImageGallery.setTextOrGone(getString(configuration.galleryText))
-            }
+            vUploadImageTitle.setTextOrGone(configuration.title)
+            vUploadImageCamera.setTextOrGone(configuration.cameraText)
+            vUploadImageGallery.setTextOrGone(configuration.galleryText)
         }
     }
 
@@ -93,6 +93,13 @@ class GetImageDialogFragment : BottomSheetDialogFragment() {
         code = INTENT_CODE_IMAGE_GALLERY,
         onPermissionDenied = configuration.callback::onPermissionDenied,
         onError = configuration.callback::onUnexpectedError)
+
+    @dagger.Module
+    abstract class Module {
+
+        @ContributesAndroidInjector
+        abstract fun getImageDialogFragment(): GetImageDialogFragment
+    }
 
     companion object {
 
