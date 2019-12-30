@@ -27,19 +27,19 @@ import ar.com.wolox.wolmo.core.permission.PermissionListener
 import ar.com.wolox.wolmo.core.presenter.BasePresenter
 import ar.com.wolox.wolmo.core.util.Logger
 import ar.com.wolox.wolmo.core.util.ToastFactory
+import dagger.Module
 import dagger.Provides
 
 /**
  * Provides default implementations for Wolmo's dependencies and utils.
  * You can add this module to your [Component] if you don't need to customize any dependency.
  */
-object DefaultModule {
+@Module
+class DefaultModule {
 
-    @JvmStatic
     @Provides
     fun providesPermissionManagerArray() = SparseArray<PermissionListener>()
 
-    @JvmStatic
     @Provides
     fun providesDefaultBasePresenter() = BasePresenter<Any>()
 
@@ -47,12 +47,10 @@ object DefaultModule {
      * Provides a default [WolmoFragmentHandler] with no presenter for fragments that don't
      * need it.
      */
-    @JvmStatic
     @Provides
     fun providesDefaultWolmoFragmentHandler(toastFactory: ToastFactory?,
                                             logger: Logger?,
-                                            basePresenter: BasePresenter<Any>):
-        WolmoFragmentHandler<*> {
+                                            basePresenter: BasePresenter<Any>): WolmoFragmentHandler<*> {
         return WolmoFragmentHandler(toastFactory!!, logger!!, basePresenter)
     }
 }
