@@ -46,7 +46,7 @@ import ar.com.wolox.wolmo.core.util.WolmoFileProvider;
  * @deprecated use {@link ar.com.wolox.wolmo.core.util.GetImageHelper} instead.
  */
 @Deprecated
-public abstract class GetImageFragment<T extends BasePresenter<?    >> extends WolmoFragment<T> {
+public abstract class GetImageFragment<T extends BasePresenter<?>> extends WolmoFragment<T> {
 
     private static final String[] CAMERA_PERMISSIONS = new String[] {
             Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -62,7 +62,6 @@ public abstract class GetImageFragment<T extends BasePresenter<?    >> extends W
     private File mPictureTakenFile;
     private OnImageReturnCallback mImageCallback;
 
-    @Inject PermissionManager mPermissionManager;
     @Inject ImageProvider mImageProvider;
     @Inject WolmoFileProvider mWolmoFileProvider;
 
@@ -111,32 +110,32 @@ public abstract class GetImageFragment<T extends BasePresenter<?    >> extends W
 
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-            case INTENT_CODE_IMAGE_GALLERY:
-                if (data != null && data.getData() != null) {
-                    String pathUri = mWolmoFileProvider.getRealPathFromUri(data.getData());
-                    mImageCallback.success(new File(pathUri));
-                } else {
-                    notifyError(Error.ERROR_DATA);
-                }
-                break;
+	            case INTENT_CODE_IMAGE_GALLERY:
+	                if (data != null && data.getData() != null) {
+	                    String pathUri = mWolmoFileProvider.getRealPathFromUri(data.getData());
+	                    mImageCallback.success(new File(pathUri));
+	                } else {
+	                    notifyError(Error.ERROR_DATA);
+	                }
+	                break;
 
-            case INTENT_CODE_IMAGE_CAMERA:
-                mImageProvider.addPictureToDeviceGallery(Uri.fromFile(mPictureTakenFile));
-                mImageCallback.success(mPictureTakenFile);
-                break;
+	            case INTENT_CODE_IMAGE_CAMERA:
+	                mImageProvider.addPictureToDeviceGallery(Uri.fromFile(mPictureTakenFile));
+	                mImageCallback.success(mPictureTakenFile);
+	                break;
 
-            default:
-                notifyError(Error.ERROR_UNKNOWN);
+	            default:
+	                notifyError(Error.ERROR_UNKNOWN);
             }
         } else if (resultCode == Activity.RESULT_CANCELED) {
             switch (requestCode) {
-            case INTENT_CODE_IMAGE_GALLERY:
-            case INTENT_CODE_IMAGE_CAMERA:
-                notifyError(Error.USER_CANCELED);
-                break;
+	            case INTENT_CODE_IMAGE_GALLERY:
+	            case INTENT_CODE_IMAGE_CAMERA:
+	                notifyError(Error.USER_CANCELED);
+	                break;
 
-            default:
-                notifyError(Error.ERROR_UNKNOWN);
+	            default:
+	                notifyError(Error.ERROR_UNKNOWN);
             }
         }
 
