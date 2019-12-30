@@ -90,7 +90,6 @@ class PermissionManager @Inject constructor(
      * [android.content.pm.PackageManager.PERMISSION_DENIED]. Never null.
      */
     fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        Log.d("DylanLog", "permissions result: $requestListeners")
         requestListeners.get(requestCode)?.let {
             requestListeners.remove(requestCode)
             // Workaround to Android bug: https://goo.gl/OwseuO

@@ -21,7 +21,7 @@ class GetImageHelper @Inject constructor(
         onPermissionDenied: () -> Unit = {},
         onError: () -> Unit = {}
     ) {
-        permissionManager.requestPermission(fragment, object : PermissionListener() {
+        permissionManager.requestPermission(fragment.requireActivity(), object : PermissionListener() {
             override fun onPermissionsGranted() {
                 if (!imageProvider.getImageFromGallery(fragment, code)) {
                     onError()
@@ -42,7 +42,7 @@ class GetImageHelper @Inject constructor(
         onError: () -> Unit = {}
     ) {
 
-        permissionManager.requestPermission(fragment, object : PermissionListener() {
+        permissionManager.requestPermission(fragment.requireActivity(), object : PermissionListener() {
             override fun onPermissionsGranted() {
                 if (!imageProvider.getImageFromCamera(fragment, code, destinationFilename)) {
                     onError()
