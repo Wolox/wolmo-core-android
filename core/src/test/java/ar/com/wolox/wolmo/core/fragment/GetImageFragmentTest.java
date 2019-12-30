@@ -59,237 +59,237 @@ import static org.mockito.Mockito.when;
 @Config(manifest = Config.NONE, sdk = Build.VERSION_CODES.LOLLIPOP)
 public class GetImageFragmentTest {
 
-	// This codes are from GetImageFragment
-	private static final int INTENT_CODE_IMAGE_GALLERY = 9000;
-	private static final int INTENT_CODE_IMAGE_CAMERA = 9001;
+    // This codes are from GetImageFragment
+    private static final int INTENT_CODE_IMAGE_GALLERY = 9000;
+    private static final int INTENT_CODE_IMAGE_CAMERA = 9001;
 
-	private static final String[] CAMERA_PERMISSIONS = new String[] {
-			Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
-	};
+    private static final String[] CAMERA_PERMISSIONS = new String[] {
+            Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
-	static final int GALLERY_ERROR_RES_ID = 123;
-	static final int CAMERA_ERROR_RES_ID = 1234;
-	static final String CAMERA_FILENAME = "Filename";
+    static final int GALLERY_ERROR_RES_ID = 123;
+    static final int CAMERA_ERROR_RES_ID = 1234;
+    static final String CAMERA_FILENAME = "Filename";
 
-	private WolmoFragmentHandler<BasePresenter> mWolmoFragmentHandlerMock;
-	private PermissionManager mPermissionManagerMock;
-	private ImageProvider mImageProviderMock;
-	private WolmoFileProvider mWolmoFileProviderMock;
-	private GetImageFragment mGetImageFragmentSpy;
+    private WolmoFragmentHandler<BasePresenter> mWolmoFragmentHandlerMock;
+    private PermissionManager mPermissionManagerMock;
+    private ImageProvider mImageProviderMock;
+    private WolmoFileProvider mWolmoFileProviderMock;
+    private GetImageFragment mGetImageFragmentSpy;
 
-	@Before
-	@SuppressWarnings("unchecked")
-	public void beforeTest() {
-		mWolmoFragmentHandlerMock = mock(WolmoFragmentHandler.class);
-		mPermissionManagerMock = mock(PermissionManager.class);
-		mImageProviderMock = mock(ImageProvider.class);
-		mWolmoFileProviderMock = mock(WolmoFileProvider.class);
+    @Before
+    @SuppressWarnings("unchecked")
+    public void beforeTest() {
+        mWolmoFragmentHandlerMock = mock(WolmoFragmentHandler.class);
+        mPermissionManagerMock = mock(PermissionManager.class);
+        mImageProviderMock = mock(ImageProvider.class);
+        mWolmoFileProviderMock = mock(WolmoFileProvider.class);
 
-		mGetImageFragmentSpy = spy(new TestImageFragment());
-		mGetImageFragmentSpy.fragmentHandler = mWolmoFragmentHandlerMock;
-		mGetImageFragmentSpy.mPermissionManager = mPermissionManagerMock;
-		mGetImageFragmentSpy.mImageProvider = mImageProviderMock;
-		mGetImageFragmentSpy.mWolmoFileProvider = mWolmoFileProviderMock;
-	}
-
-
-	@Test
-	public void selectImageFromGallerySuccessShouldCallDependencies() {
-		GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
-
-		doAnswer(invocation -> {
-			((PermissionListener) invocation.getArgument(1)).onPermissionsGranted();
-			return null;
-		}).when(mPermissionManagerMock).requestPermission(any(Fragment.class), any(PermissionListener.class), eq(Manifest.permission.READ_EXTERNAL_STORAGE));
-
-		mGetImageFragmentSpy.selectImageFromGallery(callbackMock);
-
-		verify(mPermissionManagerMock, times(1)).requestPermission(eq(mGetImageFragmentSpy), any(PermissionListener.class), eq(Manifest.permission.READ_EXTERNAL_STORAGE));
-		verify(mImageProviderMock, times(1)).getImageFromGallery(eq(mGetImageFragmentSpy), eq(INTENT_CODE_IMAGE_GALLERY), eq(GALLERY_ERROR_RES_ID));
-		verify(callbackMock, times(0)).error(any(GetImageFragment.Error.class));
-		verify(callbackMock, times(0)).success(any(File.class));
-	}
+        mGetImageFragmentSpy = spy(new TestImageFragment());
+        mGetImageFragmentSpy.fragmentHandler = mWolmoFragmentHandlerMock;
+        mGetImageFragmentSpy.mPermissionManager = mPermissionManagerMock;
+        mGetImageFragmentSpy.mImageProvider = mImageProviderMock;
+        mGetImageFragmentSpy.mWolmoFileProvider = mWolmoFileProviderMock;
+    }
 
 
-	@Test
-	public void selectImageFromGalleryErrorNotifyCallback() {
-		GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
+    @Test
+    public void selectImageFromGallerySuccessShouldCallDependencies() {
+        GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
 
-		doAnswer(invocation -> {
-			((PermissionListener) invocation.getArgument(1)).onPermissionsDenied(new String[1]);
-			return null;
-		}).when(mPermissionManagerMock).requestPermission(any(Fragment.class), any(PermissionListener.class), eq(Manifest.permission.READ_EXTERNAL_STORAGE));
+        doAnswer(invocation -> {
+            ((PermissionListener) invocation.getArgument(1)).onPermissionsGranted();
+            return null;
+        }).when(mPermissionManagerMock).requestPermission(any(Fragment.class), any(PermissionListener.class), eq(Manifest.permission.READ_EXTERNAL_STORAGE));
 
-		mGetImageFragmentSpy.selectImageFromGallery(callbackMock);
+        mGetImageFragmentSpy.selectImageFromGallery(callbackMock);
 
-		verify(mPermissionManagerMock, times(1)).requestPermission(eq(mGetImageFragmentSpy), any(PermissionListener.class), eq(Manifest.permission.READ_EXTERNAL_STORAGE));
-		verify(mImageProviderMock, times(0)).getImageFromGallery(any(Fragment.class), anyInt(), anyInt());
-		verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.PERMISSION_DENIED));
-		verify(callbackMock, times(0)).success(any(File.class));
-	}
-
-
-	@Test
-	public void takePictureSuccessShouldCallDependencies() {
-		GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
-		getImageFromCameraSuccess();
-
-		mGetImageFragmentSpy.takePicture(callbackMock);
-
-		verify(mPermissionManagerMock, times(1)).requestPermission(eq(mGetImageFragmentSpy), any(PermissionListener.class), eq(CAMERA_PERMISSIONS[0]), eq(CAMERA_PERMISSIONS[1]));
-		verify(mImageProviderMock, times(1)).getImageFromCamera(eq(mGetImageFragmentSpy), eq(INTENT_CODE_IMAGE_CAMERA), eq(CAMERA_FILENAME), eq(ImageProvider.PNG), eq(CAMERA_ERROR_RES_ID));
-		verify(callbackMock, times(0)).error(any(GetImageFragment.Error.class));
-		verify(callbackMock, times(0)).success(any(File.class));
-	}
+        verify(mPermissionManagerMock, times(1)).requestPermission(eq(mGetImageFragmentSpy), any(PermissionListener.class), eq(Manifest.permission.READ_EXTERNAL_STORAGE));
+        verify(mImageProviderMock, times(1)).getImageFromGallery(eq(mGetImageFragmentSpy), eq(INTENT_CODE_IMAGE_GALLERY), eq(GALLERY_ERROR_RES_ID));
+        verify(callbackMock, times(0)).error(any(GetImageFragment.Error.class));
+        verify(callbackMock, times(0)).success(any(File.class));
+    }
 
 
-	@Test
-	public void takePictureErrorShouldNotifyCallback() {
-		GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
+    @Test
+    public void selectImageFromGalleryErrorNotifyCallback() {
+        GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
 
-		doAnswer(invocation -> {
-			((PermissionListener) invocation.getArgument(1)).onPermissionsDenied(new String[1]);
-			return null;
-		}).when(mPermissionManagerMock).requestPermission(any(Fragment.class), any(PermissionListener.class), eq(CAMERA_PERMISSIONS[0]), eq(CAMERA_PERMISSIONS[1]));
+        doAnswer(invocation -> {
+            ((PermissionListener) invocation.getArgument(1)).onPermissionsDenied(new String[1]);
+            return null;
+        }).when(mPermissionManagerMock).requestPermission(any(Fragment.class), any(PermissionListener.class), eq(Manifest.permission.READ_EXTERNAL_STORAGE));
 
-		mGetImageFragmentSpy.takePicture(callbackMock);
+        mGetImageFragmentSpy.selectImageFromGallery(callbackMock);
 
-		verify(mPermissionManagerMock, times(1)).requestPermission(eq(mGetImageFragmentSpy), any(PermissionListener.class), eq(CAMERA_PERMISSIONS[0]), eq(CAMERA_PERMISSIONS[1]));
-		verify(mImageProviderMock, times(0)).getImageFromGallery(any(Fragment.class), anyInt(), anyInt());
-		verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.PERMISSION_DENIED));
-		verify(callbackMock, times(0)).success(any(File.class));
-	}
+        verify(mPermissionManagerMock, times(1)).requestPermission(eq(mGetImageFragmentSpy), any(PermissionListener.class), eq(Manifest.permission.READ_EXTERNAL_STORAGE));
+        verify(mImageProviderMock, times(0)).getImageFromGallery(any(Fragment.class), anyInt(), anyInt());
+        verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.PERMISSION_DENIED));
+        verify(callbackMock, times(0)).success(any(File.class));
+    }
 
-	@Test
-	public void onActivityResultFromGalleryShouldCallCallback() {
-		GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
-		getImageFromGallerySuccess();
-		mGetImageFragmentSpy.selectImageFromGallery(callbackMock);
 
-		Intent intentMock = mock(Intent.class);
-		when(intentMock.getData()).thenReturn(Uri.EMPTY);
-		when(mWolmoFileProviderMock.getRealPathFromUri(any(Uri.class))).thenReturn("/");
+    @Test
+    public void takePictureSuccessShouldCallDependencies() {
+        GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
+        getImageFromCameraSuccess();
 
-		// Call Test
-		mGetImageFragmentSpy.onActivityResult(INTENT_CODE_IMAGE_GALLERY, Activity.RESULT_OK, intentMock);
+        mGetImageFragmentSpy.takePicture(callbackMock);
 
-		verify(callbackMock, times(1)).success(eq(new File("/")));
-	}
+        verify(mPermissionManagerMock, times(1)).requestPermission(eq(mGetImageFragmentSpy), any(PermissionListener.class), eq(CAMERA_PERMISSIONS[0]), eq(CAMERA_PERMISSIONS[1]));
+        verify(mImageProviderMock, times(1)).getImageFromCamera(eq(mGetImageFragmentSpy), eq(INTENT_CODE_IMAGE_CAMERA), eq(CAMERA_FILENAME), eq(ImageProvider.PNG), eq(CAMERA_ERROR_RES_ID));
+        verify(callbackMock, times(0)).error(any(GetImageFragment.Error.class));
+        verify(callbackMock, times(0)).success(any(File.class));
+    }
 
-	@Test
-	public void onActivityResultFromGalleryWithNullDataShouldCallError() {
-		GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
-		getImageFromGallerySuccess();
-		mGetImageFragmentSpy.selectImageFromGallery(callbackMock);
 
-		Intent intentMock = mock(Intent.class);
-		when(intentMock.getData()).thenReturn(null);
-		when(mWolmoFileProviderMock.getRealPathFromUri(any(Uri.class))).thenReturn("/");
+    @Test
+    public void takePictureErrorShouldNotifyCallback() {
+        GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
 
-		// Call Test
-		mGetImageFragmentSpy.onActivityResult(INTENT_CODE_IMAGE_GALLERY, Activity.RESULT_OK, intentMock);
+        doAnswer(invocation -> {
+            ((PermissionListener) invocation.getArgument(1)).onPermissionsDenied(new String[1]);
+            return null;
+        }).when(mPermissionManagerMock).requestPermission(any(Fragment.class), any(PermissionListener.class), eq(CAMERA_PERMISSIONS[0]), eq(CAMERA_PERMISSIONS[1]));
 
-		verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.ERROR_DATA));
-	}
+        mGetImageFragmentSpy.takePicture(callbackMock);
 
-	@Test
-	public void onActivityResultFromCameraShouldCallCallback() {
-		GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
-		getImageFromCameraSuccess();
-		mGetImageFragmentSpy.takePicture(callbackMock);
+        verify(mPermissionManagerMock, times(1)).requestPermission(eq(mGetImageFragmentSpy), any(PermissionListener.class), eq(CAMERA_PERMISSIONS[0]), eq(CAMERA_PERMISSIONS[1]));
+        verify(mImageProviderMock, times(0)).getImageFromGallery(any(Fragment.class), anyInt(), anyInt());
+        verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.PERMISSION_DENIED));
+        verify(callbackMock, times(0)).success(any(File.class));
+    }
 
-		Intent intentMock = mock(Intent.class);
-		when(intentMock.getData()).thenReturn(Uri.EMPTY);
-		when(mWolmoFileProviderMock.getRealPathFromUri(any(Uri.class))).thenReturn("/");
+    @Test
+    public void onActivityResultFromGalleryShouldCallCallback() {
+        GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
+        getImageFromGallerySuccess();
+        mGetImageFragmentSpy.selectImageFromGallery(callbackMock);
 
-		// Call Test
-		mGetImageFragmentSpy.onActivityResult(INTENT_CODE_IMAGE_CAMERA, Activity.RESULT_OK, intentMock);
+        Intent intentMock = mock(Intent.class);
+        when(intentMock.getData()).thenReturn(Uri.EMPTY);
+        when(mWolmoFileProviderMock.getRealPathFromUri(any(Uri.class))).thenReturn("/");
 
-		verify(mImageProviderMock, times(1)).addPictureToDeviceGallery(eq(Uri.fromFile(new File("/"))));
-		verify(callbackMock, times(1)).success(eq(new File("/")));
-	}
+        // Call Test
+        mGetImageFragmentSpy.onActivityResult(INTENT_CODE_IMAGE_GALLERY, Activity.RESULT_OK, intentMock);
 
-	@Test
-	public void onActivityResultWithRandomErrorShouldNotifyError() {
-		GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
-		getImageFromGallerySuccess();
-		mGetImageFragmentSpy.selectImageFromGallery(callbackMock);
+        verify(callbackMock, times(1)).success(eq(new File("/")));
+    }
 
-		Intent intentMock = mock(Intent.class);
+    @Test
+    public void onActivityResultFromGalleryWithNullDataShouldCallError() {
+        GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
+        getImageFromGallerySuccess();
+        mGetImageFragmentSpy.selectImageFromGallery(callbackMock);
 
-		// Call Test
-		mGetImageFragmentSpy.onActivityResult(1234, Activity.RESULT_OK, intentMock);
+        Intent intentMock = mock(Intent.class);
+        when(intentMock.getData()).thenReturn(null);
+        when(mWolmoFileProviderMock.getRealPathFromUri(any(Uri.class))).thenReturn("/");
 
-		verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.ERROR_UNKNOWN));
-	}
+        // Call Test
+        mGetImageFragmentSpy.onActivityResult(INTENT_CODE_IMAGE_GALLERY, Activity.RESULT_OK, intentMock);
 
-	@Test
-	public void onActivityResultCancelledShouldNotifyCallback() {
-		GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
-		getImageFromGallerySuccess();
-		mGetImageFragmentSpy.selectImageFromGallery(callbackMock);
+        verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.ERROR_DATA));
+    }
 
-		Intent intentMock = mock(Intent.class);
+    @Test
+    public void onActivityResultFromCameraShouldCallCallback() {
+        GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
+        getImageFromCameraSuccess();
+        mGetImageFragmentSpy.takePicture(callbackMock);
 
-		// Call Test
-		mGetImageFragmentSpy.onActivityResult(INTENT_CODE_IMAGE_GALLERY, Activity.RESULT_CANCELED, intentMock);
+        Intent intentMock = mock(Intent.class);
+        when(intentMock.getData()).thenReturn(Uri.EMPTY);
+        when(mWolmoFileProviderMock.getRealPathFromUri(any(Uri.class))).thenReturn("/");
 
-		verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.USER_CANCELED));
-	}
+        // Call Test
+        mGetImageFragmentSpy.onActivityResult(INTENT_CODE_IMAGE_CAMERA, Activity.RESULT_OK, intentMock);
 
-	@Test
-	public void onActivityResultCancelledRandomCodeShouldNotifyCallback() {
-		GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
-		getImageFromGallerySuccess();
-		mGetImageFragmentSpy.selectImageFromGallery(callbackMock);
+        verify(mImageProviderMock, times(1)).addPictureToDeviceGallery(eq(Uri.fromFile(new File("/"))));
+        verify(callbackMock, times(1)).success(eq(new File("/")));
+    }
 
-		Intent intentMock = mock(Intent.class);
+    @Test
+    public void onActivityResultWithRandomErrorShouldNotifyError() {
+        GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
+        getImageFromGallerySuccess();
+        mGetImageFragmentSpy.selectImageFromGallery(callbackMock);
 
-		// Call Test
-		mGetImageFragmentSpy.onActivityResult(1234, Activity.RESULT_CANCELED, intentMock);
+        Intent intentMock = mock(Intent.class);
 
-		verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.ERROR_UNKNOWN));
-	}
+        // Call Test
+        mGetImageFragmentSpy.onActivityResult(1234, Activity.RESULT_OK, intentMock);
 
-	private void getImageFromGallerySuccess() {
-		doAnswer(invocation -> {
-			((PermissionListener) invocation.getArgument(1)).onPermissionsGranted();
-			return null;
-		}).when(mPermissionManagerMock).requestPermission(any(Fragment.class), any(PermissionListener.class), eq(Manifest.permission.READ_EXTERNAL_STORAGE));
-	}
+        verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.ERROR_UNKNOWN));
+    }
 
-	private void getImageFromCameraSuccess() {
-		doAnswer(invocation -> {
-			when(mImageProviderMock.getImageFromCamera(any(Fragment.class), anyInt(), anyString(), anyString(), anyInt())).thenReturn(new File("/"));
-			((PermissionListener) invocation.getArgument(1)).onPermissionsGranted();
-			return null;
-		}).when(mPermissionManagerMock).requestPermission(any(Fragment.class), any(PermissionListener.class), eq(CAMERA_PERMISSIONS[0]), eq(CAMERA_PERMISSIONS[1]));
-	}
+    @Test
+    public void onActivityResultCancelledShouldNotifyCallback() {
+        GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
+        getImageFromGallerySuccess();
+        mGetImageFragmentSpy.selectImageFromGallery(callbackMock);
 
-	public static class TestImageFragment extends GetImageFragment {
+        Intent intentMock = mock(Intent.class);
 
-		@Override
-		public int layout() {
-			return 12345;
-		}
+        // Call Test
+        mGetImageFragmentSpy.onActivityResult(INTENT_CODE_IMAGE_GALLERY, Activity.RESULT_CANCELED, intentMock);
 
-		@Override
-		public void init() {}
+        verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.USER_CANCELED));
+    }
 
-		@Override
-		protected int galleryErrorResId() {
-			return GALLERY_ERROR_RES_ID;
-		}
+    @Test
+    public void onActivityResultCancelledRandomCodeShouldNotifyCallback() {
+        GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
+        getImageFromGallerySuccess();
+        mGetImageFragmentSpy.selectImageFromGallery(callbackMock);
 
-		@Override
-		protected int cameraErrorResId() {
-			return CAMERA_ERROR_RES_ID;
-		}
+        Intent intentMock = mock(Intent.class);
 
-		@NonNull
-		@Override
-		protected String pictureTakenFilename() {
-			return CAMERA_FILENAME;
-		}
-	}
+        // Call Test
+        mGetImageFragmentSpy.onActivityResult(1234, Activity.RESULT_CANCELED, intentMock);
+
+        verify(callbackMock, times(1)).error(eq(GetImageFragment.Error.ERROR_UNKNOWN));
+    }
+
+    private void getImageFromGallerySuccess() {
+        doAnswer(invocation -> {
+            ((PermissionListener) invocation.getArgument(1)).onPermissionsGranted();
+            return null;
+        }).when(mPermissionManagerMock).requestPermission(any(Fragment.class), any(PermissionListener.class), eq(Manifest.permission.READ_EXTERNAL_STORAGE));
+    }
+
+    private void getImageFromCameraSuccess() {
+        doAnswer(invocation -> {
+            when(mImageProviderMock.getImageFromCamera(any(Fragment.class), anyInt(), anyString(), anyString(), anyInt())).thenReturn(new File("/"));
+            ((PermissionListener) invocation.getArgument(1)).onPermissionsGranted();
+            return null;
+        }).when(mPermissionManagerMock).requestPermission(any(Fragment.class), any(PermissionListener.class), eq(CAMERA_PERMISSIONS[0]), eq(CAMERA_PERMISSIONS[1]));
+    }
+
+    public static class TestImageFragment extends GetImageFragment {
+
+        @Override
+        public int layout() {
+            return 12345;
+        }
+
+        @Override
+        public void init() {}
+
+        @Override
+        protected int galleryErrorResId() {
+            return GALLERY_ERROR_RES_ID;
+        }
+
+        @Override
+        protected int cameraErrorResId() {
+            return CAMERA_ERROR_RES_ID;
+        }
+
+        @NonNull
+        @Override
+        protected String pictureTakenFilename() {
+            return CAMERA_FILENAME;
+        }
+    }
 }
