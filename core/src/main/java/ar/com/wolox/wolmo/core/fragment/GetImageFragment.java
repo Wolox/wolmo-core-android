@@ -183,7 +183,7 @@ public abstract class GetImageFragment<T extends BasePresenter<?>> extends Wolmo
      */
     protected void selectImageFromGallery(
             @NonNull final OnImageReturnCallback onImageReturnCallback) {
-        mPermissionManager.requestPermission(this, new PermissionListener() {
+        permissionManager.requestPermission(this, new PermissionListener() {
             @Override
             public void onPermissionsGranted() {
                 mImageCallback = onImageReturnCallback;
@@ -205,7 +205,7 @@ public abstract class GetImageFragment<T extends BasePresenter<?>> extends Wolmo
      * @param onImageReturnCallback callback for request result
      */
     protected void takePicture(@NonNull final OnImageReturnCallback onImageReturnCallback) {
-        mPermissionManager.requestPermission(this, new PermissionListener() {
+        permissionManager.requestPermission(this, new PermissionListener() {
             @Override
             public void onPermissionsGranted() {
                 mImageCallback = onImageReturnCallback;
