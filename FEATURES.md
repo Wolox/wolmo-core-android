@@ -35,12 +35,12 @@ Injectable wrapper of [Log] to simplify logs in the same class by reusing the ta
 
 ### NavigationUtils
 Provides some context extensions for navigation.
-- `Context.jumpTo(clazz: Class<*>, vararg intentExtras: IntentExtra)`: opens a new activity [clazz] sending all the given [intentExtras].
-- `Context.jumpToClearingTask(clazz: Class<*>, transition: ActivityOptionsCompat?, vararg intentExtras: IntentExtra)`: opens a new activity [clazz] with a [transition] sending all the given [intentExtras].
-- `Context.jumpTo(clazz: Class<*>, vararg intentExtras: IntentExtra)`: opens a new activity [clazz] clearing the current task and sending all the given [intentExtras]. 
-- `Context.openBrowser(url: String?)`: opens browser with the given [url] (if it's null, open a blank page). 
-- `Context.makeCall(phone: String)`: make a call to the given [phone]. It needs the [CALL_PHONE] permission.
-- `Context.openDial(phone: String)`: open the dial with the given [phone]. It doesn't need any extra permission.
+- `Context.jumpTo(clazz: Class<*>, vararg intentExtras: IntentExtra): Unit`: opens a new activity [clazz] sending all the given [intentExtras].
+- `Context.jumpToClearingTask(clazz: Class<*>, transition: ActivityOptionsCompat?, vararg intentExtras: IntentExtra): Unit`: opens a new activity [clazz] with a [transition] sending all the given [intentExtras].
+- `Context.jumpTo(clazz: Class<*>, vararg intentExtras: IntentExtra): Unit`: opens a new activity [clazz] clearing the current task and sending all the given [intentExtras]. 
+- `Context.openBrowser(url: String?): Unit`: opens browser with the given [url] (if it's null, open a blank page). 
+- `Context.makeCall(phone: String): Unit`: make a call to the given [phone]. It needs the [CALL_PHONE] permission.
+- `Context.openDial(phone: String): Unit`: open the dial with the given [phone]. It doesn't need any extra permission.
 
 ### PermissionManager
 Singleton injectable helper class to handler Android’s runtime permissions.
@@ -60,6 +60,11 @@ Note: The fragments given to this should be injected.
 
 ### ToastFactory
 Singleton injectable utility class to simplify work with Android's [Toast] messages.
+
+### View extensions
+Provides some view extensions.
+- `ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View`: inflates a layout inside the [ViewGroup].
+- `TextView.setTextOrGone(newText: String?): Unit`: set text and show if text is not null or empty or hide otherwise.
 
 ### WolmoActivity
 Base implementation of a `DaggerActivity` that provides these extra features:
