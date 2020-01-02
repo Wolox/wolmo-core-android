@@ -78,7 +78,7 @@ fun Context.openDial(phone: String) {
  * Makes a call to the given [phone].
  * Android Manifest should contains CALL_PHONE permission.
  */
-    @RequiresPermission(value = Manifest.permission.CALL_PHONE)
+@RequiresPermission(value = Manifest.permission.CALL_PHONE)
 fun Context.makeCall(phone: String) {
     val intent = Intent(Intent.ACTION_CALL, "tel:$phone".toUri()).setNewTaskIfNecessary(this)
     startActivity(intent)
