@@ -78,25 +78,21 @@ fun Context.openDial(phone: String) {
  * Makes a call to the given [phone].
  * Android Manifest should contains CALL_PHONE permission.
  */
-@RequiresPermission(value = Manifest.permission.CALL_PHONE)
+    @RequiresPermission(value = Manifest.permission.CALL_PHONE)
 fun Context.makeCall(phone: String) {
     val intent = Intent(Intent.ACTION_CALL, "tel:$phone".toUri()).setNewTaskIfNecessary(this)
     startActivity(intent)
 }
 
 /**
- * Sends an intent to start an [Activity] for the provided [clazz] from a [context]
+ * Sends an intent to start an [Activity] for the provided [clazz] from a [Context]
  * with a variable number of instances of [intentExtras] that will be sent as extras.
- * It accepts a [transition] that defines the animation behaviour.
  */
 @SafeVarargs
-fun Context.jumpTo(
-    clazz: Class<*>,
-    vararg intentExtras: IntentExtra
-) = jumpTo(clazz, null, *intentExtras)
+fun Context.jumpTo(clazz: Class<*>, vararg intentExtras: IntentExtra) = jumpTo(clazz, null, *intentExtras)
 
 /**
- * Sends an intent to start an [Activity] for the provided [clazz] from a [context]
+ * Sends an intent to start an [Activity] for the provided [clazz] from a [Context]
  * with a variable number of instances of [intentExtras] that will be sent as extras.
  * It accepts a [transition] that defines the animation behaviour.
  */
@@ -114,7 +110,7 @@ fun Context.jumpTo(
 }
 
 /**
- * Sends an intent to start an [Activity] for the provided [clazz] from a [context] but clearing
+ * Sends an intent to start an [Activity] for the provided [clazz] from a [Context] but clearing
  * the current task and starting a new one with a variable number of instances of
  * [intentExtras] that will be sent as extras.
  */
