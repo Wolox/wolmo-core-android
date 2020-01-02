@@ -25,7 +25,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Handler
-import android.util.Log
 import android.util.SparseArray
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
