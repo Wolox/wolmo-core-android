@@ -28,9 +28,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import androidx.core.content.FileProvider
-import androidx.core.net.toFile
 import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope
 import java.io.File
 import java.io.IOException
