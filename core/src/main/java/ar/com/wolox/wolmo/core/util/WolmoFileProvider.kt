@@ -51,27 +51,23 @@ class WolmoFileProvider @Inject constructor(private val context: Context) {
     private var cacheFolder: String = getTmpDirectory(context).absolutePath
 
     private fun getTmpDirectory(context: Context) = File(context.cacheDir, appName).apply {
-        if (!exists()) {
-            mkdir()
-        }
+        if (!exists()) mkdir()
     }
 
     private fun getEnvironmentFilename(folder: String, name: String, extension: String, mime: String): String? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val resolver = context.contentResolver
             val contentValues = ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, FILENAME_FORMAT.format(name, System.nanoTime()))
                 put(MediaStore.MediaColumns.MIME_TYPE, mime)
                 put(MediaStore.MediaColumns.RELATIVE_PATH, "$folder/$appName")
             }
 
-            resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)?.let {
+            context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)?.let {
                 getRealPathFromUri(it)
             }
         } else {
-            val file = File(Environment.getExternalStoragePublicDirectory(folder), appName)
-            if (!file.exists()) {
-                file.mkdirs()
+            val file = File(Environment.getExternalStoragePublicDirectory(folder), appName).apply {
+                if (!exists()) mkdirs()
             }
             File(file.absolutePath, FILE_FORMAT.format(name, System.nanoTime(), extension)).absolutePath
         }
