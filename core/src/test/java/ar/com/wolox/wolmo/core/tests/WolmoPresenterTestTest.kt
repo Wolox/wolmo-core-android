@@ -34,7 +34,7 @@ class WolmoPresenterTestTest : WolmoPresenterTest<WolmoPresenterTestTest.TestVie
     }
 
     @Test
-    fun `given a annotated mock when using it then it's not null`() {
+    fun `given an annotated mock when using it then it's not null`() {
 
         val rectMocked = tryToGet { rectMocked }
 
