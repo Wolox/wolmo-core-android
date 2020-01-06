@@ -29,7 +29,7 @@ class ViewExtensionsTest {
     @Test
     fun `given a visible TextView when set text or gone a non empty text then the TextView shows text`() {
         val textView = TextView(ApplicationProvider.getApplicationContext())
-        assertThat(textView.isVisible,       `is`(true))
+        assertThat(textView.isVisible, `is`(true))
 
         textView.setTextOrGone("test")
 
