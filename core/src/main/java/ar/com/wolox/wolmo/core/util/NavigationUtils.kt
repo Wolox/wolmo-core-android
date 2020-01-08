@@ -24,20 +24,15 @@
 package ar.com.wolox.wolmo.core.util
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.view.View
 import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.net.toUri
 import java.io.Serializable
-
 
 /** An utility class to pair [Intent] extras with their corresponding keys. */
 typealias IntentExtra = Pair<String, Serializable>
