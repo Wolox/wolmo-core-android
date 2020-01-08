@@ -24,20 +24,16 @@
 package ar.com.wolox.wolmo.core.util
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.view.View
 import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.net.toUri
 import java.io.Serializable
-
 
 /** An utility class to pair [Intent] extras with their corresponding keys. */
 typealias IntentExtra = Pair<String, Serializable>
@@ -63,6 +59,7 @@ fun Context.openBrowser(url: String?) {
     }
     val browserIntent = Intent(Intent.ACTION_VIEW, finalUrl.toUri()).setNewTaskIfNecessary(this)
     startActivity(browserIntent)
+    ContextCompat.startActivity(this, browserIntent, null)
 }
 
 private const val BASE_HTTP = "http://"
@@ -71,7 +68,7 @@ private const val BASE_HTTPS = "https://"
 /** Opens the dial with a given [phone]. */
 fun Context.openDial(phone: String) {
     val intent = Intent(Intent.ACTION_DIAL, "tel:$phone".toUri()).setNewTaskIfNecessary(this)
-    startActivity(intent)
+    ContextCompat.startActivity(this, intent, null)
 }
 
 /**
@@ -81,7 +78,7 @@ fun Context.openDial(phone: String) {
 @RequiresPermission(value = Manifest.permission.CALL_PHONE)
 fun Context.makeCall(phone: String) {
     val intent = Intent(Intent.ACTION_CALL, "tel:$phone".toUri()).setNewTaskIfNecessary(this)
-    startActivity(intent)
+    ContextCompat.startActivity(this, intent, null)
 }
 
 /**

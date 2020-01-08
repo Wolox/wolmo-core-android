@@ -48,9 +48,9 @@ class DefaultModule {
      * need it.
      */
     @Provides
-    fun providesDefaultWolmoFragmentHandler(toastFactory: ToastFactory?,
-                                            logger: Logger?,
+    fun providesDefaultWolmoFragmentHandler(toastFactory: ToastFactory,
+                                            logger: Logger,
                                             basePresenter: BasePresenter<Any>): WolmoFragmentHandler<*> {
-        return WolmoFragmentHandler(toastFactory!!, logger!!, basePresenter)
+        return WolmoFragmentHandler(toastFactory, logger, basePresenter)
     }
 }
