@@ -84,10 +84,6 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
 
-    // Android KTX
-    api "androidx.core:core-ktx:$android_ktx_version"
-    api "androidx.fragment:fragment-ktx:$android_ktx_version"
-
     // Test
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.robolectric:robolectric:$robolectric_version"

@@ -134,6 +134,8 @@ These features can be found in CORE:
 * Files helpers
 * Camera and image helpers
 
+[See all the features available here.](FEATURES.md)
+
 ## <a name="topic-contributing"></a> Contributing
 
 1. Fork it
