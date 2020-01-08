@@ -19,24 +19,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.permission;
-
-import androidx.annotation.NonNull;
+package ar.com.wolox.wolmo.core.presenter
 
 /**
- * Callback used by {@link PermissionManager} when requesting permissions to the user
+ * Interface to extend from the views that have a loading view along with an error one as well as
+ * content that loads asynchronously.
  */
-public abstract class PermissionListener {
+interface LceView<T> : LeView {
 
     /**
-     * Called when the required permissions are granted by the user
+     * Show the content view.
+     * **The content view must have the id = R.id.contentView**
      */
-    public void onPermissionsGranted() {}
+    fun showContent()
 
     /**
-     * Called when all or some of the requested permissions are rejected by the user
-     *
-     * @param deniedPermissions Array of {@link String} that contains the denied permissions
+     * The [data] that should be displayed with [showContent]
      */
-    public void onPermissionsDenied(@NonNull String[] deniedPermissions) {}
+    fun setData(data: T)
+
 }

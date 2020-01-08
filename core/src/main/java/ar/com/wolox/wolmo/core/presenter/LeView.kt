@@ -19,30 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core;
-
-import android.app.Application;
-import androidx.annotation.CallSuper;
-
-import dagger.android.support.DaggerApplication;
+package ar.com.wolox.wolmo.core.presenter
 
 /**
- * An extension of Android's native {@link Application} class that is intended to be used as
- * a Singleton
+ * Interface to extend from the views that have a loading view along with an error one.
  */
-public abstract class WolmoApplication extends DaggerApplication {
-
-    @Override
-    @CallSuper
-    public void onCreate() {
-        super.onCreate();
-        onInit();
-    }
+interface LeView {
 
     /**
-     * Provides an entry point that gets executed after the {@link Application} has been created.
-     * Useful to initialize libraries and other dependencies.
+     * Display a loading view while loading data in background.
+     * **The loading view must have the id = R.id.loadingView**
      */
-    public abstract void onInit();
+    fun showLoading()
+
+
+    /**
+     * Show the error view.
+     * **The error view must be a TextView with the id = R.id.errorView*
+     * [e] is the Throwable that has caused this error
+     */
+    fun showError(e: Throwable)
 
 }

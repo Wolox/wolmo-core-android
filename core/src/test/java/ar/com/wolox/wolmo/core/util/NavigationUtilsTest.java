@@ -40,8 +40,10 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import ar.com.wolox.wolmo.core.activity.WolmoActivity;
+import kotlin.Pair;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -65,7 +67,7 @@ public class NavigationUtilsTest {
 
     @Test
     public void openBrowserWithUrlShouldStartActivity() {
-        NavigationUtils.openBrowser(mContextSpy, "http://google.com");
+        NavigationUtilsKt.openBrowser(mContextSpy, "http://google.com");
 
         ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
         verify(mContextSpy, times(1)).startActivity(intentCaptor.capture());
@@ -77,10 +79,10 @@ public class NavigationUtilsTest {
 
     @Test
     public void jumpToShouldStartActivity() {
-        NavigationUtils.jumpTo(mContextSpy, WolmoActivity.class);
+        NavigationUtilsKt.jumpTo(mContextSpy, WolmoActivity.class);
 
         ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
-        verify(mContextSpy, times(1)).startActivity(intentCaptor.capture());
+        verify(mContextSpy, times(1)).startActivity(intentCaptor.capture(), any());
 
         Intent intent = intentCaptor.getValue();
         assertThat(intent.getComponent().getPackageName()).isEqualTo(mContextSpy.getPackageName());
@@ -90,12 +92,12 @@ public class NavigationUtilsTest {
 
     @Test
     public void jumpToWithExtrasShouldStartActivity() {
-        NavigationUtils.IntentExtra extra = new NavigationUtils.IntentExtra("Tag", "Value");
+        Pair<String, String> extra = new Pair<>("Tag", "Value");
 
-        NavigationUtils.jumpTo(mContextSpy, WolmoActivity.class, extra);
+        NavigationUtilsKt.jumpTo(mContextSpy, WolmoActivity.class, extra);
 
         ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
-        verify(mContextSpy, times(1)).startActivity(intentCaptor.capture());
+        verify(mContextSpy, times(1)).startActivity(intentCaptor.capture(), any());
 
         Intent intent = intentCaptor.getValue();
         assertThat(intent.getComponent().getPackageName()).isEqualTo(mContextSpy.getPackageName());
@@ -106,7 +108,7 @@ public class NavigationUtilsTest {
 
     @Test
     public void jumpToClearingTaskShouldAddFlags() {
-        NavigationUtils.jumpToClearingTask(mContextSpy, WolmoActivity.class);
+        NavigationUtilsKt.jumpToClearingTask(mContextSpy, WolmoActivity.class);
 
         ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
         verify(mContextSpy, times(1)).startActivity(intentCaptor.capture());
@@ -123,9 +125,9 @@ public class NavigationUtilsTest {
 
     @Test
     public void jumpToClearingTaskShouldAddFlagsAndExtras() {
-        NavigationUtils.IntentExtra extra = new NavigationUtils.IntentExtra("Tag", "Value");
+        Pair<String, String> extra = new Pair<>("Tag", "Value");
 
-        NavigationUtils.jumpToClearingTask(mContextSpy, WolmoActivity.class, extra);
+        NavigationUtilsKt.jumpToClearingTask(mContextSpy, WolmoActivity.class, extra);
 
         ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
         verify(mContextSpy, times(1)).startActivity(intentCaptor.capture());
@@ -147,7 +149,7 @@ public class NavigationUtilsTest {
         Bundle bundleMock = mock(Bundle.class);
         when(optionsCompatMock.toBundle()).thenReturn(bundleMock);
 
-        NavigationUtils.jumpToWithAnimation(mActivitySpy, WolmoActivity.class, optionsCompatMock);
+        NavigationUtilsKt.jumpTo(mActivitySpy, WolmoActivity.class, optionsCompatMock);
 
         ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
         ArgumentCaptor<Bundle> bundleCaptor = ArgumentCaptor.forClass(Bundle.class);
@@ -168,12 +170,12 @@ public class NavigationUtilsTest {
 
         builder.setClass(WolmoActivity.class)
                 .addExtra("ExtraTag", "ExtraObject")
-                .addIntentObjects(new NavigationUtils.IntentExtra("IntentExtra", "IntentObject"),
-                        new NavigationUtils.IntentExtra("IntentExtra2", "IntentObject2"))
+                .addIntentObjects(new Pair<>("IntentExtra", "IntentObject"),
+                        new Pair<>("IntentExtra2", "IntentObject2"))
                 .jump();
 
         ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
-        verify(mActivitySpy, times(1)).startActivity(intentCaptor.capture());
+        verify(mActivitySpy, times(1)).startActivity(intentCaptor.capture(), any());
 
         Intent intent = intentCaptor.getValue();
         assertThat(intent.getComponent().getPackageName()).isEqualTo(mActivitySpy.getPackageName());
@@ -191,8 +193,9 @@ public class NavigationUtilsTest {
         builder.setClass(WolmoActivity.class)
                 .addExtra("ExtraTag", "ExtraObject")
                 .addSharedElement(viewMock, "SharedView")
-                .addIntentObjects(new NavigationUtils.IntentExtra("IntentExtra", "IntentObject"),
-                        new NavigationUtils.IntentExtra("IntentExtra2", "IntentObject2"))
+                .addIntentObjects(
+                        new Pair<>("IntentExtra", "IntentObject"),
+                        new Pair<>("IntentExtra2", "IntentObject2"))
                 .jump();
 
         ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);

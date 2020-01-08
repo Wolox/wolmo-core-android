@@ -43,157 +43,138 @@ import ar.com.wolox.wolmo.core.util.ToastFactory;
  */
 public final class WolmoFragmentHandler<T extends BasePresenter> {
 
-    private Fragment mFragment;
-    private IWolmoFragment mWolmoFragment;
+	private Fragment mFragment;
+	private IWolmoFragment mWolmoFragment;
 
-    private boolean mCreated;
-    private boolean mMenuVisible;
-    private boolean mVisible;
+	private boolean mCreated;
+	private boolean mMenuVisible;
+	private boolean mVisible;
 
-    private @Nullable T mPresenter;
-    private ToastFactory mToastFactory;
-    private Logger mLogger;
+	private @NonNull T mPresenter;
+	private ToastFactory mToastFactory;
+	private Logger mLogger;
 
-    @Inject
-    WolmoFragmentHandler(@Nullable T presenter, @NonNull ToastFactory toastFactory, @NonNull Logger logger) {
-        mPresenter = presenter;
-        mToastFactory = toastFactory;
-        mLogger = logger;
-    }
+	@Inject
+	public WolmoFragmentHandler(@NonNull ToastFactory toastFactory,
+	                     @NonNull Logger logger,
+	                     @NonNull T presenter) {
+		mPresenter = presenter;
+		mToastFactory = toastFactory;
+		mLogger = logger;
+	}
 
-    public WolmoFragmentHandler(@NonNull ToastFactory toastFactory, @NonNull Logger logger) {
-        this(null, toastFactory, logger);
-    }
+	/**
+	 * Sets the fragment for this fragment handler.
+	 *
+	 * @param wolmoFragment Wolox fragment to attach.
+	 */
+	private void setFragment(@NonNull IWolmoFragment wolmoFragment) {
+		if (!(wolmoFragment instanceof Fragment)) {
+			throw new IllegalArgumentException("WolmoFragment should be a Fragment instance");
+		}
+		mFragment = (Fragment) wolmoFragment;
+		mWolmoFragment = wolmoFragment;
+	}
 
-    /**
-     * Sets the fragment for this fragment handler.
-     *
-     * @param wolmoFragment Wolox fragment to attach.
-     */
-    private void setFragment(@NonNull IWolmoFragment wolmoFragment) {
-        if (!(wolmoFragment instanceof Fragment)) {
-            throw new IllegalArgumentException("WolmoFragment should be a Fragment instance");
-        }
-        mFragment = (Fragment) wolmoFragment;
-        mWolmoFragment = wolmoFragment;
-    }
+	/**
+	 * Method called from {@link WolmoFragment#onCreate(Bundle)}, it calls to {@link
+	 * WolmoFragment#handleArguments(Bundle)} to check if the fragment has the correct arguments.
+	 *
+	 */
+	void onCreate(@NonNull IWolmoFragment wolmoFragment) {
+		mLogger.setTag(WolmoFragmentHandler.class.getSimpleName());
+		setFragment(wolmoFragment);
+		final @Nullable Boolean handleArgs = mWolmoFragment.handleArguments(mFragment.getArguments());
+		if (handleArgs == null || !handleArgs) {
+			mLogger.e(mFragment.getClass().getSimpleName() +
+					" - The fragment's handleArguments() returned false.");
+			mToastFactory.show(R.string.unknown_error);
+			mFragment.requireActivity().finish();
+		}
+	}
 
-    /**
-     * Method called from {@link WolmoFragment#onCreate(Bundle)}, it calls to {@link
-     * WolmoFragment#handleArguments(Bundle)} to check if the fragment has the correct arguments.
-     *
-     * @param savedInstanceState Saved instance state
-     */
-    void onCreate(@NonNull IWolmoFragment wolmoFragment, @Nullable Bundle savedInstanceState) {
-        mLogger.setTag(WolmoFragmentHandler.class.getSimpleName());
-        setFragment(wolmoFragment);
-        if (!mWolmoFragment.handleArguments(mFragment.getArguments())) {
-            mLogger.e(mFragment.getClass().getSimpleName() +
-                     " - The fragment's handleArguments() returned false.");
-            mToastFactory.show(R.string.unknown_error);
-            mFragment.getActivity().finish();
-        }
-    }
+	/**
+	 * Method called from {@link WolmoFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}, it
+	 * creates the view defined in {@link WolmoFragment#layout()}.
+	 * Then it calls the following methods and returns the {@link View} created:
+	 * <p><ul>
+	 * <li>{@link WolmoFragment#setUi(View)}
+	 * <li>{@link WolmoFragment#init()}
+	 * <li>{@link WolmoFragment#populate()}
+	 * <li>{@link WolmoFragment#setListeners()}
+	 * </ul><p>
+	 */
+	View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
+		return inflater.inflate(mWolmoFragment.layout(), container, false);
+	}
 
-    /**
-     * Method called from {@link WolmoFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}, it
-     * creates the view defined in {@link WolmoFragment#layout()}.
-     * Then it calls the following methods and returns the {@link View} created:
-     * <p><ul>
-     * <li>{@link WolmoFragment#setUi(View)}
-     * <li>{@link WolmoFragment#init()}
-     * <li>{@link WolmoFragment#populate()}
-     * <li>{@link WolmoFragment#setListeners()}
-     * </ul><p>
-     */
-    View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                      @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(mWolmoFragment.layout(), container, false);
-    }
+	/**
+	 * Method called from {@link WolmoFragment#onViewCreated(View, Bundle)}, it attaches the
+	 * fragment to the {@link BasePresenter} calling {@link BasePresenter#onViewAttached()}.
+	 */
+	@SuppressWarnings("unchecked")
+	void onViewCreated(@NonNull View view) {
+		mCreated = true;
+		mPresenter.attachView(mWolmoFragment);
+		mWolmoFragment.setUi(view);
+		mWolmoFragment.init();
+		mWolmoFragment.populate();
+		mWolmoFragment.setListeners();
+	}
 
-    /**
-     * Method called from {@link WolmoFragment#onViewCreated(View, Bundle)}, it attaches the
-     * fragment to the {@link BasePresenter} calling {@link BasePresenter#onViewAttached()}.
-     */
-    @SuppressWarnings("unchecked")
-    void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mCreated = true;
-        if (mPresenter != null) {
-            mPresenter.attachView(mWolmoFragment);
-        }
-        mWolmoFragment.setUi(view);
-        mWolmoFragment.init();
-        mWolmoFragment.populate();
-        mWolmoFragment.setListeners();
-    }
+	/**
+	 * Returns the presenter {@link T} for the fragment
+	 *
+	 * @return presenter
+	 */
+	@NonNull
+	public T getPresenter() {
+		return mPresenter;
+	}
 
-    /**
-     * Returns the presenter {@link T} for the fragment
-     *
-     * @return presenter
-     */
-    @Nullable
-    T getPresenter() {
-        return mPresenter;
-    }
+	private void onVisibilityChanged() {
+		if (!mCreated) return;
+		if (mFragment.isResumed() && mMenuVisible && !mVisible) {
+			mWolmoFragment.onVisible();
+			mVisible = true;
+		} else if ((!mMenuVisible || !mFragment.isResumed()) && mVisible) {
+			mWolmoFragment.onHide();
+			mVisible = false;
+		}
+	}
 
-    /**
-     * Tries to return a non null instance of the presenter {@link T} for the fragment.
-     * If the presenter is null this will throw a NullPointerException.
-     *
-     * @return presenter
-     */
-    @NonNull
-    T requirePresenter() {
-        if (mPresenter == null) throw new NullPointerException("The Presenter is null");
-        return mPresenter;
-    }
+	/**
+	 * Called from {@link WolmoFragment#onResume()}, checks visibility of the fragment
+	 * and calls {@link WolmoFragment#onVisible()} or {@link WolmoFragment#onHide()} accordingly.
+	 */
+	void onResume() {
+		onVisibilityChanged();
+	}
 
-    private void onVisibilityChanged() {
-        if (!mCreated) return;
-        if (mFragment.isResumed() && mMenuVisible && !mVisible) {
-            mWolmoFragment.onVisible();
-            mVisible = true;
-        } else if ((!mMenuVisible || !mFragment.isResumed()) && mVisible) {
-            mWolmoFragment.onHide();
-            mVisible = false;
-        }
-    }
+	/**
+	 * Called from {@link WolmoFragment#onPause()}, checks visibility of the fragment
+	 * and calls {@link WolmoFragment#onVisible()} or {@link WolmoFragment#onHide()} accordingly.
+	 */
+	void onPause() {
+		onVisibilityChanged();
+	}
 
-    /**
-     * Called from {@link WolmoFragment#onResume()}, checks visibility of the fragment
-     * and calls {@link WolmoFragment#onVisible()} or {@link WolmoFragment#onHide()} accordingly.
-     */
-    void onResume() {
-        onVisibilityChanged();
-    }
+	/**
+	 * Called from {@link WolmoFragment#setMenuVisibility(boolean)}, checks visibility of the
+	 * fragment's menu and calls {@link WolmoFragment#onVisible()} or
+	 * {@link WolmoFragment#onHide()} accordingly.
+	 * For mor info {@see Fragment#setMenuVisibility(boolean)}.
+	 */
+	void setMenuVisibility(boolean visible) {
+		mMenuVisible = visible;
+		onVisibilityChanged();
+	}
 
-    /**
-     * Called from {@link WolmoFragment#onPause()}, checks visibility of the fragment
-     * and calls {@link WolmoFragment#onVisible()} or {@link WolmoFragment#onHide()} accordingly.
-     */
-    void onPause() {
-        onVisibilityChanged();
-    }
-
-    /**
-     * Called from {@link WolmoFragment#setMenuVisibility(boolean)}, checks visibility of the
-     * fragment's menu and calls {@link WolmoFragment#onVisible()} or
-     * {@link WolmoFragment#onHide()} accordingly.
-     * For mor info {@see Fragment#setMenuVisibility(boolean)}.
-     */
-    void setMenuVisibility(boolean visible) {
-        mMenuVisible = visible;
-        onVisibilityChanged();
-    }
-
-    /**
-     * Called from {@link WolmoFragment#onDestroyView()}, it notifies the {@link BasePresenter} that
-     * the view is destroyed, calling {@link BasePresenter#onViewDetached()}
-     */
-    void onDestroyView() {
-        if (getPresenter() != null) {
-            getPresenter().detachView();
-        }
-    }
+	/**
+	 * Called from {@link WolmoFragment#onDestroyView()}, it notifies the {@link BasePresenter} that
+	 * the view is destroyed, calling {@link BasePresenter#onViewDetached()}
+	 */
+	void onDestroyView() {
+		getPresenter().detachView();
+	}
 }

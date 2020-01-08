@@ -40,21 +40,24 @@ import dagger.Provides;
 @Module
 public class DefaultModule {
 
-    @Provides
-    static SparseArray<PermissionListener> providesPermissionManagerArray() {
-        return new SparseArray<>();
-    }
+	@Provides
+	static SparseArray<PermissionListener> providesPermissionManagerArray() {
+		return new SparseArray<>();
+	}
 
-    @Provides
-    static BasePresenter providesDefaultBasePresenter() {
-        return new BasePresenter();
-    }
+	@Provides
+	static BasePresenter providesDefaultBasePresenter() {
+		return new BasePresenter();
+	}
 
-    /**
-     * Provides a default {@link WolmoFragmentHandler} with no presenter for fragments that don't need it.
-     */
-    @Provides
-    static WolmoFragmentHandler providesDefaultWolmoFragmentHandler(ToastFactory toastFactory, Logger logger) {
-        return new WolmoFragmentHandler(toastFactory, logger);
-    }
+	/**
+	 * Provides a default {@link WolmoFragmentHandler} with no presenter for fragments that don't
+	 * need it.
+	 */
+	@Provides
+	static WolmoFragmentHandler providesDefaultWolmoFragmentHandler(ToastFactory toastFactory,
+	                                                                Logger logger,
+	                                                                BasePresenter<?> basePresenter) {
+		return new WolmoFragmentHandler<>(toastFactory, logger, basePresenter);
+	}
 }

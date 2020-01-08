@@ -19,13 +19,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.di.scopes;
+package ar.com.wolox.wolmo.core
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import android.app.Application
+import androidx.annotation.CallSuper
 
-import javax.inject.Scope;
+import dagger.android.support.DaggerApplication
 
-@Scope
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ApplicationScope {}
+/**
+ * An extension of Android's native [Application] class that is intended to be used as
+ * a Singleton
+ */
+abstract class WolmoApplication : DaggerApplication() {
+
+    @CallSuper
+    override fun onCreate() {
+        super.onCreate()
+        onInit()
+    }
+
+    /**
+     * Provides an entry point that gets executed after the [Application] has been created.
+     * Useful to initialize libraries and other dependencies.
+     */
+    abstract fun onInit()
+
+}

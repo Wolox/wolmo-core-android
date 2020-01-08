@@ -45,6 +45,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import ar.com.wolox.wolmo.core.permission.PermissionListener;
+import ar.com.wolox.wolmo.core.permission.PermissionManager;
+
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, sdk = Build.VERSION_CODES.LOLLIPOP)
 public class PermissionManagerTest {

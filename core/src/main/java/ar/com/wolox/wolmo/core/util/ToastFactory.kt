@@ -19,24 +19,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.presenter;
+package ar.com.wolox.wolmo.core.util
+
+import android.content.Context
+import android.widget.Toast
+import androidx.annotation.StringRes
+import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope
+import javax.inject.Inject
 
 /**
- * Interface to extend from the views that have a loading view along with an error one as well as
- * content that loads asynchronously.
+ * An utility class to work with Android's [Toast] messages
  */
-public interface LceView<T> extends LeView {
+@ApplicationScope
+class ToastFactory @Inject constructor(private val context: Context) {
 
-    /**
-     * Show the content view.
-     * <p>
-     * <b>The content view must have the id = R.id.contentView</b>
-     */
-    void showContent();
+    /** Displays a message from a [resourceId] inside a [Toast], briefly. */
+    fun show(@StringRes resourceId: Int) = Toast.makeText(context, resourceId, Toast.LENGTH_SHORT).show()
 
-    /**
-     * The data that should be displayed with {@link #showContent()}
-     */
-    void setData(T data);
+    /** Displays a given [message] inside a [Toast], briefly. */
+    fun show(message: String) = Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
+    /** Displays a message from a [resourceId] inside a [Toast], during a longer interval. */
+    fun showLong(@StringRes resourceId: Int) = Toast.makeText(context, resourceId, Toast.LENGTH_LONG).show()
+
+    /** Displays a given [message] inside a [Toast], during a longer interval.*/
+    fun showLong(message: String) = Toast.makeText(context, message, Toast.LENGTH_LONG).show()
 }

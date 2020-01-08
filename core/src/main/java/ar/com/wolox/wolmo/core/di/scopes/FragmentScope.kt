@@ -19,26 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.presenter;
+package ar.com.wolox.wolmo.core.di.scopes
 
-/**
- * Interface to extend from the views that have a loading view along with an error one.
- */
-public interface LeView {
+import javax.inject.Scope
 
-    /**
-     * Display a loading view while loading data in background.
-     * <b>The loading view must have the id = R.id.loadingView</b>
-     */
-    void showLoading();
-
-
-    /**
-     * Show the error view.
-     * <b>The error view must be a TextView with the id = R.id.errorView</b>
-     *
-     * @param e The Throwable that has caused this error
-     */
-    void showError(Throwable e);
-
-}
+@Scope
+@Retention(AnnotationRetention.RUNTIME)
+annotation class FragmentScope

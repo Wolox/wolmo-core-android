@@ -21,17 +21,16 @@
  */
 package ar.com.wolox.wolmo.core.presenter;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import ar.com.wolox.wolmo.core.presenter.BasePresenter;
+
 import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import ar.com.wolox.wolmo.core.java8.Consumer;
 
 public class BasePresenterTest {
 
@@ -78,19 +77,4 @@ public class BasePresenterTest {
         mBasePresenter.runIfViewAttached(runnableMock);
         verify(runnableMock, times(1)).run();
     }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void presenterRunIfViewAttachedConsumer() {
-        Consumer<Object> consumerMock = mock(Consumer.class);
-
-        mBasePresenter.runIfViewAttached(consumerMock);
-        verify(consumerMock, times(0)).accept(any(Object.class));
-
-        // Now the view is attached
-        mBasePresenter.attachView(new Object());
-        mBasePresenter.runIfViewAttached(consumerMock);
-        verify(consumerMock, times(1)).accept(any(Object.class));
-    }
-
 }

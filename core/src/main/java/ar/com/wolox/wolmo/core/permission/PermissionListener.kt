@@ -19,13 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ar.com.wolox.wolmo.core.di.scopes;
+package ar.com.wolox.wolmo.core.permission
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+/** Callback used by [PermissionManager] when requesting permissions to the user */
+abstract class PermissionListener {
 
-import javax.inject.Scope;
+    /** Called when the required permissions are granted by the user */
+    open fun onPermissionsGranted() {}
 
-@Scope
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ActivityScope {}
+    /** Called when all or some of the [deniedPermissions] rejected by the user */
+    open fun onPermissionsDenied(deniedPermissions: Array<String>) {}
+}

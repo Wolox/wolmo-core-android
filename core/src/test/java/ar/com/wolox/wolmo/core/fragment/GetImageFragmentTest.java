@@ -71,7 +71,7 @@ public class GetImageFragmentTest {
     static final int CAMERA_ERROR_RES_ID = 1234;
     static final String CAMERA_FILENAME = "Filename";
 
-    private WolmoFragmentHandler<BasePresenter> mWolmoFragmentHandlerMock;
+    private WolmoFragmentHandler<BasePresenter<?>> mWolmoFragmentHandlerMock;
     private PermissionManager mPermissionManagerMock;
     private ImageProvider mImageProviderMock;
     private WolmoFileProvider mWolmoFileProviderMock;
@@ -86,8 +86,8 @@ public class GetImageFragmentTest {
         mWolmoFileProviderMock = mock(WolmoFileProvider.class);
 
         mGetImageFragmentSpy = spy(new TestImageFragment());
-        mGetImageFragmentSpy.mFragmentHandler = mWolmoFragmentHandlerMock;
-        mGetImageFragmentSpy.mPermissionManager = mPermissionManagerMock;
+        mGetImageFragmentSpy.fragmentHandler = mWolmoFragmentHandlerMock;
+        mGetImageFragmentSpy.permissionManager = mPermissionManagerMock;
         mGetImageFragmentSpy.mImageProvider = mImageProviderMock;
         mGetImageFragmentSpy.mWolmoFileProvider = mWolmoFileProviderMock;
     }
