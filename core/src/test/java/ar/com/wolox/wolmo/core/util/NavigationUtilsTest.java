@@ -78,6 +78,30 @@ public class NavigationUtilsTest {
     }
 
     @Test
+    public void openDialWithPhoneShouldStartActivity() {
+        NavigationUtilsKt.openDial(mContextSpy, "41235678");
+
+        ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
+        verify(mContextSpy, times(1)).startActivity(intentCaptor.capture());
+
+        Intent intent = intentCaptor.getValue();
+        assertThat(intent.getData().toString()).isEqualTo("tel:41235678");
+        assertThat(intent.getAction()).isEqualTo(Intent.ACTION_DIAL);
+    }
+
+    @Test
+    public void makeCallWithPhoneShouldStartActivity() {
+        NavigationUtilsKt.makeCall(mContextSpy, "41235678");
+
+        ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
+        verify(mContextSpy, times(1)).startActivity(intentCaptor.capture(), any());
+
+        Intent intent = intentCaptor.getValue();
+        assertThat(intent.getData().toString()).isEqualTo("tel:41235678");
+        assertThat(intent.getAction()).isEqualTo(Intent.ACTION_CALL);
+    }
+
+    @Test
     public void jumpToShouldStartActivity() {
         NavigationUtilsKt.jumpTo(mContextSpy, WolmoActivity.class);
 

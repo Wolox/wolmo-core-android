@@ -21,9 +21,11 @@
  */
 package ar.com.wolox.wolmo.core.util
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
@@ -37,6 +39,57 @@ import javax.inject.Inject
  */
 @ApplicationScope
 class WolmoFileProvider @Inject constructor(private val context: Context) {
+
+    private val appName: String by lazy {
+        val applicationInfo = context.applicationInfo
+        val stringId = applicationInfo.labelRes
+        if (stringId != 0) context.getString(stringId) else applicationInfo.nonLocalizedLabel?.toString() ?: ""
+    }
+
+    private var cacheFolder: String = getTmpDirectory(context).absolutePath
+
+    private fun getTmpDirectory(context: Context) = File(context.cacheDir, appName).apply {
+        if (!exists()) mkdir()
+    }
+
+    private fun getEnvironmentFilename(folder: String, name: String, extension: String, mime: String): String? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val contentValues = ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, FILENAME_FORMAT.format(name, System.nanoTime()))
+                put(MediaStore.MediaColumns.MIME_TYPE, mime)
+                put(MediaStore.MediaColumns.RELATIVE_PATH, "$folder/$appName")
+            }
+
+            context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)?.let {
+                getRealPathFromUri(it)
+            }
+        } else {
+            val file = File(Environment.getExternalStoragePublicDirectory(folder), appName).apply {
+                if (!exists()) mkdirs()
+            }
+            File(file.absolutePath, FILE_FORMAT.format(name, System.nanoTime(), extension)).absolutePath
+        }
+    }
+
+    /** Returns a new picture filename inside the app cache. */
+    fun getNewCachePictureFilename(name: String, imageType: ImageType = ImageType.PNG): String {
+        return cacheFolder + FILE_FORMAT.format(name, System.nanoTime(), imageType.extension)
+    }
+
+    /** Returns a new a video filename inside the app cache. */
+    fun getNewCacheVideoFilename(name: String): String {
+        return cacheFolder + FILE_FORMAT.format(name, System.nanoTime(), MP4_EXTENSION)
+    }
+
+    /** Returns a new picture filename inside the DCIM folder. */
+    fun getNewPictureName(name: String, imageType: ImageType = ImageType.PNG): String? {
+        return getEnvironmentFilename(Environment.DIRECTORY_DCIM, name, imageType.extension, imageType.mime)
+    }
+
+    /** Returns a new video filename inside the Videos folder. */
+    fun getNewVideoName(name: String): String? {
+        return getEnvironmentFilename(Environment.DIRECTORY_MOVIES, name, MP4_EXTENSION, MP4_MIME)
+    }
 
     /**
      * Returns a new empty file named [name].[extension]. The given [extension] could
@@ -74,5 +127,17 @@ class WolmoFileProvider @Inject constructor(private val context: Context) {
         } finally {
             cursor?.close()
         }
+    }
+
+    enum class ImageType(val extension: String, val mime: String) {
+        PNG(".png", "image/png"),
+        JPG(".jpg", "image/jpg")
+    }
+
+    companion object {
+        private const val FILE_FORMAT = "/%s_%s%s"
+        private const val FILENAME_FORMAT = "%s_%s"
+        private const val MP4_EXTENSION = ".mp4"
+        private const val MP4_MIME = "video/mp4"
     }
 }

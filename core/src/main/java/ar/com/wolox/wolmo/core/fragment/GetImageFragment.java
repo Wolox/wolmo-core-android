@@ -42,7 +42,9 @@ import ar.com.wolox.wolmo.core.util.WolmoFileProvider;
  * Class to help to load images from the gallery or from the camera.
  *
  * @param <T> Presenter for this fragment
+ * @deprecated use {@link ar.com.wolox.wolmo.core.util.GetImageHelper} instead.
  */
+@Deprecated
 public abstract class GetImageFragment<T extends BasePresenter<?>> extends WolmoFragment<T> {
 
     private static final String[] CAMERA_PERMISSIONS = new String[] {

@@ -23,10 +23,12 @@
 
 package ar.com.wolox.wolmo.core.util
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.View
+import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.net.toUri
@@ -37,11 +39,11 @@ typealias IntentExtra = Pair<String, Serializable>
 
 private const val BLANK_PAGE = "about:blank"
 
-private fun Context.setNewTaskIfNecessary(intent: Intent): Intent {
-    if (this !is Activity) {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+private fun Intent.setNewTaskIfNecessary(context: Context): Intent {
+    if (context !is Activity) {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     }
-    return intent
+    return this
 }
 
 /**
@@ -54,11 +56,28 @@ fun Context.openBrowser(url: String?) {
         url.startsWith(BASE_HTTP) || url.startsWith(BASE_HTTPS) -> url
         else -> "${BASE_HTTP}$url"
     }
-    val browserIntent = setNewTaskIfNecessary(Intent(Intent.ACTION_VIEW, finalUrl.toUri()))
+    val browserIntent = Intent(Intent.ACTION_VIEW, finalUrl.toUri()).setNewTaskIfNecessary(this)
     startActivity(browserIntent)
 }
+
 private const val BASE_HTTP = "http://"
 private const val BASE_HTTPS = "https://"
+
+/** Opens the dial with a given [phone]. */
+fun Context.openDial(phone: String) {
+    val intent = Intent(Intent.ACTION_DIAL, "tel:$phone".toUri()).setNewTaskIfNecessary(this)
+    startActivity(intent)
+}
+
+/**
+ * Makes a call to the given [phone].
+ * Android Manifest should contains CALL_PHONE permission.
+ */
+@RequiresPermission(value = Manifest.permission.CALL_PHONE)
+fun Context.makeCall(phone: String) {
+    val intent = Intent(Intent.ACTION_CALL, "tel:$phone".toUri()).setNewTaskIfNecessary(this)
+    startActivity(intent)
+}
 
 /**
  * Sends an intent to start an [Activity] for the provided [clazz] from a [context]
@@ -84,7 +103,7 @@ fun Context.jumpTo(
 ) {
     val intent = Intent(this, clazz).apply {
         intentExtras.forEach { putExtra(it.first, it.second) }
-        setNewTaskIfNecessary(this)
+        setNewTaskIfNecessary(this@jumpTo)
     }
     ActivityCompat.startActivity(this, intent, transition?.toBundle())
 }

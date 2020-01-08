@@ -129,7 +129,7 @@ public class GetImageFragmentTest {
     }
 
 
-   @Test
+    @Test
     public void takePictureSuccessShouldCallDependencies() {
         GetImageFragment.OnImageReturnCallback callbackMock = mock(GetImageFragment.OnImageReturnCallback.class);
         getImageFromCameraSuccess();
