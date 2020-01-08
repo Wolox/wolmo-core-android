@@ -81,17 +81,14 @@ fun Context.makeCall(phone: String) {
 }
 
 /**
- * Sends an intent to start an [Activity] for the provided [clazz] from a [context]
+ * Sends an intent to start an [Activity] for the provided [clazz] from a [Context]
  * with a variable number of instances of [intentExtras] that will be sent as extras.
  */
 @SafeVarargs
-fun Context.jumpTo(
-    clazz: Class<*>,
-    vararg intentExtras: IntentExtra
-) = jumpTo(clazz, null, *intentExtras)
+fun Context.jumpTo(clazz: Class<*>, vararg intentExtras: IntentExtra) = jumpTo(clazz, null, *intentExtras)
 
 /**
- * Sends an intent to start an [Activity] for the provided [clazz] from a [context]
+ * Sends an intent to start an [Activity] for the provided [clazz] from a [Context]
  * with a variable number of instances of [intentExtras] that will be sent as extras.
  * It accepts a [transition] that defines the animation behaviour.
  */

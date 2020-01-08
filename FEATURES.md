@@ -87,3 +87,11 @@ Base implementation of a `DaggerFragment` that is MVP-ready (you can access the 
 
 It also provides this extra feature:
 - `requireArgument(key: String): T`: get argument by the given [key] and returns it as a non-null [T].
+
+# Wolmo testing features
+
+### WolmoPresenterTest
+A base that setups the environment for a Wolmo's [BasePresenter] test. It also provides a prepared environment for annotated mocks.
+
+### CoroutineTestRule
+A Junit Test Rule that allows to use Coroutines main dispatcher on a test. If [runOnAllTests] is false then all tests will have this configuration, otherwise just those that have [CoroutineTest] annotation.
