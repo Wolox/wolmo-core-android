@@ -58,7 +58,6 @@ fun Context.openBrowser(url: String?) {
         else -> "${BASE_HTTP}$url"
     }
     val browserIntent = Intent(Intent.ACTION_VIEW, finalUrl.toUri()).setNewTaskIfNecessary(this)
-    startActivity(browserIntent)
     ContextCompat.startActivity(this, browserIntent, null)
 }
 
