@@ -1,4 +1,4 @@
-[![Build Status](https://www.bitrise.io/app/effc7a938ebd8bc5/status.svg?token=5aAalVW4BGoIUIy-xgHv3A&branch=master)](https://www.bitrise.io/app/effc7a938ebd8bc5)
+[![Build Status](https://app.bitrise.io/app/effc7a938ebd8bc5/status.svg?token=5aAalVW4BGoIUIy-xgHv3A&branch=master)](https://app.bitrise.io/app/effc7a938ebd8bc5)
 [![Release](https://jitpack.io/v/Wolox/wolmo-core-android.svg)](https://jitpack.io/#Wolox/wolmo-core-android)
 [![Coverage Status](https://coveralls.io/repos/github/Wolox/wolmo-core-android/badge.svg?branch=master)](https://coveralls.io/github/Wolox/wolmo-core-android?branch=master)
 
