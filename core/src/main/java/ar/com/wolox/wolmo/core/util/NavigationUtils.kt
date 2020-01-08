@@ -31,6 +31,7 @@ import android.view.View
 import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import java.io.Serializable
 
@@ -57,7 +58,7 @@ fun Context.openBrowser(url: String?) {
         else -> "${BASE_HTTP}$url"
     }
     val browserIntent = Intent(Intent.ACTION_VIEW, finalUrl.toUri()).setNewTaskIfNecessary(this)
-    startActivity(browserIntent)
+    ContextCompat.startActivity(this, browserIntent, null)
 }
 
 private const val BASE_HTTP = "http://"
@@ -66,7 +67,7 @@ private const val BASE_HTTPS = "https://"
 /** Opens the dial with a given [phone]. */
 fun Context.openDial(phone: String) {
     val intent = Intent(Intent.ACTION_DIAL, "tel:$phone".toUri()).setNewTaskIfNecessary(this)
-    startActivity(intent)
+    ContextCompat.startActivity(this, intent, null)
 }
 
 /**
@@ -76,7 +77,7 @@ fun Context.openDial(phone: String) {
 @RequiresPermission(value = Manifest.permission.CALL_PHONE)
 fun Context.makeCall(phone: String) {
     val intent = Intent(Intent.ACTION_CALL, "tel:$phone".toUri()).setNewTaskIfNecessary(this)
-    startActivity(intent)
+    ContextCompat.startActivity(this, intent, null)
 }
 
 /**
