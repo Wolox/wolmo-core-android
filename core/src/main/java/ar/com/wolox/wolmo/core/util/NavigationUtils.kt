@@ -35,7 +35,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import java.io.Serializable
 
-
 /** An utility class to pair [Intent] extras with their corresponding keys. */
 typealias IntentExtra = Pair<String, Serializable>
 
