@@ -22,6 +22,7 @@
 package ar.com.wolox.wolmo.core.fragment
 
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -38,6 +39,7 @@ import androidx.fragment.app.FragmentManager
 import ar.com.wolox.wolmo.core.permission.PermissionManager
 import ar.com.wolox.wolmo.core.presenter.BasePresenter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.DaggerAppCompatDialogFragment
 import javax.inject.Inject
 
@@ -57,6 +59,11 @@ abstract class WolmoBottomSheetDialogFragment<P : BasePresenter<*>> : BottomShee
 
     val presenter: P
         get() = fragmentHandler.presenter
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = super.onCreateDialog(savedInstanceState).apply {
         window?.run {
