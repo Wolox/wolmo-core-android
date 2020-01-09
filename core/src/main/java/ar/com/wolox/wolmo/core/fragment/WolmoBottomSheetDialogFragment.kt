@@ -44,7 +44,7 @@ import dagger.android.support.DaggerAppCompatDialogFragment
 import javax.inject.Inject
 
 /**
- * Base implementation for [IWolmoFragment] for dialog fragments. This is in charge of
+ * Base implementation for [IWolmoFragment] for bottom sheet dialog fragments. This is in charge of
  * inflating the view returned by [layout].
  * The presenter is created on [onCreate] if [handleArguments] returns true.
  */
@@ -193,7 +193,7 @@ abstract class WolmoBottomSheetDialogFragment<P : BasePresenter<*>> : BottomShee
     override fun populate() {}
 
     /**
-     * Shows the [WolmoDialogFragment] using the fragment.
+     * Shows the [BottomSheetDialogFragment] using the fragment.
      *
      * @param manager Fragment Manager to show the dialog fragment
      */
