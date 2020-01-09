@@ -57,11 +57,16 @@ abstract class WolmoBottomSheetDialogFragment<P : BasePresenter<*>> : BottomShee
     @Inject
     lateinit var fragmentHandler: WolmoFragmentHandler<P>
 
+    /** Invoked when thee dialog is attached. */
+    var onAttached: (() -> Unit)? = null
+
     val presenter: P
         get() = fragmentHandler.presenter
 
+    @CallSuper
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
+        onAttached?.invoke()
         super.onAttach(context)
     }
 
