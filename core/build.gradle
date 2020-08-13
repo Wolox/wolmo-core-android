@@ -4,6 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: "com.hiya.jacoco-android"
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     compileSdkVersion 29
