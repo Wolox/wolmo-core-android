@@ -28,12 +28,15 @@ import android.content.SharedPreferences
 import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 
 /**
  * Provides objects that depends of the Application [Context].
  * The objects provided by this module uses [ApplicationScope].
  */
 @Module
+@InstallIn(ApplicationComponent::class)
 class ContextModule {
     @Provides
     @ApplicationScope

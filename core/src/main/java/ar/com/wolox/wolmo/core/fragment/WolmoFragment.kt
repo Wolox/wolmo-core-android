@@ -26,9 +26,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.fragment.app.Fragment
 import ar.com.wolox.wolmo.core.permission.PermissionManager
 import ar.com.wolox.wolmo.core.presenter.BasePresenter
-import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
 /**
@@ -36,7 +36,7 @@ import javax.inject.Inject
  * by [layout]. The presenter is created on [onCreate] if [handleArguments] returns true.
  * This class defines default implementations for most of the methods on [IWolmoFragment].
  */
-abstract class WolmoFragment<P : BasePresenter<*>> : DaggerFragment(), IWolmoFragment {
+abstract class WolmoFragment<P : BasePresenter<*>> : Fragment(), IWolmoFragment {
 
     @Inject
     lateinit var fragmentHandler: WolmoFragmentHandler<P>

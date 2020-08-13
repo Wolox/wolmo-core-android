@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'jacoco-android'
+apply plugin: "com.hiya.jacoco-android"
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'kotlin-android-extensions'
 
@@ -71,12 +71,9 @@ dependencies {
     // Mockito inline adds support for mocking final classes and methods
     api "org.mockito:mockito-inline:$mockito_inline_version"
 
-    // Dagger
-    api "com.google.dagger:dagger:$dagger_version"
-    api "com.google.dagger:dagger-android:$dagger_version"
-    api "com.google.dagger:dagger-android-support:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
-    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$google_dagger_hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$google_dagger_hilt_version"
 
     // Android KTX
     api "androidx.core:core-ktx:$android_ktx_version"
@@ -93,6 +90,4 @@ dependencies {
     testImplementation "org.mockito:mockito-inline:$mockito_inline_version"
     // Mockito inline adds support for mocking final classes and methods
     testImplementation "org.assertj:assertj-core:$assertj_version"
-    testAnnotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    testAnnotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
 }

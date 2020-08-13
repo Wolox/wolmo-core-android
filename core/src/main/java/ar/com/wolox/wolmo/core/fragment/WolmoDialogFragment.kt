@@ -34,10 +34,10 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.CallSuper
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import ar.com.wolox.wolmo.core.permission.PermissionManager
 import ar.com.wolox.wolmo.core.presenter.BasePresenter
-import dagger.android.support.DaggerAppCompatDialogFragment
 import javax.inject.Inject
 
 /**
@@ -45,7 +45,7 @@ import javax.inject.Inject
  * inflating the view returned by [layout].
  * The presenter is created on [onCreate] if [handleArguments] returns true.
  */
-abstract class WolmoDialogFragment<P : BasePresenter<*>> : DaggerAppCompatDialogFragment(),
+abstract class WolmoDialogFragment<P : BasePresenter<*>> : AppCompatDialogFragment(),
         IWolmoFragment {
 
     @Inject
