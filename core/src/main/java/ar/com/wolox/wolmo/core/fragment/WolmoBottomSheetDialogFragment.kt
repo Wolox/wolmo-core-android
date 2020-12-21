@@ -35,6 +35,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.CallSuper
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentManager
 import ar.com.wolox.wolmo.core.permission.PermissionManager
 import ar.com.wolox.wolmo.core.presenter.BasePresenter
@@ -48,20 +49,23 @@ import javax.inject.Inject
  * inflating the view returned by [layout].
  * The presenter is created on [onCreate] if [handleArguments] returns true.
  */
-abstract class WolmoBottomSheetDialogFragment<P : BasePresenter<*>> : BottomSheetDialogFragment(),
+abstract class WolmoBottomSheetDialogFragment<V : ViewDataBinding, P : BasePresenter<*>> : BottomSheetDialogFragment(),
     IWolmoFragment {
 
     @Inject
     lateinit var permissionManager: PermissionManager
 
     @Inject
-    lateinit var fragmentHandler: WolmoFragmentHandler<P>
+    lateinit var fragmentHandler: WolmoFragmentHandler<V, P>
 
     /** Invoked when thee dialog is attached. */
     var onAttached: (() -> Unit)? = null
 
     val presenter: P
         get() = fragmentHandler.presenter
+
+    protected val binding: V?
+        get() = fragmentHandler.binding
 
     @CallSuper
     override fun onAttach(context: Context) {

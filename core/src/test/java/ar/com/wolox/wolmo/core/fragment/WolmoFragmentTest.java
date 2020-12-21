@@ -25,6 +25,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.databinding.ViewDataBinding;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,7 +42,7 @@ import static org.mockito.Mockito.when;
 
 public class WolmoFragmentTest {
 
-    private WolmoFragmentHandler<BasePresenter<?>> mWolmoFragmentHandlerMock;
+    private WolmoFragmentHandler<?, BasePresenter<?>> mWolmoFragmentHandlerMock;
     private PermissionManager mPermissionManagerMock;
     private WolmoFragment mWolmoFragmentSpy;
 

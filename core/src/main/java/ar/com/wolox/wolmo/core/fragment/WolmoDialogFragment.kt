@@ -34,6 +34,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.CallSuper
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentManager
 import ar.com.wolox.wolmo.core.permission.PermissionManager
 import ar.com.wolox.wolmo.core.presenter.BasePresenter
@@ -45,17 +46,20 @@ import javax.inject.Inject
  * inflating the view returned by [layout].
  * The presenter is created on [onCreate] if [handleArguments] returns true.
  */
-abstract class WolmoDialogFragment<P : BasePresenter<*>> : DaggerAppCompatDialogFragment(),
+abstract class WolmoDialogFragment<V : ViewDataBinding, P : BasePresenter<*>> : DaggerAppCompatDialogFragment(),
         IWolmoFragment {
 
     @Inject
     lateinit var permissionManager: PermissionManager
 
     @Inject
-    lateinit var fragmentHandler: WolmoFragmentHandler<P>
+    lateinit var fragmentHandler: WolmoFragmentHandler<V, P>
 
     val presenter: P
         get() = fragmentHandler.presenter
+
+    val binding: V?
+        get() = fragmentHandler.binding
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = super.onCreateDialog(savedInstanceState).apply {
         window?.run {
