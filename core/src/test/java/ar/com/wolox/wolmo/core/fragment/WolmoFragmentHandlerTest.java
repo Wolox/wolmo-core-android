@@ -57,7 +57,7 @@ public class WolmoFragmentHandlerTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
-    private WolmoFragmentHandler<TestViewBinding,TestPresenter> mWolmoFragmentHandler;
+    private WolmoFragmentHandler<?,TestPresenter> mWolmoFragmentHandler;
     private WolmoFragment mWolmoFragmentMock;
     private TestPresenter mTestPresenter;
     private ToastFactory mToastFactoryMock;
@@ -161,7 +161,7 @@ public class WolmoFragmentHandlerTest {
     interface TestView {
     }
 
-    static class TestFragment extends WolmoFragment<TestViewBinding, TestPresenter> implements TestView {
+    static class TestFragment extends WolmoFragment<ViewDataBinding, TestPresenter> implements TestView {
         @Override
         public int layout() {
             return 0;
@@ -174,41 +174,4 @@ public class WolmoFragmentHandlerTest {
 
     static class TestPresenter extends BasePresenter<TestView> {
     }
-
-    static class TestViewBinding extends ViewDataBinding {
-
-        protected TestViewBinding(DataBindingComponent bindingComponent, View root, int localFieldCount) {
-            super(bindingComponent, root, localFieldCount);
-        }
-
-        protected TestViewBinding(Object bindingComponent, View root, int localFieldCount) {
-            super(bindingComponent, root, localFieldCount);
-        }
-
-        @Override
-        protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
-            return false;
-        }
-
-        @Override
-        public boolean setVariable(int variableId, @Nullable Object value) {
-            return false;
-        }
-
-        @Override
-        protected void executeBindings() {
-
-        }
-
-        @Override
-        public void invalidateAll() {
-
-        }
-
-        @Override
-        public boolean hasPendingBindings() {
-            return false;
-        }
-    }
-
 }
