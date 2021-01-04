@@ -28,6 +28,7 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.databinding.ViewDataBinding;
 
 import java.io.File;
 
@@ -45,7 +46,7 @@ import ar.com.wolox.wolmo.core.util.WolmoFileProvider;
  * @deprecated use {@link ar.com.wolox.wolmo.core.util.GetImageHelper} instead.
  */
 @Deprecated
-public abstract class GetImageFragment<T extends BasePresenter<?>> extends WolmoFragment<T> {
+public abstract class GetImageFragment<V extends ViewDataBinding, T extends BasePresenter<?>> extends WolmoFragment<V, T> {
 
     private static final String[] CAMERA_PERMISSIONS = new String[] {
             Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE

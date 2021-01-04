@@ -22,6 +22,7 @@
 package ar.com.wolox.wolmo.core.di.modules
 
 import android.util.SparseArray
+import androidx.databinding.ViewDataBinding
 import ar.com.wolox.wolmo.core.fragment.WolmoFragmentHandler
 import ar.com.wolox.wolmo.core.permission.PermissionListener
 import ar.com.wolox.wolmo.core.presenter.BasePresenter
@@ -50,7 +51,7 @@ class DefaultModule {
     @Provides
     fun providesDefaultWolmoFragmentHandler(toastFactory: ToastFactory,
                                             logger: Logger,
-                                            basePresenter: BasePresenter<Any>): WolmoFragmentHandler<*> {
-        return WolmoFragmentHandler(toastFactory, logger, basePresenter)
+                                            basePresenter: BasePresenter<Any>): WolmoFragmentHandler<*,*> {
+        return WolmoFragmentHandler<ViewDataBinding, BasePresenter<Any>>(toastFactory, logger, basePresenter)
     }
 }

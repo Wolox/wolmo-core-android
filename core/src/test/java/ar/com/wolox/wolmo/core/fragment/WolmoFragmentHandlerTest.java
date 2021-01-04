@@ -24,6 +24,9 @@ package ar.com.wolox.wolmo.core.fragment;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingComponent;
+import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.FragmentActivity;
 
 import org.junit.Before;
@@ -31,6 +34,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
+import org.mockito.internal.matchers.Any;
 
 import ar.com.wolox.wolmo.core.R;
 import ar.com.wolox.wolmo.core.presenter.BasePresenter;
@@ -53,7 +57,7 @@ public class WolmoFragmentHandlerTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
-    private WolmoFragmentHandler<TestPresenter> mWolmoFragmentHandler;
+    private WolmoFragmentHandler<?,TestPresenter> mWolmoFragmentHandler;
     private WolmoFragment mWolmoFragmentMock;
     private TestPresenter mTestPresenter;
     private ToastFactory mToastFactoryMock;
@@ -157,7 +161,7 @@ public class WolmoFragmentHandlerTest {
     interface TestView {
     }
 
-    static class TestFragment extends WolmoFragment<TestPresenter> implements TestView {
+    static class TestFragment extends WolmoFragment<ViewDataBinding, TestPresenter> implements TestView {
         @Override
         public int layout() {
             return 0;
@@ -170,5 +174,4 @@ public class WolmoFragmentHandlerTest {
 
     static class TestPresenter extends BasePresenter<TestView> {
     }
-
 }

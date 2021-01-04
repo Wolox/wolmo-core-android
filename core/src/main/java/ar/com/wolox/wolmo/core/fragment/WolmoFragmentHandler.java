@@ -28,6 +28,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 
 import javax.inject.Inject;
@@ -41,7 +43,7 @@ import ar.com.wolox.wolmo.core.util.ToastFactory;
  * This class is used to separate Wolox Fragments logic so that different subclasses of
  * Fragment can implement MVP without re-writing this.
  */
-public final class WolmoFragmentHandler<T extends BasePresenter> {
+public final class WolmoFragmentHandler<V extends ViewDataBinding, T extends BasePresenter> {
 
 	private Fragment mFragment;
 	private IWolmoFragment mWolmoFragment;
@@ -51,6 +53,7 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
 	private boolean mVisible;
 
 	private @NonNull T mPresenter;
+	private @Nullable V mBinding;
 	private ToastFactory mToastFactory;
 	private Logger mLogger;
 
@@ -105,7 +108,8 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
 	 * </ul><p>
 	 */
 	View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
-		return inflater.inflate(mWolmoFragment.layout(), container, false);
+		mBinding = DataBindingUtil.inflate(inflater, mWolmoFragment.layout(), container, false);
+		return mBinding.getRoot();
 	}
 
 	/**
@@ -130,6 +134,11 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
 	@NonNull
 	public T getPresenter() {
 		return mPresenter;
+	}
+
+	@Nullable
+	public V getBinding() {
+		return mBinding;
 	}
 
 	private void onVisibilityChanged() {
@@ -176,5 +185,6 @@ public final class WolmoFragmentHandler<T extends BasePresenter> {
 	 */
 	void onDestroyView() {
 		getPresenter().detachView();
+		mBinding = null;
 	}
 }

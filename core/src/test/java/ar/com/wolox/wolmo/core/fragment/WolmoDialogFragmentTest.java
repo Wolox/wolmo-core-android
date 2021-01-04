@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 
 public class WolmoDialogFragmentTest {
 
-    private WolmoFragmentHandler<BasePresenter<?>> mWolmoFragmentHandlerMock;
+    private WolmoFragmentHandler<?, BasePresenter<?>> mWolmoFragmentHandlerMock;
     private PermissionManager mPermissionManagerMock;
     private WolmoDialogFragment mWolmoDialogFragmentSpy;
 

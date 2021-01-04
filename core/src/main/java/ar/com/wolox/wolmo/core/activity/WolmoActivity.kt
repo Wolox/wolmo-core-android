@@ -26,6 +26,8 @@ import android.view.MenuItem
 import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import ar.com.wolox.wolmo.core.fragment.IWolmoFragment
@@ -37,12 +39,14 @@ import javax.inject.Inject
 /**
  * A base [DaggerAppCompatActivity] that implements Wolmo's custom lifecycle.
  */
-abstract class WolmoActivity : DaggerAppCompatActivity() {
+abstract class WolmoActivity<V : ViewDataBinding> : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var toastFactory: ToastFactory
     @Inject
     lateinit var permissionManager: PermissionManager
+
+    var binding: V? = null
 
     /**
      * Handles the custom lifecycle of Wolmo's Activity. It provides a set of callbacks to structure
@@ -51,7 +55,7 @@ abstract class WolmoActivity : DaggerAppCompatActivity() {
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(layout())
+        binding = DataBindingUtil.setContentView(this, layout())
         if (handleArguments(intent.extras) == true) {
             init()
             populate()
@@ -60,6 +64,11 @@ abstract class WolmoActivity : DaggerAppCompatActivity() {
             toastFactory.show(ar.com.wolox.wolmo.core.R.string.unknown_error)
             finish()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
     }
 
     /**
