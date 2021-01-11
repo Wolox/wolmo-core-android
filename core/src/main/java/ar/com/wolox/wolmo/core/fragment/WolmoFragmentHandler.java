@@ -136,7 +136,7 @@ public final class WolmoFragmentHandler<V extends ViewDataBinding, T extends Bas
 		return mPresenter;
 	}
 
-	@Nullable
+	@NonNull
 	public V getBinding() {
 		return mBinding;
 	}

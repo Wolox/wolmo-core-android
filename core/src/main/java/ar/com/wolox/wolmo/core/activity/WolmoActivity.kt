@@ -46,7 +46,10 @@ abstract class WolmoActivity<V : ViewDataBinding> : DaggerAppCompatActivity() {
     @Inject
     lateinit var permissionManager: PermissionManager
 
-    var binding: V? = null
+    private var _binding: V? = null
+
+    val binding: V
+        get() = _binding!!
 
     /**
      * Handles the custom lifecycle of Wolmo's Activity. It provides a set of callbacks to structure
@@ -55,7 +58,7 @@ abstract class WolmoActivity<V : ViewDataBinding> : DaggerAppCompatActivity() {
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, layout())
+        _binding = DataBindingUtil.setContentView(this, layout())
         if (handleArguments(intent.extras) == true) {
             init()
             populate()
@@ -68,7 +71,7 @@ abstract class WolmoActivity<V : ViewDataBinding> : DaggerAppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        binding = null
+        _binding = null
     }
 
     /**

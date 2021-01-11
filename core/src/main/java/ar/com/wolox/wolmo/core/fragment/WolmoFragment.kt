@@ -52,7 +52,7 @@ abstract class WolmoFragment<V : ViewDataBinding, P : BasePresenter<*>> : Dagger
     val presenter: P
         get() = fragmentHandler.presenter
 
-    val binding: V?
+    val binding: V
         get() = fragmentHandler.binding
 
     @CallSuper
