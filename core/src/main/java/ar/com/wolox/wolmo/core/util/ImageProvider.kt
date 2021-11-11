@@ -42,7 +42,6 @@ import javax.inject.Inject
  * Utils class to manipulate images, through [Bitmap]s or their corresponding [Uri], and
  * for retrieving pictures from gallery/taking them from the camera.
  */
-@ApplicationScope
 class ImageProvider @Inject constructor(private val context: Context, private val wolmoFileProvider: WolmoFileProvider) {
 
     /** Image compression formats supported. */

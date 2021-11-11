@@ -25,25 +25,25 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import ar.com.wolox.wolmo.core.R
 import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 /**
  * Provides objects that depends of the Application [Context].
  * The objects provided by this module uses [ApplicationScope].
  */
 @Module
+@InstallIn(SingletonComponent::class)
 class ContextModule {
-    @Provides
-    @ApplicationScope
-    fun provideContext(application: Application): Context {
-        return application.applicationContext
-    }
 
     @Provides
-    @ApplicationScope
-    fun provideSharedPreferences(sharedPrefName: String?, context: Context): SharedPreferences {
-        return context.getSharedPreferences(sharedPrefName, Activity.MODE_PRIVATE)
+    fun provideContext(application: Application): Context {
+        return application.applicationContext
     }
 }
