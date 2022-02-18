@@ -9,7 +9,7 @@ import javax.inject.Inject
  * to simplify unit tests.
  * @deprecated use [WolmoLogger] instead.
  */
-@Deprecated("User WolmoLogger Instead")
+@Deprecated("Use WolmoLogger instead.")
 class Logger @Inject constructor() {
 
     /** [tag] used to identify the source of a log message. */
