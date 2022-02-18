@@ -9,6 +9,10 @@ object WolmoLogger {
     private const val WOLMO_NAME = "WolmoCoreAndroid"
     var tag: String? = null
 
+    fun resetTag() {
+        this.tag = null
+    }
+
     fun log(exception: Throwable? = null, message : () -> Any?) {
         Log.d(tag.orElse(WOLMO_NAME), message.toStringSafely(), exception)
     }
