@@ -40,8 +40,6 @@ import androidx.fragment.app.FragmentManager
 import ar.com.wolox.wolmo.core.permission.PermissionManager
 import ar.com.wolox.wolmo.core.presenter.BasePresenter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import dagger.android.support.AndroidSupportInjection
-import dagger.android.support.DaggerAppCompatDialogFragment
 import javax.inject.Inject
 
 /**
@@ -69,7 +67,6 @@ abstract class WolmoBottomSheetDialogFragment<V : ViewDataBinding, P : BasePrese
 
     @CallSuper
     override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
         onAttached?.invoke()
         super.onAttach(context)
     }

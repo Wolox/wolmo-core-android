@@ -30,12 +30,15 @@ import ar.com.wolox.wolmo.core.util.Logger
 import ar.com.wolox.wolmo.core.util.ToastFactory
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 /**
  * Provides default implementations for Wolmo's dependencies and utils.
  * You can add this module to your [Component] if you don't need to customize any dependency.
  */
 @Module
+@InstallIn(SingletonComponent::class)
 class DefaultModule {
 
     @Provides

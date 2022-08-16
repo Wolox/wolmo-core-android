@@ -30,7 +30,6 @@ import javax.inject.Inject
 /**
  * An utility class to work with Android's [Toast] messages
  */
-@ApplicationScope
 class ToastFactory @Inject constructor(private val context: Context) {
 
     /** Displays a message from a [resourceId] inside a [Toast], briefly. */
