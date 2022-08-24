@@ -30,12 +30,14 @@ import ar.com.wolox.wolmo.core.util.Logger
 import ar.com.wolox.wolmo.core.util.ToastFactory
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.migration.DisableInstallInCheck
 
 /**
  * Provides default implementations for Wolmo's dependencies and utils.
  * You can add this module to your [Component] if you don't need to customize any dependency.
  */
 @Module
+@DisableInstallInCheck
 class DefaultModule {
 
     @Provides

@@ -25,12 +25,12 @@ import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
 import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 /**
  * An utility class to work with Android's [Toast] messages
  */
-@ApplicationScope
 class ToastFactory @Inject constructor(private val context: Context) {
 
     /** Displays a message from a [resourceId] inside a [Toast], briefly. */

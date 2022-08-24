@@ -26,6 +26,7 @@ import android.view.MenuItem
 import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
@@ -33,13 +34,12 @@ import androidx.fragment.app.commit
 import ar.com.wolox.wolmo.core.fragment.IWolmoFragment
 import ar.com.wolox.wolmo.core.permission.PermissionManager
 import ar.com.wolox.wolmo.core.util.ToastFactory
-import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
 /**
- * A base [DaggerAppCompatActivity] that implements Wolmo's custom lifecycle.
+ * A base [AppCompatActivity] that implements Wolmo's custom lifecycle.
  */
-abstract class WolmoActivity<V : ViewDataBinding> : DaggerAppCompatActivity() {
+abstract class WolmoActivity<V : ViewDataBinding> : AppCompatActivity() {
 
     @Inject
     lateinit var toastFactory: ToastFactory
@@ -125,7 +125,6 @@ abstract class WolmoActivity<V : ViewDataBinding> : DaggerAppCompatActivity() {
      * Replaces the current [Fragment] in a given container layout defined by a [resId]
      * with a new [fragment].
      */
-    // TODO We should delegate this methods to a helper
     protected fun replaceFragment(@IdRes resId: Int, fragment: Fragment) = supportFragmentManager.commit {
         replace(resId, fragment)
     }
@@ -135,7 +134,6 @@ abstract class WolmoActivity<V : ViewDataBinding> : DaggerAppCompatActivity() {
      * with a new [fragment] using a custom [tag] that allows the fragment to be more
      * easily located.
      */
-    // TODO We should delegate this methods to a helper
     protected fun replaceFragment(@IdRes resId: Int, fragment: Fragment, tag: String) = supportFragmentManager.commit {
         replace(resId, fragment, tag)
     }
