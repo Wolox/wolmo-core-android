@@ -33,6 +33,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import ar.com.wolox.wolmo.core.fragment.IWolmoFragment
 import ar.com.wolox.wolmo.core.permission.PermissionManager
+import ar.com.wolox.wolmo.core.util.DataStoreManager
 import ar.com.wolox.wolmo.core.util.ToastFactory
 import javax.inject.Inject
 
@@ -45,6 +46,8 @@ abstract class WolmoActivity<V : ViewDataBinding> : AppCompatActivity() {
     lateinit var toastFactory: ToastFactory
     @Inject
     lateinit var permissionManager: PermissionManager
+    @Inject
+    lateinit var dataStoreManager: DataStoreManager
 
     private var _binding: V? = null
 

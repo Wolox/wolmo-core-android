@@ -33,7 +33,6 @@ import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope
 import javax.inject.Inject
 
 /** Helper class to handle Android's runtime permissions */
-@ApplicationScope
 class PermissionManager @Inject constructor(
         private val context: Context,
         private val requestListeners: SparseArray<PermissionListener>

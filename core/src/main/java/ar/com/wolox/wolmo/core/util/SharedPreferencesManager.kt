@@ -23,14 +23,11 @@ package ar.com.wolox.wolmo.core.util
 
 import android.content.SharedPreferences
 
-import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope
-
 import javax.inject.Inject
 
 /**
  * Utility class to query and store values in [SharedPreferences].
  */
-@ApplicationScope
 class SharedPreferencesManager @Inject constructor(private val sharedPreferences: SharedPreferences) {
 
     fun store(key: String, value: String?) = sharedPreferences.edit().putString(key, value).apply()

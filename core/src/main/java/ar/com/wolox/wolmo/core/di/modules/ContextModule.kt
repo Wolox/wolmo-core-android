@@ -30,6 +30,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.scopes.ActivityScoped
 
+
 /**
  * Provides objects that depends of the Application [Context].
  * The objects provided by this module uses [ActivityScoped].
@@ -37,6 +38,7 @@ import dagger.hilt.android.scopes.ActivityScoped
 @Module
 @InstallIn(ActivityComponent::class)
 class ContextModule {
+
     @Provides
     fun provideContext(activity: Activity): Context {
         return activity.applicationContext

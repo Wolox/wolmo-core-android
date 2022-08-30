@@ -37,7 +37,6 @@ import javax.inject.Inject
 /**
  * Utils class for managing [File]s.
  */
-@ApplicationScope
 class WolmoFileProvider @Inject constructor(private val context: Context) {
 
     private val appName: String by lazy {
