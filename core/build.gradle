@@ -1,6 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'com.hiya.jacoco-android'
+apply plugin: 'com.github.kt3k.coveralls'
 
 android {
     compileSdkVersion 32
@@ -17,14 +20,24 @@ android {
         consumerProguardFiles 'proguard-joda-time.pro', 'proguard-dagger.pro'
     }
 
-
-
-    lintOptions {
-        abortOnError false
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
     }
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+    }
+
 
     buildFeatures {
         dataBinding true
+    }
+    lint {
+        abortOnError false
     }
 }
 
@@ -55,10 +68,6 @@ kapt {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    implementation "com.google.dagger:hilt-android-gradle-plugin:$hilt_plugin_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_plugin_version"
-
     // Support
     api "androidx.appcompat:appcompat:$androidx_appcompat_version"
     api "com.google.android.material:material:$androidx_material_version"
@@ -68,9 +77,9 @@ dependencies {
     // Mockito inline adds support for mocking final classes and methods
     api "org.mockito:mockito-inline:$mockito_inline_version"
 
-    // Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    // Dagger
+    implementation "com.google.dagger:hilt-android:2.42"
+    kapt "com.google.dagger:hilt-android-compiler:2.42"
 
     // Android KTX
     api "androidx.core:core-ktx:$androidx_ktx_core_version"

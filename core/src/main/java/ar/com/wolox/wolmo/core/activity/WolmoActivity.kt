@@ -38,7 +38,7 @@ import ar.com.wolox.wolmo.core.util.ToastFactory
 import javax.inject.Inject
 
 /**
- * A base [DaggerAppCompatActivity] that implements Wolmo's custom lifecycle.
+ * A base [AppCompatActivity] that implements Wolmo's custom lifecycle.
  */
 abstract class WolmoActivity<V : ViewDataBinding> : AppCompatActivity() {
 
@@ -128,7 +128,6 @@ abstract class WolmoActivity<V : ViewDataBinding> : AppCompatActivity() {
      * Replaces the current [Fragment] in a given container layout defined by a [resId]
      * with a new [fragment].
      */
-    // TODO We should delegate this methods to a helper
     protected fun replaceFragment(@IdRes resId: Int, fragment: Fragment) = supportFragmentManager.commit {
         replace(resId, fragment)
     }
@@ -138,7 +137,6 @@ abstract class WolmoActivity<V : ViewDataBinding> : AppCompatActivity() {
      * with a new [fragment] using a custom [tag] that allows the fragment to be more
      * easily located.
      */
-    // TODO We should delegate this methods to a helper
     protected fun replaceFragment(@IdRes resId: Int, fragment: Fragment, tag: String) = supportFragmentManager.commit {
         replace(resId, fragment, tag)
     }

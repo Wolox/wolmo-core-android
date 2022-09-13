@@ -30,7 +30,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import ar.com.wolox.wolmo.core.permission.PermissionManager
 import ar.com.wolox.wolmo.core.presenter.BasePresenter
-import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**

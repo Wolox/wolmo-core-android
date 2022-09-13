@@ -23,7 +23,6 @@ package ar.com.wolox.wolmo.core
 
 import android.app.Application
 import androidx.annotation.CallSuper
-import dagger.hilt.android.HiltAndroidApp
 
 /**
  * An extension of Android's native [Application] class that is intended to be used as

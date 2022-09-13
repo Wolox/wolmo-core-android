@@ -25,6 +25,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
 import ar.com.wolox.wolmo.core.di.scopes.ApplicationScope
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 /**
