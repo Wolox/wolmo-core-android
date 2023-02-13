@@ -69,7 +69,7 @@ These features can be found in CORE:
 
 This project is maintained and written mostly by collaborators of [Wolox, part of Accenture](http://www.wolox.com.ar).
 
-![Wolox](https://raw.githubusercontent.com/Wolox/press-kit/master/logos/logo_banner.png)
+![Wolox](https://user-images.githubusercontent.com/50247351/146973273-9cca946f-4811-44f4-9e00-53dd0e3ec120.png)
 
 ## <a name="topic-license"></a> License
 
