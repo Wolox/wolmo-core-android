@@ -18,9 +18,9 @@ class CachedValue<T> {
     private val mutex: Mutex = Mutex()
 
     suspend fun fetch(policy: CachePolicy<T>): T? {
-        if (policy.shouldInvalidate(value)) {
-            mutex.withLock {
-                value = policy.update()
+        mutex.withLock {
+            if (policy.shouldInvalidate(value)) {
+                value = policy.update(value)
             }
         }
         return mutex.withLock { value }
@@ -34,7 +34,7 @@ internal class ExampleRepository {
         var refresh = true
         var firstTime = true
 
-        override suspend fun update(): List<String> {
+        override suspend fun update(value: List<String>?): List<String> {
             delay(2000L)
             if (!firstTime) {
                 refresh = false
