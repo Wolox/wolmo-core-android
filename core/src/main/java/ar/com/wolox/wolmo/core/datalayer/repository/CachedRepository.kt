@@ -2,9 +2,12 @@ package ar.com.wolox.wolmo.core.datalayer.repository
 
 import ar.com.wolox.wolmo.core.datalayer.cache.CachePolicy
 import ar.com.wolox.wolmo.core.datalayer.cache.CachedValue
+import ar.com.wolox.wolmo.core.datalayer.cache.UsageThresholdPolicy
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
+@Suppress("UNCHECKED_CAST")
 abstract class CachedRepository<T>(
     keys: List<String>,
 ) {
@@ -19,69 +22,60 @@ abstract class CachedRepository<T>(
 
     abstract val policy: CachePolicy<Pair<String, T>>
 
-    operator fun get(key: String) = entries[key]
-
     open suspend fun fetchWithPolicy(key: String): T? {
+        // TODO: We should check if we could return subtypes of T (E : T ?).
         return entries[key]?.fetch(policy)?.second
     }
 
 }
 
-class UserRepository : CachedRepository<Person>(
-    listOf("friend","enemy"),
-) {
-    override val policy: CachePolicy<Pair<String, Person>> = object : CachePolicy<Pair<String, Person>> {
+// TODO: This Repository is for experimental causes. 
 
-        var usages: MutableMap<String, Int> = mutableMapOf()
+class UserRepository(private val userAPI: UserAPI) {
 
-        val threshold = 2 // 0, 1, 2 (3 allowed)
+    private val userInformation : CachedValue<UserInformation> = CachedValue()
+    private val userUpdatePolicy = UsageThresholdPolicy(
+        threshold = 5,
+        updater = { fetchUserInformationUsingAPI() }
+    )
 
-        override suspend fun update(value: Pair<String, Person>?): Pair<String, Person> {
-            return if (value?.first == "enemy") "enemy" to Enemy("Pepe", "")
-            else "friend" to Friends("Epep")
-        }
+    suspend fun fetchUserInformation(): UserInformation? {
+        return userInformation.fetch(userUpdatePolicy)
+    }
 
-        override fun shouldInvalidate(value: Pair<String, Person>?): Boolean {
-            val invalidate =
-                value == null || (usages[value.first] != null && usages[value.first]!! > threshold)
-            if (!invalidate) {
-                usages[value!!.first] = (usages[value.first] ?: 1) + 1
-            } else {
-                println("Invalidation occur.")
-            }
-            return invalidate
-        }
+    private suspend fun fetchUserInformationUsingAPI() : UserInformation {
+        val response = userAPI.fetchUserInformation()
+        return response.body()!!
     }
 
 
-
-
-    suspend fun fetchFriend(): Friends = fetchWithPolicy("friend") as Friends
-    suspend fun fetchEnemy(): Enemy = fetchWithPolicy("enemy") as Enemy
-
 }
 
-interface Person {
-    val name: String
+interface UserAPI {
+    suspend fun fetchUserInformation() : Response<UserInformation>
 }
 
-data class Friends(
-    override val name: String
-) : Person
-
-data class Enemy(
-    override val name: String,
-    val surname: String
-) : Person
+data class UserInformation(
+    val username: String,
+    val userTier: String,
+    val userCountry: String
+)
 
 suspend fun main() {
-    val r = UserRepository()
+    val r = UserRepository(
+        object : UserAPI {
+            override suspend fun fetchUserInformation(): Response<UserInformation> {
+                return Response.success(UserInformation("Lisandro", "Normal", "ARG"))
+            }
+        }
+    )
     coroutineScope {
         launch {
-            r.fetchFriend()
-            r.fetchFriend()
-            r.fetchFriend()
-            r.fetchFriend()
+            val info = r.fetchUserInformation()
+            println(info)
+            repeat(10) {
+                r.fetchUserInformation()
+            }
         }
     }
 

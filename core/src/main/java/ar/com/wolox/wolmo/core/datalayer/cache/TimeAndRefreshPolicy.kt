@@ -1,9 +1,5 @@
 package ar.com.wolox.wolmo.core.datalayer.cache
 
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlin.coroutines.coroutineContext
-
 /**
  * [CachePolicy] that uses a [threshold] and a [refreshCriteria]
  * in order to check if an invalidation should occur.
