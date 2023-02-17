@@ -49,7 +49,6 @@ class PermissionManager(
             permissionsToRequest[permissionName]?.let { handler ->
                 RequestPermissionLauncher.request(componentActivity, handler, permissionName)
             }
-
         }
     }
 }

@@ -1,10 +1,9 @@
 package ar.com.wolox.wolmo.core.networking.interceptors
 
-import java.io.IOException
-
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
+import java.io.IOException
 
 /**
  * An implementation of OkHTTP's [Interceptor] that adds common headers to every API
@@ -25,7 +24,9 @@ abstract class ApiRestInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var request: Request = chain.request()
         val requestBuilder: Request.Builder =
-            request.newBuilder().addHeader(CONTENT_TYPE_HEADER, "application/json")
+            request
+                .newBuilder()
+                .addHeader(CONTENT_TYPE_HEADER, "application/json")
                 .addHeader(ACCEPT_HEADER, "application/json")
         addHeaders(requestBuilder)
         request = requestBuilder.build()

@@ -29,7 +29,7 @@ abstract class CachedRepository<T>(
 
 }
 
-// TODO: This Repository is for experimental causes. 
+// TODO: This Repository is for experimental causes.
 
 class UserRepository(private val userAPI: UserAPI) {
 

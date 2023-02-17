@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
 }
 
 apply from: '../dependencies.gradle'
@@ -57,4 +58,20 @@ dependencies {
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:1.1.4"
     androidTestImplementation "androidx.test.espresso:espresso-core:3.5.0"
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId = 'com.github.wolox'
+                artifactId = 'wolmo-core-android'
+                version = '5.0.0'
+
+                afterEvaluate {
+                    from components.release
+                }
+            }
+        }
+    }
 }

@@ -21,6 +21,25 @@ object NetworkRequestHandler {
         }
     }
 
+    /**
+     * Static method that allows to execute requests from a [suspend] function of [Response] type
+     * and returns a [NetworkResponse] object depending on HTTP response.
+     * Also, this variant allows us to catch the throwable, giving us the option to
+     * map it to another response.
+     */
+    suspend fun <T: Response<*>> safeServiceCall(
+        block: suspend () -> T,
+        catching: suspend (Throwable) -> T
+    ): NetworkResponse<T> {
+        return try {
+            val response: T = block.invoke()
+            if (response.isSuccessful) NetworkResponse.Success(response)
+            else NetworkResponse.Error(response)
+        } catch (t: Throwable) {
+            NetworkResponse.CaughtFailure(catching(t))
+        }
+    }
+
 }
 
 /**
@@ -51,4 +70,6 @@ sealed class NetworkResponse<T> {
      * [Throwable] object
      */
     data class Failure<T>(val t: Throwable) : NetworkResponse<T>()
+
+    data class CaughtFailure<T>(val failedValue: T) : NetworkResponse<T>()
 }

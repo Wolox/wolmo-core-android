@@ -19,8 +19,9 @@ WOLMO is a an opinionated framework designed to reduce the time taken to develop
 
 WOLMO is made up of several modules, each one supporting a different role in the production of modern apps. The following are the current modules available for the WOLMO framework.
 
-* **CORE:** This module provides standalone base classes and utilities of the framework. As a general rule, this module will be required in any WOLMO-based project. CORE is also a generally required dependency of other modules.
+* **CORE:** This module provides standalone base classes and utilities of the framework. As a general rule, this module will be required in any WOLMO-based project.
 * **COMPOSE:** This module provides utilities and abstractions to help the development of Android Apps that uses the Compose Framework. 
+* **TESTING:** * This module provides a suite of methods to improve the process of writing instrumentation tests with Espresso, while also providing implementations to support fragment testing with Hilt.
 
 ## Installation
 
