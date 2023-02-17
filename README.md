@@ -19,10 +19,9 @@ WOLMO is a an opinionated framework designed to reduce the time taken to develop
 
 WOLMO is made up of several modules, each one supporting a different role in the production of modern apps. The following are the current modules available for the WOLMO framework.
 
-* **CORE:** This module provides standalone base classes and utilities of the framework. As a general rule, this module will be required in any WOLMO-based project. CORE is also a generally required dependency of other modules.
-* **NETWORKING:** This module provides offline capabilities and abstracts the network layer of the rest of the project.
-* **AUTH:** Provides utilities for accounts, login and signup features.
-* **MAPS:** Google Maps helpers classes and views.
+* **CORE:** This module provides standalone base classes and utilities of the framework. As a general rule, this module will be required in any WOLMO-based project.
+* **COMPOSE:** This module provides utilities and abstractions to help the development of Android Apps that uses the Compose Framework. 
+* **TESTING:** * This module provides a suite of methods to improve the process of writing instrumentation tests with Espresso, while also providing implementations to support fragment testing with Hilt.
 
 ## Installation
 
@@ -53,9 +52,9 @@ CORE is the base module of the framework and provides all of the must have class
 
 These features can be found in CORE:
 
-* MVP-ready activities and fragments
-* Files helpers
-* Camera and image helpers
+* MVVM oriented.
+* FileSystem Abstractions.
+* Permission Management.
 
 [See all the features available here.](FEATURES.md)
 
@@ -69,10 +68,9 @@ These features can be found in CORE:
 
 ## <a name="topic-about"></a> About
 
-This project is maintained by [Juan Ignacio Molina](https://github.com/juanignaciomolina)
-and it was written by [Wolox](http://www.wolox.com.ar).
+This project is maintained and written mostly by collaborators of [Wolox, part of Accenture](http://www.wolox.com.ar).
 
-![Wolox](https://raw.githubusercontent.com/Wolox/press-kit/master/logos/logo_banner.png)
+![Wolox](https://user-images.githubusercontent.com/50247351/146973273-9cca946f-4811-44f4-9e00-53dd0e3ec120.png)
 
 ## <a name="topic-license"></a> License
 

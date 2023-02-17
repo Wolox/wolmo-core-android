@@ -1,0 +1,12 @@
+ext {
+    androidx_core_ktx_version = '1.8.0'
+    androidx_lifecycle_ktx_version = '2.5.1'
+    junit_version = '4.13.2'
+    appcompat_version = '1.5.1'
+    material_version = '1.6.1'
+    navigation_version = '2.5.1'
+    material_version = '1.7.0'
+    retrofit_version = '2.9.0'
+    okhttp3_version = '4.9.0'
+
+}
